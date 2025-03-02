@@ -14,6 +14,7 @@ public:
 
 	const unsigned int GetRendererID() const { return m_RendererID; }
 	void SetUniformMatrix4(const std::string& name, const glm::mat4& value);
+	void SetUniformVector3(const std::string& name, const glm::vec3& value);
 
 private:
 	uint32_t LoadShader(const std::string& shaderPath, unsigned int shaderType);

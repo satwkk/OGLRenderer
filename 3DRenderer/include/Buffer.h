@@ -18,7 +18,7 @@ private:
 class IndexBuffer
 {
 public:
-	IndexBuffer(const std::vector<unsigned int>& vertices);
+	IndexBuffer(const std::vector<unsigned int>& indices);
 	IndexBuffer(float* indices, uint32_t count);
 	~IndexBuffer();
 

@@ -51,12 +51,18 @@ void Shader::SetUniformMatrix4(const std::string& name, const glm::mat4& value)
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void Shader::SetUniformVector3(const std::string& name, const glm::vec3& value)
+{
+    auto location = glGetUniformLocation(m_RendererID, name.c_str());
+    glUniform3fv(location, 1, glm::value_ptr(value));
+}
+
 uint32_t Shader::LoadShader(const std::string& shaderPath, unsigned int shaderType)
 {
     std::string shaderString = Utility::ReadFile(shaderPath);
     const char* shaderSrc = shaderString.c_str();
 
-    float shaderID = glCreateShader(shaderType);
+    unsigned int shaderID = glCreateShader(shaderType);
     glShaderSource(shaderID, 1, &shaderSrc, nullptr);
     glCompileShader(shaderID);
 

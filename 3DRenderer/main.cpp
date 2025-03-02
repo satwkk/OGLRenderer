@@ -19,9 +19,14 @@
 
 double cursorPosLastFrameX = 0.0;
 double cursorPosLastFrameY = 0.0;
+bool shouldMoveLight = false;
+double lightMoveSens = 2.f;
+glm::vec3 lightPosition(150.0f, 50.0f, 0.0f);
+glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 void UpdateCamera(GLFWwindow* window, Camera& camera)
 {
+    if (shouldMoveLight) return;
     glm::vec3 targetDir = glm::vec3(0.0f, 0.0f, 0.0f);
     float angle = 0.0f;
 
@@ -57,6 +62,34 @@ void UpdateCamera(GLFWwindow* window, Camera& camera)
 
     cursorPosLastFrameX = cursorPosX;
     cursorPosLastFrameY = cursorPosY;
+}
+
+void UpdateLight(GLFWwindow* window)
+{
+    if (glfwGetKey(window, GLFW_KEY_L))
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        shouldMoveLight = true;
+
+    }
+    else
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        shouldMoveLight = false;
+    }
+
+    if (!shouldMoveLight) return;
+
+    double mouseX, mouseY;
+    glfwGetCursorPos(window, &mouseX, &mouseY);
+
+    float deltaX = mouseX - cursorPosLastFrameX;
+    float deltaY = mouseY - cursorPosLastFrameY;
+
+    lightPosition += glm::vec3(deltaX * lightMoveSens, deltaY * lightMoveSens, 0.0f);
+
+    cursorPosLastFrameX = mouseX;
+    cursorPosLastFrameY = mouseY;
 }
 
 int main()
@@ -119,10 +152,8 @@ int main()
         45.0f
     );
 
-    glEnable(GL_BLEND);
+    glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-    glDepthFunc(GL_LESS);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -130,16 +161,23 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
+        UpdateLight(window);
         UpdateCamera(window, camera);
-        auto& pos = camera.GetPosition();
 
         auto model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-        auto transformationMatrix = camera.GetVPMatrix() * model;
 
         shader->Use();
-        shader->SetUniformMatrix4("u_Transform", transformationMatrix);
+
+        // Set PHONG variables
+        shader->SetUniformVector3("uLightPos", lightPosition);
+        shader->SetUniformVector3("uLightColor", lightColor);
+        shader->SetUniformVector3("uCameraPosition", camera.GetPosition());
+
+        // Set MVP variables
+        shader->SetUniformMatrix4("uVPMatrix", camera.GetVPMatrix());
+        shader->SetUniformMatrix4("uModelMatrix", model);
 
         vertexArray->Bind();
         glDrawElements(GL_TRIANGLES, loadedModel->IndexData.size(), GL_UNSIGNED_INT, (void*)0);

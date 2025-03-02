@@ -24,6 +24,11 @@ std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned 
             auto texCoord = mesh->mTextureCoords[0][i];
             model->VertexData.push_back(texCoord.x);
             model->VertexData.push_back(texCoord.y);
+
+            auto normal = mesh->mNormals[i];
+            model->VertexData.push_back(normal.x);
+            model->VertexData.push_back(normal.y);
+            model->VertexData.push_back(normal.z);
         }
 
         for (uint32_t i = 0; i < mesh->mNumFaces; i++)
