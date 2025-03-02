@@ -5,6 +5,7 @@
 class Camera
 {
 public:
+	Camera() = default;
 	Camera(const glm::vec3& initialPosition, float nearClipPlane, float farClipPlane, float winWidth, float winHeight, float fov);
 	~Camera();
 
@@ -27,9 +28,9 @@ private:
 	glm::mat4 m_ViewMatrix;
 	glm::mat4 m_ViewProjectionMatrix;
 	glm::vec3 m_Position;
+	glm::vec3 m_RotationAxis;
 	float m_Yaw;
 	float m_Pitch;
-	glm::vec3 m_RotationAxis;
 	float m_MoveSpeed;
 	float m_Sensitivity;
 };

@@ -29,7 +29,7 @@ void main()
 	// Specular
 	vec3 reflectedLight = reflect(-directionToLight, norm);
 	vec3 directionToCamera = normalize(uCameraPosition - FragmentWorldPosition);
-	float specular = max(dot(reflectedLight, directionToCamera), 0.0);
+	float specular = max(pow(dot(reflectedLight, directionToCamera), 32), 0.0);
 	vec3 specularLight = specular * uLightColor;
 	
 	// Final color
