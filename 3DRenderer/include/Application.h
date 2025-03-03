@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Camera.h"
+#include "Texture.h"
 #include <glm/glm.hpp>
 #include <memory>
 #include <string>
@@ -13,6 +14,7 @@ class Shader;
 class VertexBuffer;
 class VertexArray;
 class IndexBuffer;
+class Texture;
 
 struct AppConfig
 {
@@ -47,9 +49,6 @@ private:
 	Camera m_Camera;
 	std::shared_ptr<Model> m_Model;
 	std::shared_ptr<Shader> m_Shader;
-	std::shared_ptr<VertexBuffer> m_VertexBuffer;
-	std::shared_ptr<IndexBuffer> m_IndexBuffer;
-	std::shared_ptr<VertexArray> m_VertexArray;
 };
 
 void UpdateCamera(GLFWwindow* window, Camera& camera);

@@ -18,4 +18,5 @@ public:
 	static std::shared_ptr<Model> Load(const std::string& modelPath, unsigned int flags);
 
 private:
+	static void LoadMaterial(std::shared_ptr<Model>& model);
 };

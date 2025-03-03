@@ -45,6 +45,15 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\models\Cube.FBX" />
@@ -52,6 +61,7 @@
     <None Include="shaders\vertex.glsl" />
     <None Include="res\models\Green_Sea_Turtle.fbx" />
     <None Include="res\models\SimpleRig_cube.fbx" />
+    <None Include="shaders\fragment_2.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Utility.h">
@@ -84,9 +94,30 @@
     <ClInclude Include="include\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\models\container.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\ContainerDiffuse.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\ContainerSpecular.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\Tortoise.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

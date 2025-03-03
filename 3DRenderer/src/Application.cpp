@@ -7,8 +7,6 @@
 
 #include "Application.h"
 #include "Window.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stbi_image.h"
 
 #include "Utility.h"
 #include "Buffer.h"
@@ -23,7 +21,7 @@ double cursorPosLastFrameX = 0.0;
 double cursorPosLastFrameY = 0.0;
 bool shouldMoveLight = false;
 double lightMoveSens = 2.f;
-glm::vec3 lightPosition(150.0f, 50.0f, 0.0f);
+glm::vec3 lightPosition(5.f, 10.0, 0.0f);
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 void UpdateCamera(GLFWwindow* window, Camera& camera)
@@ -88,10 +86,19 @@ void UpdateLight(GLFWwindow* window)
     float deltaX = mouseX - cursorPosLastFrameX;
     float deltaY = mouseY - cursorPosLastFrameY;
 
-    lightPosition += glm::vec3(deltaX * lightMoveSens, deltaY * lightMoveSens, 0.0f);
+    lightPosition += glm::vec3(deltaX * lightMoveSens, 0.f, deltaY * lightMoveSens);
 
     cursorPosLastFrameX = mouseX;
     cursorPosLastFrameY = mouseY;
+}
+
+
+void RenderModel(std::shared_ptr<Model>& model)
+{
+    for (auto& mesh : model->m_Meshes)
+    {
+        glDrawElements(GL_TRIANGLES, mesh->m_IndexData.size(), GL_UNSIGNED_INT, (void*)0);
+    }
 }
 
 Application* Application::s_Instance = nullptr;
@@ -137,40 +144,15 @@ bool Application::Init()
         return false;
     }
 
-    m_Model = ModelLoader::Load("./res/models/Green_Sea_Turtle.fbx", BASICFLAGS);
-
-    m_VertexArray = std::make_shared<VertexArray>();
-    m_VertexBuffer = std::make_shared<VertexBuffer>(m_Model->VertexData);
-    m_IndexBuffer = std::make_shared<IndexBuffer>(m_Model->IndexData);
-
-    m_VertexArray->AddBuffer(m_VertexBuffer);
-    m_VertexArray->AddBuffer(m_IndexBuffer);
-    m_VertexArray->SetupLayouts();
-
-    int width, height, channels;
-    unsigned char* data = stbi_load("./res/models/container.jpg", &width, &height, &channels, 0);
-    if (data == nullptr)
-    {
-        std::cerr << "could not load texture\n";
-        return false;
-    }
-
-    // TODO(void): Refactor this when material systems is in place
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    int format = channels == 4 ? GL_RGBA : GL_RGB;
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-
     m_Shader = std::make_shared<Shader>("./shaders/vertex.glsl", "./shaders/fragment.glsl");
+    m_Model = ModelLoader::Load("./res/models/Green_Sea_Turtle.fbx", BASICFLAGS);
+    // m_Model = ModelLoader::Load("./res/models/SimpleRig_cube.fbx", BASICFLAGS);
+
+    m_Shader->Use();
+    m_Shader->SetUniformInt("material.diffuse", 0);
+    m_Shader->SetUniformInt("material.specular", 1);
 
     // Enable depth testing
-    glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
     return true;
@@ -181,7 +163,7 @@ void Application::Run()
     while (!glfwWindowShouldClose(m_MainWindow->GetHandle()))
     {
         glfwPollEvents();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glClearColor(m_Config.BackgroundColor.x, m_Config.BackgroundColor.y, m_Config.BackgroundColor.z, m_Config.BackgroundColor.w);
 
         UpdateLight(m_MainWindow->GetHandle());
@@ -189,21 +171,30 @@ void Application::Run()
 
         auto model = glm::mat4(1.0f);
         model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(1.0f));
 
         m_Shader->Use();
 
-        // Set PHONG variables
-        m_Shader->SetUniformVector3("uLightPos", lightPosition);
-        m_Shader->SetUniformVector3("uLightColor", lightColor);
+        // Position properties
+        m_Shader->SetUniformVector3("light.position", lightPosition);
         m_Shader->SetUniformVector3("uCameraPosition", m_Camera.GetPosition());
+
+        // Light properties
+        m_Shader->SetUniformVector3("light.ambient", glm::vec3(0.2f));
+        m_Shader->SetUniformVector3("light.diffuse", glm::vec3(0.5f));
+        m_Shader->SetUniformVector3("light.specular", glm::vec3(1.0f));
+
+        // Material properties
+        m_Shader->SetUniformFloat("material.shine", 64.0f);
 
         // Set MVP variables
         m_Shader->SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());
         m_Shader->SetUniformMatrix4("uModelMatrix", model);
 
-        m_VertexArray->Bind();
-        glDrawElements(GL_TRIANGLES, m_Model->IndexData.size(), GL_UNSIGNED_INT, (void*)0);
+        // Bind texture
+        m_Model->BeginRender();
+        RenderModel(m_Model); // TODO: Remove when renderer class is in place
+        m_Model->EndRender();
         glfwSwapBuffers(m_MainWindow->GetHandle());
     }
 }

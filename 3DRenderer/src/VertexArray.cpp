@@ -17,7 +17,6 @@ VertexArray::~VertexArray()
 
 void VertexArray::Bind()
 {
-	assert(m_VertexBuffer != nullptr && m_IndexBuffer != nullptr);
 	glBindVertexArray(m_VAO);
 }
 
