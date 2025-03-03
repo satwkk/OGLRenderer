@@ -13,6 +13,7 @@
 #include "VertexArray.h"
 #include "ModelLoader.h"
 #include "Shader.h"
+#include "Logger.h"
 
 // =======================================================================================================
 // TODO(void): Refactor this system into separate Input and GlobalLight system
@@ -124,7 +125,7 @@ bool Application::Init()
     // Init GLFW
     if (!glfwInit())
     {
-        std::cerr << "Glfw failed\n";
+        err << "GLFW Failed to initialize\n";
         return false;
     }
 
@@ -139,7 +140,8 @@ bool Application::Init()
     {
         unsigned int errCode = glGetError();
         const GLubyte* errStr = glewGetErrorString(errCode);
-        printf("GLEW ERROR: %s\n", errStr);
+        err << "GLEW Failed to initialize\n";
+        printf("%s\n", errStr);
         glfwTerminate();
         return false;
     }
