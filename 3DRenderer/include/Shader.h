@@ -10,7 +10,8 @@ public:
 	Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 	~Shader();
 
-	void Use();
+	void Bind();
+	void UnBind();
 
 	const unsigned int GetRendererID() const { return m_RendererID; }
 	void SetUniformMatrix4(const std::string& name, const glm::mat4& value);

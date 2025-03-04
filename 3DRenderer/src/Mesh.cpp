@@ -2,7 +2,7 @@
 
 void Mesh::RenderSetup()
 {
-	m_Material = std::make_unique<Material>();
+	m_Material = std::make_shared<Material>();
 	m_VertexArray = std::make_shared<VertexArray>();
 	m_VertexBuffer = std::make_shared<VertexBuffer>(m_VertexData);
 	m_IndexBuffer = std::make_shared<IndexBuffer>(m_IndexData);
@@ -14,8 +14,8 @@ void Mesh::RenderSetup()
 
 void Mesh::BeginRender()
 {
-	m_Material->Enable();
 	m_VertexArray->Bind();
+	m_Material->Enable();
 }
 
 void Mesh::EndRender()

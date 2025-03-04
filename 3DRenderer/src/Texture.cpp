@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Logger.h"
 
 #include "Texture.h"
 #define STB_IMAGE_IMPLEMENTATION
@@ -25,8 +26,8 @@ Texture::Texture(const std::string& filePath, uint32_t slot) :
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 Texture::~Texture()
@@ -35,11 +36,13 @@ Texture::~Texture()
 
 void Texture::Bind()
 {
+    vlog << "Activating slot " << m_Slot << nl;
     glActiveTexture(GL_TEXTURE0 + m_Slot);
     glBindTexture(GL_TEXTURE_2D, m_TextureID);
 }
 
 void Texture::UnBind()
 {
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }

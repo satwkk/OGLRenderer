@@ -24,6 +24,8 @@ private:
 	std::ostream& m_Stream;
 };
 
-Logger err(std::cerr, "ERROR");
-Logger log(std::cout, "LOG");
-Logger warn(std::cout, "WARN");
+static Logger verr(std::cerr, "ERROR");
+static Logger vlog(std::cout, "LOG");
+static Logger vwarn(std::cout, "WARN");
+
+#define nl std::endl;

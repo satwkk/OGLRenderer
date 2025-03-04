@@ -15,3 +15,8 @@ void Model::EndRender()
 		mesh->EndRender();
 	}
 }
+
+void Model::AddMesh(const std::shared_ptr<Mesh>& mesh)
+{
+	m_Meshes.push_back(mesh);
+}

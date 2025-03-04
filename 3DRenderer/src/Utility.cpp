@@ -2,7 +2,6 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
-#include <assert.h>
 
 std::string Utility::ReadFile(const std::string& filePath)
 {
@@ -21,7 +20,7 @@ std::string Utility::ReadFile(const std::string& filePath)
 std::string Utility::GetFileNameFromPath(const std::string& filePath)
 {
 	std::filesystem::path file(filePath);
-	assert(file.has_filename());
+	ASSERT(file.has_filename());
 	auto fileName = file.filename();
 	auto fileStr = fileName.string();
 	return fileStr.substr(0, fileStr.find_first_of('.'));

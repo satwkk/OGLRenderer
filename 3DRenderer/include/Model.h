@@ -10,6 +10,7 @@ class Model
 public:
 	Model() = default;
 	~Model() = default;
+	void AddMesh(const std::shared_ptr<Mesh>& mesh);
 	void BeginRender();
 	void EndRender();
 

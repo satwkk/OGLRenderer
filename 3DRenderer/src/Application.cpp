@@ -15,16 +15,6 @@
 #include "Shader.h"
 #include "Logger.h"
 
-// =======================================================================================================
-// TODO(void): Refactor this system into separate Input and GlobalLight system
-// =======================================================================================================
-double cursorPosLastFrameX = 0.0;
-double cursorPosLastFrameY = 0.0;
-bool shouldMoveLight = false;
-double lightMoveSens = 2.f;
-glm::vec3 lightPosition(5.f, 10.0, 0.0f);
-glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-
 void UpdateCamera(GLFWwindow* window, Camera& camera)
 {
     if (shouldMoveLight) return;
@@ -125,7 +115,7 @@ bool Application::Init()
     // Init GLFW
     if (!glfwInit())
     {
-        err << "GLFW Failed to initialize\n";
+        verr << "GLFW Failed to initialize\n";
         return false;
     }
 
@@ -140,19 +130,18 @@ bool Application::Init()
     {
         unsigned int errCode = glGetError();
         const GLubyte* errStr = glewGetErrorString(errCode);
-        err << "GLEW Failed to initialize\n";
+        verr << "GLEW Failed to initialize\n";
         printf("%s\n", errStr);
         glfwTerminate();
         return false;
     }
 
     m_Shader = std::make_shared<Shader>("./shaders/vertex.glsl", "./shaders/fragment.glsl");
-    m_Model = ModelLoader::Load("./res/models/Green_Sea_Turtle.fbx", BASICFLAGS);
-    // m_Model = ModelLoader::Load("./res/models/SimpleRig_cube.fbx", BASICFLAGS);
+    m_Model = ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS);
 
-    m_Shader->Use();
-    m_Shader->SetUniformInt("material.diffuse", 0);
-    m_Shader->SetUniformInt("material.specular", 1);
+    m_Shader->Bind();
+    // m_Shader->SetUniformInt("material.diffuse", 0);
+    // m_Shader->SetUniformInt("material.specular", 1);
 
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -172,10 +161,10 @@ void Application::Run()
         UpdateCamera(m_MainWindow->GetHandle(), m_Camera);
 
         auto model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f));
+        // model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.2f));
 
-        m_Shader->Use();
+        m_Shader->Bind();
 
         // Position properties
         m_Shader->SetUniformVector3("light.position", lightPosition);
@@ -187,7 +176,7 @@ void Application::Run()
         m_Shader->SetUniformVector3("light.specular", glm::vec3(1.0f));
 
         // Material properties
-        m_Shader->SetUniformFloat("material.shine", 64.0f);
+        // m_Shader->SetUniformFloat("material.shine", 64.0f);
 
         // Set MVP variables
         m_Shader->SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());

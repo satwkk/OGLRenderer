@@ -40,9 +40,14 @@ Shader::~Shader()
     glDeleteProgram(m_RendererID);
 }
 
-void Shader::Use()
+void Shader::Bind()
 {
     glUseProgram(m_RendererID);
+}
+
+void Shader::UnBind()
+{
+    glUseProgram(0);
 }
 
 void Shader::SetUniformMatrix4(const std::string& name, const glm::mat4& value)

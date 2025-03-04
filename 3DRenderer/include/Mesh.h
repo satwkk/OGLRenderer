@@ -2,10 +2,12 @@
 
 #include <vector>
 #include <memory>
+#include <vector>
 
 #include "Material.h"
 #include "Buffer.h"
 #include "VertexArray.h"
+#include "Texture.h"
 
 class Mesh
 {
@@ -19,7 +21,7 @@ private:
 	void RenderSetup();
 
 public:
-	std::unique_ptr<Material> m_Material;
+	std::shared_ptr<Material> m_Material;
 	std::vector<float> m_VertexData;
 	std::vector<unsigned int> m_IndexData;
 	std::shared_ptr<VertexBuffer> m_VertexBuffer;
