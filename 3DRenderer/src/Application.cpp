@@ -128,10 +128,24 @@ bool Application::Init()
     }
 
     m_Shader = std::make_shared<Shader>("./shaders/vertex.glsl", "./shaders/fragment.glsl");
-    m_Model = ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS);
-    m_Model2 = ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS);
 
-    m_Model2->SetPosition(glm::vec3(50.0f, 0.0f, 0.0f));
+    m_Models = {
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_3.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_5.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS)
+    };
+
+
+    for (uint32_t i = 0; i < m_Models.size(); i++)
+    {
+        glm::vec3 pos = glm::vec3(0.0f);
+        pos.x += rand() % 100;
+        pos.z += rand() % 100;
+        m_Models[i]->SetPosition(pos);
+    }
 
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -165,8 +179,11 @@ void Application::Run()
         m_Shader->SetUniformVector3("light.specular", glm::vec3(1.0f));
 
         // Bind texture
-        m_Model->OnDraw(m_Shader);
-        m_Model2->OnDraw(m_Shader);
+        for (auto& model : m_Models)
+        {
+            model->OnDraw(m_Shader);
+        }
+
         glfwSwapBuffers(m_MainWindow->GetHandle());
     }
 }

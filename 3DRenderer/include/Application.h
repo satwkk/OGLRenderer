@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Camera.h"
-#include "Texture.h"
-#include <glm/glm.hpp>
+#include <vector>
 #include <memory>
 #include <string>
+#include <glm/glm.hpp>
+
+#include "Camera.h"
+#include "Texture.h"
 
 struct GLFWwindow;
 class Model;
@@ -50,6 +52,7 @@ private:
 	std::shared_ptr<Window> m_MainWindow;
 
 	Camera m_Camera;
+	std::vector<std::shared_ptr<Model>> m_Models;
 	std::shared_ptr<Model> m_Model;
 	std::shared_ptr<Model> m_Model2;
 	std::shared_ptr<Shader> m_Shader;
