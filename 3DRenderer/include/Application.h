@@ -51,6 +51,7 @@ private:
 
 	Camera m_Camera;
 	std::shared_ptr<Model> m_Model;
+	std::shared_ptr<Model> m_Model2;
 	std::shared_ptr<Shader> m_Shader;
 };
 

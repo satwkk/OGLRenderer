@@ -61,16 +61,15 @@ std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned 
         auto* mat = scene->mMaterials[materialIndex];
         
         std::string diffuseFile = GetTextureFileNameFromMaterial(mat, aiTextureType_DIFFUSE);
-        std::string specularFile = GetTextureFileNameFromMaterial(mat, aiTextureType_SPECULAR);
-
         std::string diffuseFilePath = GetTextureLocalPath(model->AssetPath, diffuseFile);
-        // std::string specularFilePath = GetTextureLocalPath(model->AssetPath, specularFile);
+
+        // TODO: we will control which diffuse texture should be assigned when editor layer is implemented
+        if (diffuseFilePath.empty())
+             diffuseFilePath = "./res/models/tree/gleditsia triacanthos bark2 a1.jpg";
 
         // TODO: Create a function inside mesh called AddMaterial
-        vlog << "Adding diffuse " << diffuseFilePath << nl;
-        modelMesh->m_Material->SetDiffuse("./res/models/tree/gleditsia triacanthos bark2 a1.jpg");
-        //modelMesh->m_Material->SetDiffuse(diffuseFilePath);
-        // modelMesh->m_Material->SetSpecular(specularFilePath);
+        vlog << "Adding diffuse " << diffuseFilePath << " for mesh " << meshIdx << nl;
+        modelMesh->m_Material->SetDiffuse(diffuseFilePath, meshIdx);
 
         model->AddMesh(modelMesh);
     }

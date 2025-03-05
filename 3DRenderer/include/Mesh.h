@@ -17,6 +17,8 @@ public:
 	void BeginRender();
 	void EndRender();
 
+	inline Material& GetMaterial() { return *m_Material; }
+
 private:
 	void RenderSetup();
 

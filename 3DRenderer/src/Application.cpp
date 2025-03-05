@@ -83,15 +83,6 @@ void UpdateLight(GLFWwindow* window)
     cursorPosLastFrameY = mouseY;
 }
 
-
-void RenderModel(std::shared_ptr<Model>& model)
-{
-    for (auto& mesh : model->m_Meshes)
-    {
-        glDrawElements(GL_TRIANGLES, mesh->m_IndexData.size(), GL_UNSIGNED_INT, (void*)0);
-    }
-}
-
 Application* Application::s_Instance = nullptr;
 
 Application::Application(const AppConfig& config) :
@@ -137,11 +128,10 @@ bool Application::Init()
     }
 
     m_Shader = std::make_shared<Shader>("./shaders/vertex.glsl", "./shaders/fragment.glsl");
-    m_Model = ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS);
+    m_Model = ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS);
+    m_Model2 = ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS);
 
-    m_Shader->Bind();
-    // m_Shader->SetUniformInt("material.diffuse", 0);
-    // m_Shader->SetUniformInt("material.specular", 1);
+    m_Model2->SetPosition(glm::vec3(50.0f, 0.0f, 0.0f));
 
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -160,11 +150,10 @@ void Application::Run()
         UpdateLight(m_MainWindow->GetHandle());
         UpdateCamera(m_MainWindow->GetHandle(), m_Camera);
 
-        auto model = glm::mat4(1.0f);
-        // model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.2f));
-
         m_Shader->Bind();
+
+        // Camera View projection matrix
+        m_Shader->SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());
 
         // Position properties
         m_Shader->SetUniformVector3("light.position", lightPosition);
@@ -175,17 +164,9 @@ void Application::Run()
         m_Shader->SetUniformVector3("light.diffuse", glm::vec3(0.5f));
         m_Shader->SetUniformVector3("light.specular", glm::vec3(1.0f));
 
-        // Material properties
-        // m_Shader->SetUniformFloat("material.shine", 64.0f);
-
-        // Set MVP variables
-        m_Shader->SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());
-        m_Shader->SetUniformMatrix4("uModelMatrix", model);
-
         // Bind texture
-        m_Model->BeginRender();
-        RenderModel(m_Model); // TODO: Remove when renderer class is in place
-        m_Model->EndRender();
+        m_Model->OnDraw(m_Shader);
+        m_Model2->OnDraw(m_Shader);
         glfwSwapBuffers(m_MainWindow->GetHandle());
     }
 }
