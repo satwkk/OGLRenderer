@@ -2,9 +2,7 @@
 
 A CPP 3D renderer implemented in OpenGL.
 
-[POC](https://vimeo.com/1063063559)
-
-
+# POC
 https://github.com/user-attachments/assets/2c47a67e-fb77-4ab4-b518-5a45a020c689
 
 TODO:
