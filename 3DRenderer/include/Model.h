@@ -15,12 +15,10 @@ public:
 	Model() = default;
 	~Model() = default;
 
-	void OnDraw(std::shared_ptr<Shader>& shader);
-	void SetPosition(const glm::vec3& newPosition);
 	void AddMesh(const std::shared_ptr<Mesh>& mesh);
+	inline std::vector<std::shared_ptr<Mesh>>& GetMeshArray() { return m_Meshes; }
 
 public:
-	glm::vec3 m_Position = glm::vec3(0.0f);
 	glm::mat4 m_ModelMatrix;
 	std::string Name{};
 	std::filesystem::path AssetPath{};

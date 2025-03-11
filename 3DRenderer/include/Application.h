@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include "Camera.h"
+#include "Scene.h"
 #include "Texture.h"
 
 struct GLFWwindow;
@@ -52,9 +53,7 @@ private:
 	std::shared_ptr<Window> m_MainWindow;
 
 	Camera m_Camera;
-	std::vector<std::shared_ptr<Model>> m_Models;
-	std::shared_ptr<Model> m_Model;
-	std::shared_ptr<Model> m_Model2;
+	Scene m_Scene;
 	std::shared_ptr<Shader> m_Shader;
 };
 

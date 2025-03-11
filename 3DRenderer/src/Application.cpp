@@ -13,6 +13,7 @@
 #include "VertexArray.h"
 #include "ModelLoader.h"
 #include "Shader.h"
+#include "SceneObject.h"
 #include "Logger.h"
 
 void UpdateCamera(GLFWwindow* window, Camera& camera)
@@ -129,23 +130,7 @@ bool Application::Init()
 
     m_Shader = std::make_shared<Shader>("./shaders/vertex.glsl", "./shaders/fragment.glsl");
 
-    m_Models = {
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_3.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_5.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS)
-    };
-
-
-    for (uint32_t i = 0; i < m_Models.size(); i++)
-    {
-        glm::vec3 pos = glm::vec3(0.0f);
-        pos.x += rand() % 100;
-        pos.z += rand() % 100;
-        m_Models[i]->SetPosition(pos);
-    }
+    m_Scene.InitDebugScene();
 
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -178,11 +163,8 @@ void Application::Run()
         m_Shader->SetUniformVector3("light.diffuse", glm::vec3(0.5f));
         m_Shader->SetUniformVector3("light.specular", glm::vec3(1.0f));
 
-        // Bind texture
-        for (auto& model : m_Models)
-        {
-            model->OnDraw(m_Shader);
-        }
+        // Update scene
+        m_Scene.OnUpdate(m_Shader);
 
         glfwSwapBuffers(m_MainWindow->GetHandle());
     }

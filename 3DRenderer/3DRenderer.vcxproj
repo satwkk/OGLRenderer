@@ -143,6 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SceneObject.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\ufbx.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -170,12 +172,16 @@
   <ItemGroup>
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\entt.hpp" />
+    <ClInclude Include="include\SceneObject.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\Material.h" />
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\Model.h" />
     <ClInclude Include="include\ModelLoader.h" />
     <ClInclude Include="include\Renderer.h" />
+    <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\Shader.h" />
     <ClInclude Include="include\stbi_image.h" />
     <ClInclude Include="include\Texture.h" />

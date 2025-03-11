@@ -17,7 +17,12 @@ public:
 	void BeginRender();
 	void EndRender();
 
-	inline Material& GetMaterial() { return *m_Material; }
+	inline std::shared_ptr<Material>& GetMaterial() { return m_Material; }
+	inline std::vector<float>& GetVertices() { return m_VertexData; }
+	inline std::shared_ptr<VertexBuffer>& GetVertexRawBuffer() { return m_VertexBuffer; }
+	inline std::shared_ptr<IndexBuffer>& GetIndexRawBuffer() { return m_IndexBuffer; }
+	inline std::shared_ptr<VertexArray>& GetVertexArray() { return m_VertexArray; }
+	inline std::vector<unsigned int>& GetIndices() { return m_IndexData; }
 
 private:
 	void RenderSetup();
