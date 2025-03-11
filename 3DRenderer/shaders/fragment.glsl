@@ -50,10 +50,15 @@ void main()
 	// float specular = pow(max(dot(directionToCamera, reflectedLight), 0.0), material.shine);
 
 	vec3 ambient = light.ambient * texture(material.diffuse, TexCoord).rgb;
-	vec3 diffuseLight = light.diffuse * diffuseFactor * texture(material.diffuse, TexCoord).rgb;
+
+	vec4 diffuseTexture = texture(material.diffuse, TexCoord);
+	if (diffuseTexture.a < 0.5) 
+		discard;
+
+	vec3 diffuseLight = light.diffuse * diffuseFactor * diffuseTexture.rgb;
 	// vec3 specularLight = light.specular * specular * texture(material.specular, TexCoord).rgb;
 	
 	// Final color
 	// FragColor = vec4(ambient + diffuseLight + specularLight, 1.0);
-	FragColor = vec4(ambient + diffuseLight, 1.0);
+	FragColor = vec4(ambient + diffuseLight, diffuseTexture.a);
 }

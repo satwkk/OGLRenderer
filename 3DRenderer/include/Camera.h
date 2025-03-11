@@ -15,6 +15,7 @@ public:
 	inline void SetPosition(const glm::vec3& position) { m_Position = position; SetupVPMatrix(); }
 	inline void SetSpeed(float newSpeed) { m_MoveSpeed = newSpeed; }
 
+	inline const float GetSpeed() const { return m_MoveSpeed; }
 	inline const glm::vec3& GetPosition() const { return m_Position; }
 	inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 	inline const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }

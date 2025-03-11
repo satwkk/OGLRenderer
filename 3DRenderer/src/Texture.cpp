@@ -10,6 +10,7 @@ Texture::Texture(const std::string& filePath, uint32_t slot) :
     m_Slot(slot)
 {
     int width, height, channels;
+    
     unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
     if (data == nullptr)
     {
@@ -23,6 +24,7 @@ Texture::Texture(const std::string& filePath, uint32_t slot) :
     glBindTexture(GL_TEXTURE_2D, m_TextureID);
 
     int format = channels == 4 ? GL_RGBA : GL_RGB;
+    vlog << "Texture channels: " << format << " -> " << filePath << nl;
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

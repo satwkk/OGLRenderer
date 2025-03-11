@@ -7,7 +7,6 @@
 
 #include "Application.h"
 #include "Window.h"
-
 #include "Utility.h"
 #include "Buffer.h"
 #include "VertexArray.h"
@@ -94,6 +93,7 @@ Application::Application(const AppConfig& config) :
 
 Application::~Application()
 {
+    m_Scene.CloseScene();
     glfwTerminate();
 }
 
@@ -130,7 +130,7 @@ bool Application::Init()
 
     m_Shader = std::make_shared<Shader>("./shaders/vertex.glsl", "./shaders/fragment.glsl");
 
-    m_Scene.InitDebugScene();
+    m_Scene.InitScene();
 
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);

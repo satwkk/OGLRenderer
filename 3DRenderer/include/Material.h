@@ -12,6 +12,7 @@ public:
 	~Material();
 
 	void SetDiffuse(const std::string& texturePath, uint32_t slot);
+	void SetMask(const std::string& texturePath, uint32_t slot);
 
 	void Enable();
 	void Disable();
@@ -22,6 +23,6 @@ public:
 	inline uint32_t GetDiffuseMapSlotIndex() { return m_Diffuse.GetSlot(); }
 private:
 	Texture m_Diffuse;
-	Texture m_Ambient;
+	Texture m_Mask;
 	float m_Shine;
 };

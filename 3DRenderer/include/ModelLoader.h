@@ -11,7 +11,7 @@
 
 #include "Model.h"
 
-#define BASICFLAGS aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals
+#define BASICFLAGS aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_PreTransformVertices 
 
 class ModelLoader
 {

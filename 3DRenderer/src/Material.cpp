@@ -16,6 +16,12 @@ void Material::SetDiffuse(const std::string& texturePath, uint32_t slot)
 	m_Diffuse = Texture(texturePath, slot);
 }
 
+void Material::SetMask(const std::string& texturePath, uint32_t slot)
+{
+	assert(texturePath.empty() == false);
+	m_Mask = Texture(texturePath, slot);
+}
+
 void Material::Enable()
 {
 	m_Diffuse.Bind();
