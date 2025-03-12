@@ -5,7 +5,6 @@
 #include <glm/glm.hpp>
 
 #include "Mesh.h"
-#include "Material.h"
 
 class Shader;
 

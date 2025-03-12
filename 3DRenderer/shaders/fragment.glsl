@@ -6,6 +6,10 @@
 struct Material 
 {
 	sampler2D diffuse;
+	sampler2D specular;
+    vec3 diffuseColor;
+    vec3 specularColor;
+    vec3 ambientColor;
 	float shine;
 };
 
@@ -39,26 +43,28 @@ uniform Light light;
 
 void main() 
 {
-	// Diffuse
+	// Diffuse reflection
 	vec3 norm = normalize(Normal);
 	vec3 directionToLight = normalize(light.position - FragmentWorldPosition);
 	float diffuseFactor = max(dot(norm, directionToLight), 0.0);
 
-	// Specular
-	// vec3 reflectedLight = reflect(-directionToLight, norm);
-	// vec3 directionToCamera = normalize(uCameraPosition - FragmentWorldPosition);
-	// float specular = pow(max(dot(directionToCamera, reflectedLight), 0.0), material.shine);
+	// Specular reflection
+	vec3 reflectedLight = reflect(-directionToLight, norm);
+	vec3 directionToCamera = normalize(uCameraPosition - FragmentWorldPosition);
+	float specularFactor = pow(max(dot(directionToCamera, reflectedLight), 0.0), material.shine);
 
-	vec3 ambient = light.ambient * texture(material.diffuse, TexCoord).rgb;
+    // Diffuse light
+    vec3 diffuseTextureColor = texture(material.diffuse, TexCoord).rgb;
+    vec3 diffuseColor = mix(material.diffuseColor, diffuseTextureColor, step(0.01, length(diffuseTextureColor)));
 
-	vec4 diffuseTexture = texture(material.diffuse, TexCoord);
-	if (diffuseTexture.a < 0.5) 
-		discard;
+    // Specular light
+    vec3 specularTextureColor = texture(material.specular, TexCoord).rgb;
+    vec3 specularColor = mix(material.specularColor, specularTextureColor, step(0.01, length(specularTextureColor)));
 
-	vec3 diffuseLight = light.diffuse * diffuseFactor * diffuseTexture.rgb;
-	// vec3 specularLight = light.specular * specular * texture(material.specular, TexCoord).rgb;
-	
-	// Final color
-	// FragColor = vec4(ambient + diffuseLight + specularLight, 1.0);
-	FragColor = vec4(ambient + diffuseLight, diffuseTexture.a);
+    // Final calculations
+	vec3 ambient = light.ambient * material.ambientColor * diffuseColor;
+	vec3 diffuseLight = light.diffuse * diffuseFactor * diffuseColor;
+	vec3 specularLight = light.specular * specularFactor * specularColor;
+
+	FragColor = vec4(ambient + diffuseLight + specularLight, 1.0);
 }

@@ -16,11 +16,10 @@ void SceneRenderer::Draw(const std::shared_ptr<Mesh>& mesh, glm::mat4& modelMatr
     shader->SetUniformMatrix4("uModelMatrix", modelMatrix);
 
     // Setup material params
-    shader->SetUniformInt("material.diffuse", mesh->GetMaterial()->GetDiffuseMapSlotIndex());
-    shader->SetUniformFloat("material.shine", mesh->GetMaterial()->GetShine());
+    mesh->OnRender(shader);
 
     // Draw call
-    glDrawElements(GL_TRIANGLES, mesh->m_IndexData.size(), GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, mesh->GetIndices().size(), GL_UNSIGNED_INT, (void*)0);
 
     mesh->EndRender();
 }

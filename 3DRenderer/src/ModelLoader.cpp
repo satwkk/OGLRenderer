@@ -2,10 +2,12 @@
 #include <assert.h>
 #include <vector>
 
+#include "assimp/material.h"
 #include "ufbx.h"
 #include "ModelLoader.h"
 #include "Utility.h"
 #include "Logger.h"
+#include "Material.h"
 
 std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned int flags)
 {
@@ -56,20 +58,38 @@ std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned 
         // NOTE(void): I think creating the vao, vbo and ibo here directly will make the process much more clear instead of doing it inside RenderSetup
         modelMesh->RenderSetup();
 
+        /**
         // Prepare materials
         uint32_t materialIndex = mesh->mMaterialIndex;
-        auto* mat = scene->mMaterials[materialIndex];
+        aiMaterial* mat = scene->mMaterials[materialIndex];
         
         std::string diffuseFile = GetTextureFileNameFromMaterial(mat, aiTextureType_DIFFUSE);
         std::string diffuseFilePath = GetTextureLocalPath(model->AssetPath, diffuseFile);
 
-        // TODO: we will control which diffuse texture should be assigned when editor layer is implemented
-        if (diffuseFilePath.empty())
-             diffuseFilePath = "./res/models/tree/gleditsia triacanthos bark2 a1.jpg";
+        std::string specularFile = GetTextureFileNameFromMaterial(mat, aiTextureType_SPECULAR);
+        std::string specularFilePath = GetTextureLocalPath(model->AssetPath, specularFile);
 
-        // TODO: Create a function inside mesh called AddMaterial
-        vlog << "Adding diffuse " << diffuseFilePath << " for mesh " << meshIdx << nl;
-        modelMesh->m_Material->SetDiffuse(diffuseFilePath, meshIdx);
+        // TODO: we will control which diffuse texture should be assigned when editor layer is implemented
+        if (!diffuseFilePath.empty())
+        {
+            vlog << "Adding diffuse " << diffuseFilePath << " for mesh " << meshIdx << nl;
+            modelMesh->m_Material.SetDiffuse(diffuseFilePath, meshIdx);
+        }
+        else 
+        {
+            vlog << "No diffuse texture for mesh " << meshIdx << " will be defaulting to diffuse color only" << nl;
+        }
+
+        if (!specularFilePath.empty())
+        {
+            vlog << "Adding specular " << specularFilePath << " for mesh " << meshIdx << nl;
+            modelMesh->m_Material.SetSpecular(specularFilePath, meshIdx);
+        }
+        else 
+        {
+            vlog << "No specular texture for mesh " << meshIdx << " will be defaulting to diffuse color only" << nl;
+        }
+         */
 
         model->AddMesh(modelMesh);
     }
@@ -82,7 +102,6 @@ std::string ModelLoader::GetTextureFileNameFromMaterial(aiMaterial* material, ai
     aiString path = {};
     if (material->GetTextureCount(type) <= 0)
     {
-        vwarn << "texture " << type << " not found\n";
         return std::string{};
     }
 

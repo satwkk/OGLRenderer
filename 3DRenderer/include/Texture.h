@@ -2,7 +2,6 @@
 
 #include <GL/glew.h>
 #include <string>
-#include <map>
 
 class Texture
 {
@@ -13,6 +12,8 @@ public:
 
 	void Bind();
 	void UnBind();
+
+    bool IsLoaded() { return m_TextureID != 0; }
 
 	uint32_t GetSlot() { return m_Slot; }
 	uint32_t GetID() { return m_TextureID; }

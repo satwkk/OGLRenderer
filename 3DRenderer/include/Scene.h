@@ -30,7 +30,7 @@ public:
 	}
 
 private:
-	// TODO: Replace with game objects later
+	// TODO: Replace with scene objects later
 	std::unordered_map<entt::entity, std::shared_ptr<Model>> m_SceneObjects;
 	entt::registry m_Registry;
 };
