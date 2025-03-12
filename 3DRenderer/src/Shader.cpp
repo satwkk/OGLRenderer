@@ -25,7 +25,7 @@ Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentS
         {
             char buffer[1024];
             glGetProgramInfoLog(m_RendererID, 1024, nullptr, buffer);
-            printf("Fragment shader compilation error: %s\n", buffer);
+            printf("Program link error: %s\n", buffer);
             return;
         }
     }
@@ -38,6 +38,34 @@ Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentS
 Shader::~Shader()
 {
     glDeleteProgram(m_RendererID);
+}
+
+Shader::Shader(Shader& other) noexcept
+{
+    vlog << "Shader copy constructor called\n";
+    m_RendererID = other.m_RendererID;
+}
+
+Shader& Shader::operator=(Shader& other) noexcept
+{
+    vlog << "Shader copy assignment called\n";
+    m_RendererID = other.m_RendererID; 
+    return *this;
+}
+
+Shader::Shader(Shader&& other) noexcept
+{
+    vlog << "Shader move constructor called\n";
+    m_RendererID = other.m_RendererID;
+    other.m_RendererID = 0;
+}
+
+Shader& Shader::operator=(Shader&& other) noexcept
+{
+    vlog << "Shader move assignment called\n";
+    m_RendererID = other.m_RendererID;
+    other.m_RendererID = 0;
+    return *this;
 }
 
 void Shader::Bind()

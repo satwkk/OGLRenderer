@@ -143,9 +143,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\DirectionalLight.cpp" />
     <ClCompile Include="src\SceneObject.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneRenderer.cpp" />
+    <ClCompile Include="src\ShaderLibrary.cpp" />
     <ClCompile Include="src\ufbx.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -166,14 +168,15 @@
     <None Include="res\models\Cube.FBX" />
     <None Include="res\models\Green_Sea_Turtle.fbx" />
     <None Include="res\models\SimpleRig_cube.fbx" />
-    <None Include="shaders\fragment.glsl" />
-    <None Include="shaders\fragment_2.glsl" />
-    <None Include="shaders\vertex.glsl" />
+    <None Include="shaders\phong\fragment.glsl" />
+    <None Include="shaders\phong\fragment_2.glsl" />
+    <None Include="shaders\phong\vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\DirectionalLight.h" />
     <ClInclude Include="include\entt.hpp" />
     <ClInclude Include="include\SceneObject.h" />
     <ClInclude Include="include\Logger.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\SceneRenderer.h" />
     <ClInclude Include="include\Shader.h" />
+    <ClInclude Include="include\ShaderLibrary.h" />
     <ClInclude Include="include\stbi_image.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\Utility.h" />

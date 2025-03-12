@@ -6,7 +6,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Application.h"
-#include "Window.h"
 #include "Utility.h"
 #include "Buffer.h"
 #include "VertexArray.h"
@@ -112,10 +111,10 @@ bool Application::Init()
     }
 
     // Create the window
-    m_MainWindow = std::make_shared<Window>(m_Config.WindowWidth, m_Config.WindowHeight, m_Config.ApplicationName);
+    m_MainWindow = Window{ m_Config.WindowWidth, m_Config.WindowHeight, m_Config.ApplicationName };
 
     // Setup context
-    glfwMakeContextCurrent(m_MainWindow->GetHandle());
+    glfwMakeContextCurrent(m_MainWindow.GetHandle());
 
     // Init GLEW OpenGL loader
     if (glewInit() != GLEW_OK)
@@ -128,7 +127,12 @@ bool Application::Init()
         return false;
     }
 
-    m_Shader = std::make_shared<Shader>("./shaders/vertex.glsl", "./shaders/fragment.glsl");
+    // Initialize shader library
+    m_ShaderLibrary.Init();
+
+    // Get the phong shader model
+    // TODO(void): Load this based on setting file
+    m_Shader = m_ShaderLibrary.GetShader("phong");
 
     m_Scene.InitScene();
 
@@ -140,32 +144,32 @@ bool Application::Init()
 
 void Application::Run()
 {
-    while (!glfwWindowShouldClose(m_MainWindow->GetHandle()))
+    while (!glfwWindowShouldClose(m_MainWindow.GetHandle()))
     {
         glfwPollEvents();
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glClearColor(m_Config.BackgroundColor.x, m_Config.BackgroundColor.y, m_Config.BackgroundColor.z, m_Config.BackgroundColor.w);
 
-        UpdateLight(m_MainWindow->GetHandle());
-        UpdateCamera(m_MainWindow->GetHandle(), m_Camera);
+        UpdateLight(m_MainWindow.GetHandle());
+        UpdateCamera(m_MainWindow.GetHandle(), m_Camera);
 
-        m_Shader->Bind();
+        m_Shader.Bind();
 
         // Camera View projection matrix
-        m_Shader->SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());
+        m_Shader.SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());
 
         // Position properties
-        m_Shader->SetUniformVector3("light.position", lightPosition);
-        m_Shader->SetUniformVector3("uCameraPosition", m_Camera.GetPosition());
+        m_Shader.SetUniformVector3("light.position", lightPosition);
+        m_Shader.SetUniformVector3("uCameraPosition", m_Camera.GetPosition());
 
         // Light properties
-        m_Shader->SetUniformVector3("light.ambient", glm::vec3(0.2f));
-        m_Shader->SetUniformVector3("light.diffuse", glm::vec3(0.5f));
-        m_Shader->SetUniformVector3("light.specular", glm::vec3(1.0f));
+        m_Shader.SetUniformVector3("light.ambient", glm::vec3(0.2f));
+        m_Shader.SetUniformVector3("light.diffuse", glm::vec3(0.5f));
+        m_Shader.SetUniformVector3("light.specular", glm::vec3(1.0f));
 
         // Update scene
         m_Scene.OnUpdate(m_Shader);
 
-        glfwSwapBuffers(m_MainWindow->GetHandle());
+        glfwSwapBuffers(m_MainWindow.GetHandle());
     }
 }

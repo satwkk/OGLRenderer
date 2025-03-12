@@ -26,20 +26,20 @@ void Material::SetSpecular(const std::string& texturePath, uint32_t slot)
     m_Specular = Texture(texturePath, slot);
 }
 
-void Material::OnRender(const std::shared_ptr<Shader>& shader)
+void Material::OnRender(Shader& shader)
 {
-    shader->SetUniformVector3("material.diffuseColor", m_DiffuseColor);
-    shader->SetUniformVector3("material.specularColor", m_SpecularColor);
-    shader->SetUniformVector3("material.ambientColor", m_AmbientColor);
-    shader->SetUniformFloat("material.shine", m_Shine);
+    shader.SetUniformVector3("material.diffuseColor", m_DiffuseColor);
+    shader.SetUniformVector3("material.specularColor", m_SpecularColor);
+    shader.SetUniformVector3("material.ambientColor", m_AmbientColor);
+    shader.SetUniformFloat("material.shine", m_Shine);
 
     if (m_Diffuse.IsLoaded())
     {
-        shader->SetUniformInt("material.diffuse", m_Diffuse.GetSlot());
+        shader.SetUniformInt("material.diffuse", m_Diffuse.GetSlot());
     }
     if (m_Specular.IsLoaded())
     {
-        shader->SetUniformInt("material.specular", m_Specular.GetSlot());
+        shader.SetUniformInt("material.specular", m_Specular.GetSlot());
     }
 }
 

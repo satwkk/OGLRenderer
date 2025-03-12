@@ -2,7 +2,6 @@
 #include "ModelLoader.h"
 #include "Component.h"
 #include "Model.h"
-#include "Shader.h"
 #include "SceneRenderer.h"
 #include "Mesh.h"
 
@@ -16,8 +15,9 @@ void Scene::InitScene()
     for (auto& model : models)
     {
 	    entt::entity ent = m_Registry.create();
-        float x = rand() % 200;
-        float z = rand() % 200;
+        srand(rand());
+        float x = rand() % 500;
+        float z = rand() % 500;
         m_Registry.emplace<TransformComponent>(ent, glm::vec3(x, 0.0f, z));
         m_Registry.emplace<MeshRendererComponent>(ent, model);
         m_SceneObjects.insert({ ent, model });
@@ -25,7 +25,7 @@ void Scene::InitScene()
 }
 
 // TODO(void): These rendering should be done by a scene renderer 
-void Scene::OnUpdate(std::shared_ptr<Shader>& shader)
+void Scene::OnUpdate(Shader& shader)
 {
     SceneRenderer::Draw(*this, shader);
 }

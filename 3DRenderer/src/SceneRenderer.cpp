@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 
-void SceneRenderer::Draw(const std::shared_ptr<Mesh>& mesh, glm::mat4& modelMatrix, const glm::vec3& position, const std::shared_ptr<Shader>& shader)
+void SceneRenderer::Draw(const std::shared_ptr<Mesh>& mesh, glm::mat4& modelMatrix, const glm::vec3& position, Shader& shader)
 {
     mesh->BeginRender();
 
@@ -13,18 +13,18 @@ void SceneRenderer::Draw(const std::shared_ptr<Mesh>& mesh, glm::mat4& modelMatr
         glm::translate(glm::mat4(1.0), position) *
         glm::scale(glm::mat4(1.0), glm::vec3(0.3f));
 
-    shader->SetUniformMatrix4("uModelMatrix", modelMatrix);
+    shader.SetUniformMatrix4("uModelMatrix", modelMatrix);
 
     // Setup material params
     mesh->OnRender(shader);
 
     // Draw call
-    glDrawElements(GL_TRIANGLES, mesh->GetVertexArray()->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, mesh->GetIndicesCount(), GL_UNSIGNED_INT, (void*)0);
 
     mesh->EndRender();
 }
 
-void SceneRenderer::Draw(const std::shared_ptr<Model>& model, const glm::vec3& position, const std::shared_ptr<Shader>& shader)
+void SceneRenderer::Draw(const std::shared_ptr<Model>& model, const glm::vec3& position, Shader& shader)
 {
     for (auto& mesh : model->GetMeshArray())
     {
@@ -32,14 +32,15 @@ void SceneRenderer::Draw(const std::shared_ptr<Model>& model, const glm::vec3& p
     }
 }
 
-void SceneRenderer::Draw(Scene& scene, const std::shared_ptr<Shader>& shader)
+void SceneRenderer::Draw(Scene& scene, Shader& shader)
 {
     auto& registry = scene.GetSceneRegistry();
     auto group = registry.group<TransformComponent>(entt::get<MeshRendererComponent>);
 
     for (auto entity : group)
     {
-        auto [transform, meshRenderer] = group.get<TransformComponent, MeshRendererComponent>(entity);
+        auto [transform, meshRenderer] = group.get<TransformComponent, MeshRendererComponent>(entity);  
+        vlog << "Model " << meshRenderer.ModelRef->Name << " at location " << transform.Position.x << ", " << transform.Position.z << nl;
         Draw(meshRenderer.ModelRef, transform.Position, shader);
     }
 }

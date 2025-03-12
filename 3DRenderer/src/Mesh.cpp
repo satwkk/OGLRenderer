@@ -18,11 +18,13 @@ Mesh::~Mesh()
 
 void Mesh::SetVertices(const std::vector<float>& vertexData)
 {
+    m_Vertices = vertexData;
     m_VertexArray->SetVertexBuffer(vertexData);
 }
 
 void Mesh::SetIndices(const std::vector<uint32_t>& indexData)
 {
+    m_Indices = indexData;
     m_VertexArray->SetIndexBuffer(indexData);
 }
 
@@ -31,7 +33,7 @@ void Mesh::PrepareMesh()
     m_VertexArray->SetupLayouts();
 }
 
-void Mesh::OnRender(const std::shared_ptr<Shader>& shader)
+void Mesh::OnRender(Shader& shader)
 {
     m_Material.OnRender(shader);
 }

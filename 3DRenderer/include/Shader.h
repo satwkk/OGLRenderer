@@ -7,8 +7,14 @@
 class Shader
 {
 public:
+	Shader() = default;
 	Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 	~Shader();
+
+	Shader(Shader& other) noexcept;
+	Shader& operator=(Shader& other) noexcept;
+	Shader(Shader&& other) noexcept;
+	Shader& operator=(Shader&& other) noexcept;
 
 	void Bind();
 	void UnBind();

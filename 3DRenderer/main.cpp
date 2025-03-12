@@ -6,8 +6,8 @@
 int main()
 {
 	Application* app = Application::Create({ 
-		.WindowWidth = 1920, 
-		.WindowHeight = 1080, 
+		.WindowWidth = 1024, 
+		.WindowHeight = 768, 
 		.BackgroundColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f),
 		.ApplicationName = "Void Renderer", 
 	});

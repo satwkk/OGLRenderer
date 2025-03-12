@@ -69,14 +69,20 @@
     <ClCompile Include="src\SceneRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShaderLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectionalLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\models\Cube.FBX" />
-    <None Include="shaders\fragment.glsl" />
-    <None Include="shaders\vertex.glsl" />
+    <None Include="shaders\phong\fragment.glsl" />
+    <None Include="shaders\phong\vertex.glsl" />
     <None Include="res\models\Green_Sea_Turtle.fbx" />
     <None Include="res\models\SimpleRig_cube.fbx" />
-    <None Include="shaders\fragment_2.glsl" />
+    <None Include="shaders\phong\fragment_2.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Utility.h">
@@ -140,6 +146,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\SceneRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DirectionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

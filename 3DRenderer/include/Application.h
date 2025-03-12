@@ -6,7 +6,9 @@
 #include <glm/glm.hpp>
 
 #include "Camera.h"
+#include "Window.h"
 #include "Scene.h"
+#include "ShaderLibrary.h"
 #include "Texture.h"
 
 struct GLFWwindow;
@@ -36,7 +38,7 @@ public:
 	bool Init();
 	void Run();
 
-	inline std::shared_ptr<Shader>& GetShader() { return m_Shader; }
+	inline Shader& GetShader() { return m_Shader; }
 	inline Camera& GetSceneCamera() { return m_Camera; }
 
 private:
@@ -50,11 +52,11 @@ private:
 	static Application* s_Instance;
 
 	AppConfig m_Config;
-	std::shared_ptr<Window> m_MainWindow;
-
+	Window m_MainWindow;
 	Camera m_Camera;
 	Scene m_Scene;
-	std::shared_ptr<Shader> m_Shader;
+	ShaderLibrary m_ShaderLibrary;
+	Shader m_Shader;
 };
 
 

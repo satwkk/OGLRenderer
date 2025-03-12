@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include "Logger.h"
+#include "Shader.h"
 #include "Utility.h"
 
 class SceneObject;
@@ -19,7 +20,7 @@ public:
 	~Scene() = default;
 
 	void InitScene();
-	void OnUpdate(std::shared_ptr<Shader>& shader);
+	void OnUpdate(Shader& shader);
 	void CloseScene();
 
 	inline entt::registry& GetSceneRegistry() { return m_Registry; }

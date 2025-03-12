@@ -17,13 +17,13 @@ public:
 
 	void Enable();
 	void Disable();
-    void OnRender(const std::shared_ptr<Shader>& shader);
+    void OnRender(Shader& shader);
 
     static Material DefaultMaterial();
 
 	inline void SetShine(float shine) { m_Shine = shine; }
 	inline Texture& GetDiffuseMap() { return m_Diffuse; }
-	inline float GetShine() { return m_Shine; }
+	inline const float GetShine()  const { return m_Shine; }
 	inline uint32_t GetDiffuseMapSlotIndex() { return m_Diffuse.GetSlot(); }
 private:
 	Texture m_Diffuse;
