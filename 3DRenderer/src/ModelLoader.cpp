@@ -23,24 +23,26 @@ std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned 
     {
         auto* mesh = scene->mMeshes[meshIdx];
         auto modelMesh = std::make_shared<Mesh>();
+        std::vector<float> vertexData = {};
+        std::vector<uint32_t> indexData = {};
 
         // Vertex Data Setup
         for (uint32_t i = 0; i < mesh->mNumVertices; i++)
         {
             auto vertex = mesh->mVertices[i];
 
-            modelMesh->m_VertexData.push_back(vertex.x);
-            modelMesh->m_VertexData.push_back(vertex.y);
-            modelMesh->m_VertexData.push_back(vertex.z);
+            vertexData.push_back(vertex.x);
+            vertexData.push_back(vertex.y);
+            vertexData.push_back(vertex.z);
 
             auto texCoord = mesh->mTextureCoords[0][i];
-            modelMesh->m_VertexData.push_back(texCoord.x);
-            modelMesh->m_VertexData.push_back(texCoord.y);
+            vertexData.push_back(texCoord.x);
+            vertexData.push_back(texCoord.y);
 
             auto normal = mesh->mNormals[i];
-            modelMesh->m_VertexData.push_back(normal.x);
-            modelMesh->m_VertexData.push_back(normal.y);
-            modelMesh->m_VertexData.push_back(normal.z);
+            vertexData.push_back(normal.x);
+            vertexData.push_back(normal.y);
+            vertexData.push_back(normal.z);
         }
 
         // Index data setup
@@ -49,14 +51,16 @@ std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned 
             auto face = mesh->mFaces[i];
             for (uint32_t indicesIdx = 0; indicesIdx < face.mNumIndices; indicesIdx++)
             {
-                modelMesh->m_IndexData.push_back(face.mIndices[indicesIdx]);
+                indexData.push_back(face.mIndices[indicesIdx]);
             }
         }
 
         // Bind VAO VBO and IBO
-        // TODO(void): Find a better way to do the following. Two calls for a simple setup is unnecessary and can be easily mistakened.
+        // TODO(void): Find a better way to do the following. Three calls for a simple setup is unnecessary and can be easily mistakened.
         // NOTE(void): I think creating the vao, vbo and ibo here directly will make the process much more clear instead of doing it inside RenderSetup
-        modelMesh->RenderSetup();
+        modelMesh->SetVertices(vertexData);
+        modelMesh->SetIndices(indexData);
+        modelMesh->PrepareMesh();
 
         /**
         // Prepare materials

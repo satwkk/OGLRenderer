@@ -2,11 +2,13 @@
 #include "Shader.h"
 #include "Material.h"
 #include "Logger.h"
+#include "VertexArray.h"
 
 Mesh::Mesh() :
     m_Material{}
 {
     vlog << "mesh constructed\n";
+    m_VertexArray = std::make_shared<VertexArray>();
 }
 
 Mesh::~Mesh()
@@ -14,15 +16,19 @@ Mesh::~Mesh()
     vlog << "mesh destructed\n";
 }
 
-void Mesh::RenderSetup()
+void Mesh::SetVertices(const std::vector<float>& vertexData)
 {
-	m_VertexArray = std::make_shared<VertexArray>();
-	m_VertexBuffer = std::make_shared<VertexBuffer>(m_VertexData);
-	m_IndexBuffer = std::make_shared<IndexBuffer>(m_IndexData);
+    m_VertexArray->SetVertexBuffer(vertexData);
+}
 
-	m_VertexArray->AddBuffer(m_VertexBuffer);
-	m_VertexArray->AddBuffer(m_IndexBuffer);
-	m_VertexArray->SetupLayouts();
+void Mesh::SetIndices(const std::vector<uint32_t>& indexData)
+{
+    m_VertexArray->SetIndexBuffer(indexData);
+}
+
+void Mesh::PrepareMesh()
+{
+    m_VertexArray->SetupLayouts();
 }
 
 void Mesh::OnRender(const std::shared_ptr<Shader>& shader)

@@ -19,7 +19,7 @@ void SceneRenderer::Draw(const std::shared_ptr<Mesh>& mesh, glm::mat4& modelMatr
     mesh->OnRender(shader);
 
     // Draw call
-    glDrawElements(GL_TRIANGLES, mesh->GetIndices().size(), GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, mesh->GetVertexArray()->GetIndexCount(), GL_UNSIGNED_INT, (void*)0);
 
     mesh->EndRender();
 }

@@ -1,29 +1,20 @@
 #pragma once
 
 #include <vector>
+#include <Gl/glew.h>
 
-class VertexBuffer
+#define BufferID unsigned int
+
+template<typename T>
+BufferID CreateBuffer(unsigned int type, const std::vector<T>& data);
+
+template<typename T>
+BufferID 
+CreateBuffer(unsigned int type, const std::vector<T> &data)
 {
-public:
-	VertexBuffer(const std::vector<float>& vertices);
-	VertexBuffer(float* vertices, uint32_t count);
-	~VertexBuffer();
-
-	void Bind();
-	void UnBind();
-private:
-	unsigned int m_RendererID;
-};
-
-class IndexBuffer
-{
-public:
-	IndexBuffer(const std::vector<unsigned int>& indices);
-	IndexBuffer(float* indices, uint32_t count);
-	~IndexBuffer();
-
-	void Bind();
-	void UnBind();
-private:
-	unsigned int m_RendererID;
-};
+    BufferID id;
+    glGenBuffers(1, &id);
+    glBindBuffer(type, id);
+    glBufferData(type, data.size() * sizeof(T), data.data(), GL_STATIC_DRAW);
+    return id;
+}

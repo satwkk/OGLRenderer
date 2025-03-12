@@ -1,4 +1,5 @@
 #include "VertexArray.h"
+#include "Buffer.h"
 
 #include <assert.h>
 #include <GL/glew.h>
@@ -25,16 +26,17 @@ void VertexArray::UnBind()
 	glBindVertexArray(0);
 }
 
-void VertexArray::AddBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
+void VertexArray::SetVertexBuffer(const std::vector<float>& vertexData)
 {
-	m_VertexBuffer = vertexBuffer;
-	m_VertexBuffer->Bind();
+    Bind();
+    m_VertexBuffer = CreateBuffer(GL_ARRAY_BUFFER, vertexData);
 }
 
-void VertexArray::AddBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+void VertexArray::SetIndexBuffer(const std::vector<unsigned int>& indexData)
 {
-	m_IndexBuffer = indexBuffer;
-	m_IndexBuffer->Bind();
+    Bind();
+    m_IndexBuffer = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, indexData);
+    m_IndexCount = indexData.size();
 }
 
 void VertexArray::SetupLayouts()
@@ -42,7 +44,6 @@ void VertexArray::SetupLayouts()
 	Bind();
 
 	// TODO: Abstract this when buffer layout is setup inside VertexBuffer class
-
 	// Vertices
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)0);
