@@ -4,11 +4,11 @@
 
 #include "Texture.h"
 
-class CubeMap
+class CCubeMap
 {
 public:
-    CubeMap() = default;
-    ~CubeMap() = default;
+    CCubeMap() = default;
+    ~CCubeMap() = default;
 
     void InitCubeMap(const std::vector<std::string>& texturePaths);
     void Release();
@@ -16,5 +16,5 @@ public:
     void UnBind();
 
 private:
-    uint32_t m_TextureID;
+    uint32_t m_uTextureID;
 };

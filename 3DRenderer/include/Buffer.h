@@ -11,13 +11,13 @@ BufferID CreateBuffer(unsigned int type, const std::vector<T>& data);
 
 template<typename T>
 BufferID 
-CreateBuffer(unsigned int type, const std::vector<T> &data)
+CreateBuffer(unsigned int uType, const std::vector<T> &vData)
 {
-    BufferID id;
-    glGenBuffers(1, &id);
-    glBindBuffer(type, id);
-    glBufferData(type, data.size() * sizeof(T), data.data(), GL_STATIC_DRAW);
-    return id;
+    BufferID uId;
+    glGenBuffers(1, &uId);
+    glBindBuffer(uType, uId);
+    glBufferData(uType, vData.size() * sizeof(T), vData.data(), GL_STATIC_DRAW);
+    return uId;
 }
 
 enum EVertexAttributeType
@@ -38,9 +38,9 @@ enum EVertexAttributeType
     UByte
 };
 
-static uint32_t GetSizeFromAttribType(EVertexAttributeType type)
+static uint32_t GetSizeFromAttribType(EVertexAttributeType eType)
 {
-    switch (type)
+    switch (eType)
     {
         case EVertexAttributeType::Int1:             return sizeof(int32_t) * 1;
         case EVertexAttributeType::Int2:             return sizeof(int32_t) * 2;
@@ -57,9 +57,9 @@ static uint32_t GetSizeFromAttribType(EVertexAttributeType type)
     return -1;
 }
 
-static uint32_t GetCountFromAttribType(EVertexAttributeType type)
+static uint32_t GetCountFromAttribType(EVertexAttributeType eType)
 {
-    switch (type)
+    switch (eType)
     {
         case EVertexAttributeType::Int1:            return 1;
         case EVertexAttributeType::Int2:            return 2;
@@ -76,9 +76,9 @@ static uint32_t GetCountFromAttribType(EVertexAttributeType type)
     return -1;
 }
 
-static GLenum GetGLTypeFromAttribType(EVertexAttributeType type)
+static GLenum GetGLTypeFromAttribType(EVertexAttributeType eType)
 {
-    switch (type)
+    switch (eType)
     {
         case EVertexAttributeType::Int1:            return GL_INT;
         case EVertexAttributeType::Int2:            return GL_INT;
@@ -97,42 +97,42 @@ static GLenum GetGLTypeFromAttribType(EVertexAttributeType type)
 
 struct SVertexAttributeLayout
 {
-    EVertexAttributeType AttributeType;
-    int Offset;
+    EVertexAttributeType eAttributeType;
+    int nOffset;
 
     SVertexAttributeLayout(EVertexAttributeType type, int offset) :
-        AttributeType{type},
-        Offset{offset}
+        eAttributeType{type},
+        nOffset{offset}
     {
     }
 
     SVertexAttributeLayout(const SVertexAttributeLayout& other) :
-        AttributeType{ other.AttributeType },
-        Offset{ other.Offset } 
+        eAttributeType{ other.eAttributeType },
+        nOffset{ other.nOffset } 
     {
     }
 
     SVertexAttributeLayout& operator=(const SVertexAttributeLayout& other)
     {
-        AttributeType = other.AttributeType;
-        Offset = other.Offset;
+        eAttributeType = other.eAttributeType;
+        nOffset = other.nOffset;
         return *this;
     }
 };
 
 struct SVertexBufferData
 {
-    std::vector<float> Vertices;
-    std::vector<SVertexAttributeLayout> BufferLayouts;
+    std::vector<float> vVertices;
+    std::vector<SVertexAttributeLayout> vBufferLayouts;
 
     uint32_t GetStride()
     {
-        uint32_t stride = 0;
-        for (auto& layout : BufferLayouts)
+        uint32_t uStride = 0;
+        for (auto& layout : vBufferLayouts)
         {
-            stride += GetSizeFromAttribType(layout.AttributeType);
+            uStride += GetSizeFromAttribType(layout.eAttributeType);
         }
 
-        return stride;
+        return uStride;
     }
 };

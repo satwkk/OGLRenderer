@@ -3,32 +3,30 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-class Material;
-class Mesh;
-class VertexBuffer;
-class IndexBuffer;
-class Model;
+class CMaterial;
+class CMesh;
+class CModel;
 
-struct TransformComponent
+struct STransformComponent
 {
-	glm::vec3 Position{ glm::vec3(1.0) };
-	glm::vec3 Scale{ glm::vec3(1.0f) };
+	glm::vec3 VPosition{ glm::vec3(1.0) };
+	glm::vec3 VScale{ glm::vec3(1.0f) };
 
-	TransformComponent() = default;
-	TransformComponent(const glm::vec3& pos) :
-		Position(pos) {}
-	TransformComponent(const glm::vec3& pos, const glm::vec3& scale) :
-		Position(pos), Scale(scale) {
+	STransformComponent() = default;
+	STransformComponent(const glm::vec3& pos) :
+		VPosition(pos) {}
+	STransformComponent(const glm::vec3& pos, const glm::vec3& scale) :
+		VPosition(pos), VScale(scale) {
 	}
 };
 
-struct MeshRendererComponent
+struct SMeshRendererComponent
 {
-	std::shared_ptr<Model> ModelRef = nullptr;
+	std::shared_ptr<CModel> m_spCModelRef = nullptr;
 
-	MeshRendererComponent() = default;
-	MeshRendererComponent(const std::shared_ptr<Model>& model) :
-		ModelRef(model)
+	SMeshRendererComponent() = default;
+	SMeshRendererComponent(const std::shared_ptr<CModel>& pModel) :
+		m_spCModelRef(pModel)
 	{
 	}
 };

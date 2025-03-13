@@ -4,67 +4,55 @@
 #include <assert.h>
 #include <GL/glew.h>
 
-VertexArray::VertexArray() :
-	m_VAO(0)
+CVertexArray::CVertexArray() :
+	m_uVAO(0)
 {
-	glCreateVertexArrays(1, &m_VAO);
-	glBindVertexArray(m_VAO);
+	glCreateVertexArrays(1, &m_uVAO);
+	glBindVertexArray(m_uVAO);
 }
 
-VertexArray::~VertexArray()
+CVertexArray::~CVertexArray()
 {
-	glDeleteVertexArrays(1, &m_VAO);
+	glDeleteVertexArrays(1, &m_uVAO);
 }
 
-void VertexArray::Bind()
+void CVertexArray::Bind()
 {
-	glBindVertexArray(m_VAO);
+	glBindVertexArray(m_uVAO);
 }
 
-void VertexArray::UnBind()
+void CVertexArray::UnBind()
 {
 	glBindVertexArray(0);
 }
 
-void VertexArray::SetVertexBuffer(const SVertexBufferData& vertexData)
+void CVertexArray::SetVertexBuffer(const SVertexBufferData& vertexData)
 {
     Bind();
-	m_VertexBufferData = vertexData;
-    m_VertexBuffer = CreateBuffer(GL_ARRAY_BUFFER, m_VertexBufferData.Vertices);
+	m_sVertexBufferData = vertexData;
+    m_uVertexBuffer = CreateBuffer(GL_ARRAY_BUFFER, m_sVertexBufferData.vVertices);
 }
 
-void VertexArray::SetIndexBuffer(const std::vector<unsigned int>& indexData)
+void CVertexArray::SetIndexBuffer(const std::vector<unsigned int>& indexData)
 {
     Bind();
-    m_IndexBuffer = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, indexData);
-    m_IndexCount = indexData.size();
+    m_uIndexBuffer = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, indexData);
+    m_uIndexCount = (uint32_t)indexData.size();
 }
 
-void VertexArray::PrepareVertexArray()
+void CVertexArray::PrepareVertexArray()
 {
 	Bind();
 
-	for (uint32_t i = 0; i < m_VertexBufferData.BufferLayouts.size(); i++)
+	for (uint32_t i = 0; i < m_sVertexBufferData.vBufferLayouts.size(); i++)
 	{
-		auto attribLayout = m_VertexBufferData.BufferLayouts[i];
-		auto elementCount = GetCountFromAttribType(attribLayout.AttributeType);
-		auto type = GetGLTypeFromAttribType(attribLayout.AttributeType);
-		auto stride = m_VertexBufferData.GetStride();
+		auto attribLayout = m_sVertexBufferData.vBufferLayouts[i];
+		auto elementCount = GetCountFromAttribType(attribLayout.eAttributeType);
+		auto type = GetGLTypeFromAttribType(attribLayout.eAttributeType);
+		auto stride = m_sVertexBufferData.GetStride();
 		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, elementCount, type, GL_FALSE, stride, (void*)attribLayout.Offset);
+		glVertexAttribPointer(i, elementCount, type, GL_FALSE, stride, (void*)attribLayout.nOffset);
 	}
 
 	UnBind();
-	/**
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)0);
-
-	// Tex coord
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)12);
-
-	// Normals
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)20);
-	*/
 }

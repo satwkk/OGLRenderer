@@ -3,13 +3,13 @@
 #include "Shader.h"
 #include "VertexArray.h"
 
-Renderer* Renderer::s_Instance = nullptr;
+CRenderer* CRenderer::s_pCInstance = nullptr;
 
-bool Renderer::Init()
+bool CRenderer::Init()
 {
-	if (s_Instance == nullptr)
+	if (s_pCInstance == nullptr)
 	{
-		s_Instance = new Renderer();
+		s_pCInstance = new CRenderer();
 		return true;
 	}
 
@@ -17,11 +17,11 @@ bool Renderer::Init()
 	return false;
 }
 
-void Renderer::ShutDown()
+void CRenderer::ShutDown()
 {
-	delete s_Instance;
+	delete s_pCInstance;
 }
 
-void Renderer::Render(std::shared_ptr<Shader>& shader, std::shared_ptr<VertexArray>& vertexArray)
+void CRenderer::Render(std::shared_ptr<CShader>& shader, std::shared_ptr<CVertexArray>& vertexArray)
 {
 }

@@ -7,27 +7,27 @@
 
 #include "stbi_image.h"
 
-Texture::Texture(const std::string& filePath, uint32_t slot) :
-m_TextureID{0},
-m_Slot{slot}
+CTexture::CTexture(const std::string& filePath, uint32_t slot) :
+m_uTextureID{0},
+m_uSlot{slot}
 {
     int width, height, channels;
     
-    unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
-    if (data == nullptr)
+    unsigned char* pData = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+    if (pData == nullptr)
     {
         std::cerr << "could not load texture\n";
         exit(-1);
     }
 
     // TODO(void): Refactor this when material systems is in place
-    glActiveTexture(GL_TEXTURE0 + m_Slot);
-    glGenTextures(1, &m_TextureID);
-    glBindTexture(GL_TEXTURE_2D, m_TextureID);
+    glActiveTexture(GL_TEXTURE0 + m_uSlot);
+    glGenTextures(1, &m_uTextureID);
+    glBindTexture(GL_TEXTURE_2D, m_uTextureID);
 
     int format = channels == 4 ? GL_RGBA : GL_RGB;
     vlog << "Texture channels: " << format << " -> " << filePath << nl;
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, pData);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -36,17 +36,17 @@ m_Slot{slot}
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 
-Texture::~Texture()
+CTexture::~CTexture()
 {
 }
 
-void Texture::Bind()
+void CTexture::Bind()
 {
-    glActiveTexture(GL_TEXTURE0 + m_Slot);
-    glBindTexture(GL_TEXTURE_2D, m_TextureID);
+    glActiveTexture(GL_TEXTURE0 + m_uSlot);
+    glBindTexture(GL_TEXTURE_2D, m_uTextureID);
 }
 
-void Texture::UnBind()
+void CTexture::UnBind()
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);

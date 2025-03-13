@@ -13,14 +13,14 @@
 #include "Skybox.h"
 
 struct GLFWwindow;
-class Model;
-class Window;
-class Camera;
-class Shader;
+class CModel;
+class CWindow;
+class CPerspectiveCamera;
+class CShader;
 class VertexBuffer;
-class VertexArray;
+class CVertexArray;
 class IndexBuffer;
-class Texture;
+class CTexture;
 
 struct AppConfig
 {
@@ -30,49 +30,49 @@ struct AppConfig
 	std::string ApplicationName;
 };
 
-class Application
+class CApplication
 {
 public:
-	static Application* Create(const AppConfig& config);
-	inline static Application* Get() { return s_Instance; }
+	static CApplication* Create(const AppConfig& sConfig);
+	inline static CApplication* Get() { return s_pCInstance; }
 
 	bool Init();
 	void OnUpdate();
 	void Run();
 
-	inline Shader& GetShader() { return m_Shader; }
-	inline Camera& GetSceneCamera() { return m_Camera; }
+	inline CShader& GetShader() { return m_cShader; }
+	inline CPerspectiveCamera& GetSceneCamera() { return m_cCamera; }
 
 private:
-	Application() = default;
-	Application(const AppConfig& config);
-	~Application();
-	Application(const Application&) = delete;
-	Application(Application&&) = delete;
+	CApplication() = default;
+	CApplication(const AppConfig& config);
+	~CApplication();
+	CApplication(const CApplication&) = delete;
+	CApplication(CApplication&&) = delete;
 
 private:
-	static Application* s_Instance;
+	static CApplication* s_pCInstance;
 
-	AppConfig m_Config;
-	std::unique_ptr<Window> m_pMainWindow;
-	std::unique_ptr<Skybox> m_pSkybox;
-	Camera m_Camera;
-	Scene m_Scene;
-	Shader m_SkyboxShader;
-	ShaderLibrary m_ShaderLibrary;
-	Shader m_Shader;
+	AppConfig m_sConfig;
+	std::unique_ptr<CWindow> m_pCMainWindow;
+	std::unique_ptr<CSkybox> m_pCSkybox;
+	CPerspectiveCamera m_cCamera;
+	CScene m_cScene;
+	CShader m_cSkyboxShader;
+	CShaderLibrary m_cShaderLibrary;
+	CShader m_cShader;
 };
 
 
 // =======================================================================================================
 // TODO(void): Refactor this system into separate Input and GlobalLight system
 // =======================================================================================================
-static double cursorPosLastFrameX = 0.0;
-static double cursorPosLastFrameY = 0.0;
-static bool shouldMoveLight = false;
-static double lightMoveSens = 2.f;
-static glm::vec3 lightPosition(5.f, 10.0, 0.0f);
-static glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+static double dCursorPosLastFrameX = 0.0;
+static double dCursorPosLastFrameY = 0.0;
+static bool bShouldMoveLight = false;
+static double dLightMoveSens = 2.f;
+static glm::vec3 vLightPosition(5.f, 10.0, 0.0f);
+static glm::vec3 vLightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
-void UpdateCamera(GLFWwindow* window, Camera& camera);
-void UpdateLight(GLFWwindow* window);
+void UpdateCamera(GLFWwindow* pWindow, CPerspectiveCamera& cCamera);
+void UpdateLight(GLFWwindow* pWindow);

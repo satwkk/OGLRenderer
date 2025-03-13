@@ -5,36 +5,36 @@
 #include "SceneRenderer.h"
 #include "Mesh.h"
 
-void Scene::InitScene()
+void CScene::InitScene()
 {
-    std::vector<std::shared_ptr<Model>> models = {
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+    std::vector<std::shared_ptr<CModel>> vModels = {
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
     };
 
-    for (auto& model : models)
+    for (auto& pCModel : vModels)
     {
-	    entt::entity ent = m_Registry.create();
+	    entt::entity uEntityID = m_cRegistry.create();
         srand(rand());
-        float x = rand() % 5000;
-        float z = rand() % 5000;
-        m_Registry.emplace<TransformComponent>(ent, glm::vec3{ x, 0.0f, z }, glm::vec3{ 0.3f });
-        m_Registry.emplace<MeshRendererComponent>(ent, model);
-        m_SceneObjects.insert({ ent, model });
+        float fXPos = rand() % 5000;
+        float fZPos = rand() % 5000;
+        m_cRegistry.emplace<STransformComponent>(uEntityID, glm::vec3{ fXPos, 0.0f, fZPos }, glm::vec3{ 0.3f });
+        m_cRegistry.emplace<SMeshRendererComponent>(uEntityID, pCModel);
+        m_umSceneObjectMap.insert({ uEntityID, pCModel });
     }
 }
 
 // TODO(void): These rendering should be done by a scene renderer 
-void Scene::OnUpdate(Shader& shader)
+void CScene::OnUpdate(CShader& shader)
 {
-    SceneRenderer::Draw(*this, shader);
+    CSceneRenderer::Draw(*this, shader);
 }
 
-void Scene::CloseScene()
+void CScene::CloseScene()
 {
-    for (auto& kv : m_SceneObjects)
+    for (auto& paSceneObject : m_umSceneObjectMap)
     {
-        auto& modelRef = kv.second;
-        modelRef.reset();
+        std::shared_ptr<CModel> spModelRef = paSceneObject.second;
+        spModelRef.reset();
     }
 }

@@ -3,5 +3,5 @@
 #include "Component.h"
 #include "Model.h"
 
-class Model;
+class CModel;
 

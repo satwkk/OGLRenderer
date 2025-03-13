@@ -17,7 +17,7 @@ if (!(x)) { \
 	_CrtDbgBreak();\
 }
 
-class Utility
+class CUtility
 {
 public:
 	static std::string ReadFile(const std::string& filePath);

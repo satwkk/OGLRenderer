@@ -4,48 +4,48 @@
 #include "Logger.h"
 #include "VertexArray.h"
 
-Mesh::Mesh() :
-    m_Material{}
+CMesh::CMesh() :
+    m_cMaterial{}
 {
     vlog << "mesh constructed\n";
-    m_VertexArray = std::make_shared<VertexArray>();
+    m_spCVertexArray = std::make_shared<CVertexArray>();
 }
 
-Mesh::~Mesh()
+CMesh::~CMesh()
 {
     vlog << "mesh destructed\n";
 }
 
-void Mesh::SetVertices(const SVertexBufferData& vertexData)
+void CMesh::SetVertices(const SVertexBufferData& vertexData)
 {
-    m_Vertices = vertexData.Vertices;
-    m_VertexArray->SetVertexBuffer(vertexData);
+    m_vVertices = vertexData.vVertices;
+    m_spCVertexArray->SetVertexBuffer(vertexData);
 }
 
-void Mesh::SetIndices(const std::vector<uint32_t>& indexData)
+void CMesh::SetIndices(const std::vector<uint32_t>& indexData)
 {
-    m_Indices = indexData;
-    m_VertexArray->SetIndexBuffer(indexData);
+    m_vIndices = indexData;
+    m_spCVertexArray->SetIndexBuffer(indexData);
 }
 
-void Mesh::PrepareMesh()
+void CMesh::PrepareMesh()
 {
-    m_VertexArray->PrepareVertexArray();
+    m_spCVertexArray->PrepareVertexArray();
 }
 
-void Mesh::OnRender(Shader& shader)
+void CMesh::OnRender(CShader& shader)
 {
-    m_Material.OnRender(shader);
+    m_cMaterial.OnRender(shader);
 }
 
-void Mesh::BeginRender()
+void CMesh::BeginRender()
 {
-	m_VertexArray->Bind();
-	m_Material.Enable();
+	m_spCVertexArray->Bind();
+	m_cMaterial.Enable();
 }
 
-void Mesh::EndRender()
+void CMesh::EndRender()
 {
-	m_Material.Disable();
-	m_VertexArray->UnBind();
+	m_cMaterial.Disable();
+	m_spCVertexArray->UnBind();
 }

@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include <GL/glew.h>
 
-void Model::AddMesh(const std::shared_ptr<Mesh>& mesh)
+void CModel::AddMesh(const std::shared_ptr<CMesh>& pMesh)
 {
-	m_Meshes.push_back(mesh);
+	m_vMeshes.push_back(pMesh);
 }

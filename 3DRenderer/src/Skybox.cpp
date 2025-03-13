@@ -1,8 +1,8 @@
 #include "Skybox.h"
 #include <GL/glew.h>
 
-Skybox::Skybox() :
-	m_VAO({})
+CSkybox::CSkybox() :
+	m_cVertexArray({})
 {
 	std::vector<std::string> paths
 	{
@@ -14,31 +14,31 @@ Skybox::Skybox() :
 		"./res/skybox/back.jpg",
 	};
 
-	gBufferData.Vertices = gVertices;
-	gBufferData.BufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
+	gSBufferData.vVertices = gvVertices;
+	gSBufferData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
 
-	m_VAO.SetVertexBuffer(gBufferData);
-	m_CubeMap.InitCubeMap(paths);
-	m_VAO.PrepareVertexArray();
+	m_cVertexArray.SetVertexBuffer(gSBufferData);
+	m_cCubeMap.InitCubeMap(paths);
+	m_cVertexArray.PrepareVertexArray();
 }
 
-Skybox::~Skybox()
+CSkybox::~CSkybox()
 {
-	m_CubeMap.Release();
+	m_cCubeMap.Release();
 }
 
-void Skybox::OnRender(Shader& shader, Camera& camera)
+void CSkybox::OnRender(CShader& shader, CPerspectiveCamera& camera)
 {
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_FALSE);
 	shader.Bind();
 	shader.SetUniformMatrix4("uProjection", camera.GetProjectionMatrix());
 	shader.SetUniformMatrix4("uView", glm::mat4{ camera.GetViewMatrixWithoutTranslation() });
-	m_VAO.Bind();
-	m_CubeMap.Bind();
-	glDrawArrays(GL_TRIANGLES, 0, gVertices.size());
-	m_CubeMap.UnBind();
-	m_VAO.UnBind();
+	m_cVertexArray.Bind();
+	m_cCubeMap.Bind();
+	glDrawArrays(GL_TRIANGLES, 0, gvVertices.size());
+	m_cCubeMap.UnBind();
+	m_cVertexArray.UnBind();
 	shader.UnBind();
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LESS);

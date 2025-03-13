@@ -4,13 +4,13 @@
 #include <glm/glm.hpp>
 #include "Scene.h"
 
-class Model;
-class Mesh;
+class CModel;
+class CMesh;
 
-class SceneRenderer
+class CSceneRenderer
 {
 public:
-	static void Draw(Scene& scene, Shader& shader);
-	static void Draw(const std::shared_ptr<Model>& model, const glm::vec3& position, Shader& shader);
-	static void Draw(const std::shared_ptr<Mesh>& mesh, glm::mat4& modelMatrix, const glm::vec3& position, Shader& shader);
+	static void Draw(CScene& scene, CShader& shader);
+	static void Draw(const std::shared_ptr<CModel>& pModel, const glm::vec3& position, CShader& shader);
+	static void Draw(const std::shared_ptr<CMesh>& pMesh, glm::mat4& modelMatrix, const glm::vec3& position, CShader& shader);
 };

@@ -3,8 +3,8 @@
 
 #include <GL/glew.h>
 
-Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
-    : m_RendererID(0)
+CShader::CShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+    : m_uRendererID(0)
 {
     uint32_t vs = LoadShader(vertexShaderPath, GL_VERTEX_SHADER);
     uint32_t fs = LoadShader(fragmentShaderPath, GL_FRAGMENT_SHADER);
@@ -12,19 +12,19 @@ Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentS
     assert(vs != -1);
     assert(fs != -1);
 
-    m_RendererID = glCreateProgram();
-    glAttachShader(m_RendererID, vs);
-    glAttachShader(m_RendererID, fs);
-    glLinkProgram(m_RendererID);
+    m_uRendererID = glCreateProgram();
+    glAttachShader(m_uRendererID, vs);
+    glAttachShader(m_uRendererID, fs);
+    glLinkProgram(m_uRendererID);
 
     // Link program
     {
         int param;
-        glGetProgramiv(m_RendererID, GL_LINK_STATUS, &param);
+        glGetProgramiv(m_uRendererID, GL_LINK_STATUS, &param);
         if (!param)
         {
             char buffer[1024];
-            glGetProgramInfoLog(m_RendererID, 1024, nullptr, buffer);
+            glGetProgramInfoLog(m_uRendererID, 1024, nullptr, buffer);
             printf("Program link error: %s\n", buffer);
             return;
         }
@@ -35,76 +35,76 @@ Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentS
     glUseProgram(0);
 }
 
-Shader::~Shader()
+CShader::~CShader()
 {
-    glDeleteProgram(m_RendererID);
+    glDeleteProgram(m_uRendererID);
 }
 
-Shader::Shader(Shader& other) noexcept
+CShader::CShader(CShader& other) noexcept
 {
     vlog << "Shader copy constructor called\n";
-    m_RendererID = other.m_RendererID;
+    m_uRendererID = other.m_uRendererID;
 }
 
-Shader& Shader::operator=(Shader& other) noexcept
+CShader& CShader::operator=(CShader& other) noexcept
 {
     vlog << "Shader copy assignment called\n";
-    m_RendererID = other.m_RendererID; 
+    m_uRendererID = other.m_uRendererID; 
     return *this;
 }
 
-Shader::Shader(Shader&& other) noexcept
+CShader::CShader(CShader&& other) noexcept
 {
     vlog << "Shader move constructor called\n";
-    m_RendererID = other.m_RendererID;
-    other.m_RendererID = 0;
+    m_uRendererID = other.m_uRendererID;
+    other.m_uRendererID = 0;
 }
 
-Shader& Shader::operator=(Shader&& other) noexcept
+CShader& CShader::operator=(CShader&& other) noexcept
 {
     vlog << "Shader move assignment called\n";
-    m_RendererID = other.m_RendererID;
-    other.m_RendererID = 0;
+    m_uRendererID = other.m_uRendererID;
+    other.m_uRendererID = 0;
     return *this;
 }
 
-void Shader::Bind()
+void CShader::Bind()
 {
-    glUseProgram(m_RendererID);
+    glUseProgram(m_uRendererID);
 }
 
-void Shader::UnBind()
+void CShader::UnBind()
 {
     glUseProgram(0);
 }
 
-void Shader::SetUniformMatrix4(const std::string& name, const glm::mat4& value)
+void CShader::SetUniformMatrix4(const std::string& name, const glm::mat4& value)
 {
-    auto location = glGetUniformLocation(m_RendererID, name.c_str());
+    auto location = glGetUniformLocation(m_uRendererID, name.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void Shader::SetUniformVector3(const std::string& name, const glm::vec3& value)
+void CShader::SetUniformVector3(const std::string& name, const glm::vec3& value)
 {
-    auto location = glGetUniformLocation(m_RendererID, name.c_str());
+    auto location = glGetUniformLocation(m_uRendererID, name.c_str());
     glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
-void Shader::SetUniformFloat(const std::string& name, float value)
+void CShader::SetUniformFloat(const std::string& name, float value)
 {
-    auto location = glGetUniformLocation(m_RendererID, name.c_str());
+    auto location = glGetUniformLocation(m_uRendererID, name.c_str());
     glUniform1f(location, value);
 }
 
-void Shader::SetUniformInt(const std::string& name, int value)
+void CShader::SetUniformInt(const std::string& name, int value)
 {
-    auto location = glGetUniformLocation(m_RendererID, name.c_str());
+    auto location = glGetUniformLocation(m_uRendererID, name.c_str());
     glUniform1i(location, value);
 }
 
-uint32_t Shader::LoadShader(const std::string& shaderPath, unsigned int shaderType)
+uint32_t CShader::LoadShader(const std::string& shaderPath, unsigned int shaderType)
 {
-    std::string shaderString = Utility::ReadFile(shaderPath);
+    std::string shaderString = CUtility::ReadFile(shaderPath);
     const char* shaderSrc = shaderString.c_str();
 
     unsigned int shaderID = glCreateShader(shaderType);

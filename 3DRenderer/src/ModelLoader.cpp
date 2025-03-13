@@ -9,90 +9,90 @@
 #include "Logger.h"
 #include "Material.h"
 
-std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned int flags)
+std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigned int flags)
 {
     auto importer = Assimp::Importer();
-    auto* scene = importer.ReadFile(modelPath, flags);
-    assert(scene != nullptr);
+    const aiScene* pScene = importer.ReadFile(modelPath, flags);
+    assert(pScene != nullptr);
 
-    auto model = std::make_shared<Model>();
-    model->AssetPath = modelPath;
-    model->Name = Utility::GetFileNameFromPath(modelPath);
+    std::shared_ptr<CModel> spModel = std::make_shared<CModel>();
+    spModel->m_fsAssetPath = modelPath;
+    spModel->m_sName = CUtility::GetFileNameFromPath(modelPath);
 
-    for (uint32_t meshIdx = 0; meshIdx < scene->mNumMeshes; meshIdx++)
+    for (uint32_t meshIdx = 0; meshIdx < pScene->mNumMeshes; meshIdx++)
     {
-        auto* mesh = scene->mMeshes[meshIdx];
-        auto modelMesh = std::make_shared<Mesh>();
-        SVertexBufferData vertexData = {};
-        std::vector<uint32_t> indexData = {};
+        auto* pMesh = pScene->mMeshes[meshIdx];
+        std::shared_ptr<CMesh> spModelMesh = std::make_shared<CMesh>();
+        SVertexBufferData sVertexData = {};
+        std::vector<uint32_t> vIndexData = {};
 
         // Vertex Data Setup
-        for (uint32_t i = 0; i < mesh->mNumVertices; i++)
+        for (uint32_t i = 0; i < pMesh->mNumVertices; i++)
         {
-            auto vertex = mesh->mVertices[i];
+            auto VVertex = pMesh->mVertices[i];
 
-            vertexData.Vertices.push_back(vertex.x);
-            vertexData.Vertices.push_back(vertex.y);
-            vertexData.Vertices.push_back(vertex.z);
+            sVertexData.vVertices.push_back(VVertex.x);
+            sVertexData.vVertices.push_back(VVertex.y);
+            sVertexData.vVertices.push_back(VVertex.z);
 
-            auto texCoord = mesh->mTextureCoords[0][i];
-            vertexData.Vertices.push_back(texCoord.x);
-            vertexData.Vertices.push_back(texCoord.y);
+            auto VTexCoord = pMesh->mTextureCoords[0][i];
+            sVertexData.vVertices.push_back(VTexCoord.x);
+            sVertexData.vVertices.push_back(VTexCoord.y);
 
-            auto normal = mesh->mNormals[i];
-            vertexData.Vertices.push_back(normal.x);
-            vertexData.Vertices.push_back(normal.y);
-            vertexData.Vertices.push_back(normal.z);
+            auto VNormal = pMesh->mNormals[i];
+            sVertexData.vVertices.push_back(VNormal.x);
+            sVertexData.vVertices.push_back(VNormal.y);
+            sVertexData.vVertices.push_back(VNormal.z);
         }
 
         // Index data setup
-        for (uint32_t i = 0; i < mesh->mNumFaces; i++)
+        for (uint32_t i = 0; i < pMesh->mNumFaces; i++)
         {
-            auto face = mesh->mFaces[i];
-            for (uint32_t indicesIdx = 0; indicesIdx < face.mNumIndices; indicesIdx++)
+            auto sFace = pMesh->mFaces[i];
+            for (uint32_t indicesIdx = 0; indicesIdx < sFace.mNumIndices; indicesIdx++)
             {
-                indexData.push_back(face.mIndices[indicesIdx]);
+                vIndexData.push_back(sFace.mIndices[indicesIdx]);
             }
         }
 
-        vertexData.BufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
-        vertexData.BufferLayouts.push_back({ EVertexAttributeType::Float2, 12 });
-        vertexData.BufferLayouts.push_back({ EVertexAttributeType::Float3, 20 });
+        sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
+        sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float2, 12 });
+        sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 20 });
 
-        modelMesh->SetVertices(vertexData);
-        modelMesh->SetIndices(indexData);
-        modelMesh->PrepareMesh();
-        model->AddMesh(modelMesh);
+        spModelMesh->SetVertices(sVertexData);
+        spModelMesh->SetIndices(vIndexData);
+        spModelMesh->PrepareMesh();
+        spModel->AddMesh(spModelMesh);
     }
 
-    return model;
+    return spModel;
 }
 
-std::string ModelLoader::GetTextureFileNameFromMaterial(aiMaterial* material, aiTextureType type)
+std::string CModelLoader::GetTextureFileNameFromMaterial(aiMaterial* pMaterial, aiTextureType type)
 {
-    aiString path = {};
-    if (material->GetTextureCount(type) <= 0)
+    aiString sPath = {};
+    if (pMaterial->GetTextureCount(type) <= 0)
     {
         return std::string{};
     }
 
-    if (material->GetTexture(type, 0, &path) != AI_SUCCESS)
+    if (pMaterial->GetTexture(type, 0, &sPath) != AI_SUCCESS)
     {
-        verr << "Could not load texture " << type << " from path: " << path.data << nl;
+        verr << "Could not load texture " << type << " from path: " << sPath.data << nl;
         return std::string{};
     }
 
-    std::string pathStr{ path.C_Str()};
-    return Utility::GetFileNameFromPath(pathStr);
+    std::string sPathStr{ sPath.C_Str()};
+    return CUtility::GetFileNameFromPath(sPathStr);
 
 }
 
-std::string ModelLoader::GetTextureLocalPath(const std::filesystem::path& modelPath, const std::string& searchFileName)
+std::string CModelLoader::GetTextureLocalPath(const std::filesystem::path& modelPath, const std::string& searchFileName)
 {
     for (const auto entry : std::filesystem::directory_iterator(modelPath.parent_path()))
     {
         std::string entryStr = entry.path().string();
-        std::string fileName = Utility::GetFileNameFromPath(entryStr);
+        std::string fileName = CUtility::GetFileNameFromPath(entryStr);
         if (fileName == searchFileName)
         {
             return entryStr;

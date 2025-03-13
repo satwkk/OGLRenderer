@@ -3,9 +3,9 @@
 #include "ShaderLibrary.h"
 #include "Utility.h"
 
-ShaderLibrary* ShaderLibrary::s_Instance = nullptr;
+CShaderLibrary* CShaderLibrary::s_pCInstance = nullptr;
 
-void ShaderLibrary::Init()
+void CShaderLibrary::Init()
 {
 	std::filesystem::path shaderPath{ SHADER_RESOURCE_PATH };
 	for (auto& entry : std::filesystem::directory_iterator(shaderPath))
@@ -22,24 +22,24 @@ void ShaderLibrary::Init()
 			if (std::filesystem::exists({ vertexFile }) && std::filesystem::exists({ fragmentFile }))
 			{
 				vlog << "Adding shaders for: " << dirName << nl;
-				m_Library.emplace(dirName, Shader{ vertexFile, fragmentFile });
+				m_LibraryMap.emplace(dirName, CShader{ vertexFile, fragmentFile });
 			}
 		}
 	}
 }
 
-ShaderLibrary* ShaderLibrary::Get()
+CShaderLibrary* CShaderLibrary::Get()
 {
-	if (s_Instance == nullptr)
+	if (s_pCInstance == nullptr)
 	{
-		s_Instance = new ShaderLibrary;
+		s_pCInstance = new CShaderLibrary;
 	}
-	return s_Instance;
+	return s_pCInstance;
 }
 
-Shader& ShaderLibrary::GetShader(const ShaderID& id)
+CShader& CShaderLibrary::GetShader(const ShaderID& id)
 {
-	const auto it = m_Library.find(id);
-	ASSERT(it != m_Library.end());
+	const auto it = m_LibraryMap.find(id);
+	ASSERT(it != m_LibraryMap.end());
 	return it->second;
 }

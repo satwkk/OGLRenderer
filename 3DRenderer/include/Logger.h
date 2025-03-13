@@ -5,10 +5,10 @@
 #include <iostream>
 
 
-class Logger
+class CLogger
 {
 public:
-	Logger(std::ostream& outputStream, const std::string& prefix) :
+	CLogger(std::ostream& outputStream, const std::string& prefix) :
 		m_Stream(outputStream), m_Prefix(prefix)
 	{
 	}
@@ -24,8 +24,8 @@ private:
 	std::ostream& m_Stream;
 };
 
-static Logger verr(std::cerr, "ERROR");
-static Logger vlog(std::cout, "LOG");
-static Logger vwarn(std::cout, "WARN");
+static CLogger verr(std::cerr, "ERROR");
+static CLogger vlog(std::cout, "LOG");
+static CLogger vwarn(std::cout, "WARN");
 
 #define nl std::endl;

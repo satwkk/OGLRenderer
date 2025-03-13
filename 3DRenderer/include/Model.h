@@ -6,20 +6,20 @@
 
 #include "Mesh.h"
 
-class Shader;
+class CShader;
 
-class Model
+class CModel
 {
 public:
-	Model() = default;
-	~Model() = default;
+	CModel() = default;
+	~CModel() = default;
 
-	void AddMesh(const std::shared_ptr<Mesh>& mesh);
-	inline std::vector<std::shared_ptr<Mesh>>& GetMeshArray() { return m_Meshes; }
+	void AddMesh(const std::shared_ptr<CMesh>& pMesh);
+	inline std::vector<std::shared_ptr<CMesh>>& GetMeshArray() { return m_vMeshes; }
 
 public:
-	glm::mat4 m_ModelMatrix;
-	std::string Name{};
-	std::filesystem::path AssetPath{};
-	std::vector<std::shared_ptr<Mesh>> m_Meshes{};
+	glm::mat4 m_MModelMatrix;
+	std::string m_sName{};
+	std::filesystem::path m_fsAssetPath{};
+	std::vector<std::shared_ptr<CMesh>> m_vMeshes{};
 };

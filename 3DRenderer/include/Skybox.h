@@ -8,7 +8,7 @@
 #include "Buffer.h"
 #include "VertexArray.h"
 
-static std::vector<float> gVertices =
+static std::vector<float> gvVertices =
 {
     -1.0f,  1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,
@@ -53,17 +53,17 @@ static std::vector<float> gVertices =
      1.0f, -1.0f,  1.0f
 };
 
-static SVertexBufferData gBufferData;
+static SVertexBufferData gSBufferData;
 
-class Skybox
+class CSkybox
 {
 public:
-	Skybox();
-	~Skybox();
+	CSkybox();
+	~CSkybox();
 
-	void OnRender(Shader& shader, Camera& camera);
+	void OnRender(CShader& shader, CPerspectiveCamera& camera);
 
 private:
-	CubeMap m_CubeMap;
-    VertexArray m_VAO;
+	CCubeMap m_cCubeMap;
+    CVertexArray m_cVertexArray;
 };

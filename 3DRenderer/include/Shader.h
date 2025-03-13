@@ -4,22 +4,22 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class Shader
+class CShader
 {
 public:
-	Shader() = default;
-	Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
-	~Shader();
+	CShader() = default;
+	CShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+	~CShader();
 
-	Shader(Shader& other) noexcept;
-	Shader& operator=(Shader& other) noexcept;
-	Shader(Shader&& other) noexcept;
-	Shader& operator=(Shader&& other) noexcept;
+	CShader(CShader& other) noexcept;
+	CShader& operator=(CShader& other) noexcept;
+	CShader(CShader&& other) noexcept;
+	CShader& operator=(CShader&& other) noexcept;
 
 	void Bind();
 	void UnBind();
 
-	const unsigned int GetRendererID() const { return m_RendererID; }
+	const unsigned int GetRendererID() const { return m_uRendererID; }
 	void SetUniformMatrix4(const std::string& name, const glm::mat4& value);
 	void SetUniformVector3(const std::string& name, const glm::vec3& value);
 	void SetUniformFloat(const std::string& name, float value);
@@ -29,5 +29,5 @@ private:
 	uint32_t LoadShader(const std::string& shaderPath, unsigned int shaderType);
 
 private:
-	unsigned int m_RendererID;
+	unsigned int m_uRendererID;
 };

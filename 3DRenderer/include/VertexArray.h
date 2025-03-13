@@ -3,11 +3,11 @@
 #include "Buffer.h"
 #include <memory>
 
-class VertexArray
+class CVertexArray
 {
 public:
-	VertexArray();
-	~VertexArray();
+	CVertexArray();
+	~CVertexArray();
 
 	void Bind();
 	void UnBind();
@@ -16,13 +16,13 @@ public:
     void SetIndexBuffer(const std::vector<unsigned int>& indexData);
 	void PrepareVertexArray();
 
-	inline const uint32_t GetID() const { return m_VAO; }
-    inline const uint32_t GetIndexCount() const { return m_IndexCount; }
+	inline const uint32_t GetID() const { return m_uVAO; }
+    inline const uint32_t GetIndexCount() const { return m_uIndexCount; }
 
 private:
-	uint32_t m_VAO;
-	SVertexBufferData m_VertexBufferData;
-    BufferID m_VertexBuffer;
-    BufferID m_IndexBuffer;
-    uint32_t m_IndexCount;
+	uint32_t m_uVAO;
+	SVertexBufferData m_sVertexBufferData;
+    BufferID m_uVertexBuffer;
+    BufferID m_uIndexBuffer;
+    uint32_t m_uIndexCount;
 };

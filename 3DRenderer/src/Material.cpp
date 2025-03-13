@@ -2,60 +2,60 @@
 #include "Shader.h"
 #include "Application.h"
 
-Material::Material() :
-	m_Shine(64.0f),
-    m_AmbientColor(0.1f),
-    m_SpecularColor(0.0f),
-    m_DiffuseColor(1.0f)
+CMaterial::CMaterial() :
+	m_fShine(64.0f),
+    m_VAmbientColor(0.1f),
+    m_VSpecularColor(0.0f),
+    m_VDiffuseColor(1.0f)
 {
 }
 
-Material::~Material()
+CMaterial::~CMaterial()
 {
 }
 
-void Material::SetDiffuse(const std::string& texturePath, uint32_t slot)
+void CMaterial::SetDiffuse(const std::string& texturePath, uint32_t slot)
 {
 	assert(texturePath.empty() == false);
-	m_Diffuse = Texture(texturePath, slot);
+	m_cDiffuse = CTexture(texturePath, slot);
 }
 
-void Material::SetSpecular(const std::string& texturePath, uint32_t slot)
+void CMaterial::SetSpecular(const std::string& texturePath, uint32_t slot)
 {
     assert(texturePath.empty() == false);
-    m_Specular = Texture(texturePath, slot);
+    m_cSpecular = CTexture(texturePath, slot);
 }
 
-void Material::OnRender(Shader& shader)
+void CMaterial::OnRender(CShader& shader)
 {
-    shader.SetUniformVector3("material.diffuseColor", m_DiffuseColor);
-    shader.SetUniformVector3("material.specularColor", m_SpecularColor);
-    shader.SetUniformVector3("material.ambientColor", m_AmbientColor);
-    shader.SetUniformFloat("material.shine", m_Shine);
+    shader.SetUniformVector3("material.diffuseColor", m_VDiffuseColor);
+    shader.SetUniformVector3("material.specularColor", m_VSpecularColor);
+    shader.SetUniformVector3("material.ambientColor", m_VAmbientColor);
+    shader.SetUniformFloat("material.shine", m_fShine);
 
-    if (m_Diffuse.IsLoaded())
+    if (m_cDiffuse.IsLoaded())
     {
-        shader.SetUniformInt("material.diffuse", m_Diffuse.GetSlot());
+        shader.SetUniformInt("material.diffuse", m_cDiffuse.GetSlot());
     }
-    if (m_Specular.IsLoaded())
+    if (m_cSpecular.IsLoaded())
     {
-        shader.SetUniformInt("material.specular", m_Specular.GetSlot());
+        shader.SetUniformInt("material.specular", m_cSpecular.GetSlot());
     }
 }
 
-void Material::Enable()
+void CMaterial::Enable()
 {
-    if (m_Diffuse.IsLoaded())
-        m_Diffuse.Bind();
+    if (m_cDiffuse.IsLoaded())
+        m_cDiffuse.Bind();
 }
 
-void Material::Disable()
+void CMaterial::Disable()
 {
-    if (m_Diffuse.IsLoaded())
-        m_Diffuse.UnBind();
+    if (m_cDiffuse.IsLoaded())
+        m_cDiffuse.UnBind();
 }
 
-Material Material::DefaultMaterial()
+CMaterial CMaterial::DefaultMaterial()
 {
-    return Material {};
+    return CMaterial {};
 }

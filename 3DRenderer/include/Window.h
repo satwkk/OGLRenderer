@@ -7,27 +7,27 @@
 
 struct GLFWwindow;
 
-class Window
+class CWindow
 {
 public:
-	Window() = default;
-	Window(float width, float height, const std::string& name);
-	~Window();
+	CWindow() = default;
+	CWindow(float width, float height, const std::string& name);
+	~CWindow();
 
 	void Enable(uint32_t enableFlag);
 	void OnUpdate(float ts);
 	void AddUpdateCallback(const std::function<void()>& updateCallback);
 	bool bShouldClose();
 	
-	GLFWwindow* GetHandle() const { return m_Handle; }
-	void SetBackgroundColor(const glm::vec3& color) { m_WindowBackgroundColor = color; }
-	const glm::vec3& GetBackgroundColor() const { return m_WindowBackgroundColor; }
+	GLFWwindow* GetHandle() const { return m_pSHandle; }
+	void SetBackgroundColor(const glm::vec3& color) { m_VWindowBackgroundColor = color; }
+	const glm::vec3& GetBackgroundColor() const { return m_VWindowBackgroundColor; }
 
 public:
-	std::function<void()> m_UpdateCallback;
+	std::function<void()> m_fnUpdateCallback;
 
 private:
-	glm::vec3 m_WindowBackgroundColor;
-	uint32_t m_EnabledFlags;
-	GLFWwindow* m_Handle;
+	glm::vec3 m_VWindowBackgroundColor;
+	uint32_t m_uEnabledFlags;
+	GLFWwindow* m_pSHandle;
 };

@@ -2,23 +2,23 @@
 
 #include <memory>
 
-class VertexArray;
-class Shader;
+class CVertexArray;
+class CShader;
 
-class Renderer
+class CRenderer
 {
 public:
 	bool Init();
 	void ShutDown();
-	inline Renderer* Get() { return s_Instance; }
-	void Render(std::shared_ptr<Shader>& shader, std::shared_ptr<VertexArray>& vertexArray);
+	inline CRenderer* Get() { return s_pCInstance; }
+	void Render(std::shared_ptr<CShader>& shader, std::shared_ptr<CVertexArray>& vertexArray);
 	
 private:
-	Renderer() = default;
-	~Renderer() = default;
-	Renderer(const Renderer&) = delete;
-	Renderer(Renderer&&) = delete;
+	CRenderer() = default;
+	~CRenderer() = default;
+	CRenderer(const CRenderer&) = delete;
+	CRenderer(CRenderer&&) = delete;
 
 public:
-	static Renderer* s_Instance;
+	static CRenderer* s_pCInstance;
 };

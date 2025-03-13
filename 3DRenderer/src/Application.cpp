@@ -13,147 +13,147 @@
 #include "SceneObject.h"
 #include "Logger.h"
 
-void UpdateCamera(GLFWwindow* window, Camera& camera)
+void UpdateCamera(GLFWwindow* pSWindow, CPerspectiveCamera& cCamera)
 {
-    if (shouldMoveLight) return;
+    if (bShouldMoveLight) return;
     glm::vec3 targetDir = glm::vec3(0.0f, 0.0f, 0.0f);
     float angle = 0.0f;
 
-    if (glfwGetKey(window, GLFW_KEY_A))
+    if (glfwGetKey(pSWindow, GLFW_KEY_A))
     {
         targetDir = glm::vec3(-1.0f, 0.0f, 0.0f);
     }
 
-    else if (glfwGetKey(window, GLFW_KEY_D))
+    else if (glfwGetKey(pSWindow, GLFW_KEY_D))
     {
         targetDir = glm::vec3(1.0f, 0.0f, 0.0f);
     }
 
-    else if (glfwGetKey(window, GLFW_KEY_W))
+    else if (glfwGetKey(pSWindow, GLFW_KEY_W))
     {
         targetDir = glm::vec3(0.0f, 0.0f, -1.0f);
     }
 
-    else if (glfwGetKey(window, GLFW_KEY_S))
+    else if (glfwGetKey(pSWindow, GLFW_KEY_S))
     {
         targetDir = glm::vec3(0.0f, 0.0f, 1.0f);
     }
 
     double cursorPosX = 0.0;
     double cursorPosY = 0.0;
-    glfwGetCursorPos(window, &cursorPosX, &cursorPosY);
+    glfwGetCursorPos(pSWindow, &cursorPosX, &cursorPosY);
 
-    double deltaX = cursorPosX - cursorPosLastFrameX;
-    double deltaY = cursorPosY - cursorPosLastFrameY;
+    double deltaX = cursorPosX - dCursorPosLastFrameX;
+    double deltaY = cursorPosY - dCursorPosLastFrameY;
 
-    camera.Rotate(-deltaY, -deltaX);
-    camera.Move(targetDir);
+    cCamera.Rotate(-deltaY, -deltaX);
+    cCamera.Move(targetDir);
 
-    cursorPosLastFrameX = cursorPosX;
-    cursorPosLastFrameY = cursorPosY;
+    dCursorPosLastFrameX = cursorPosX;
+    dCursorPosLastFrameY = cursorPosY;
 }
 
-void UpdateLight(GLFWwindow* window)
+void UpdateLight(GLFWwindow* pSWindow)
 {
-    if (glfwGetKey(window, GLFW_KEY_L))
+    if (glfwGetKey(pSWindow, GLFW_KEY_L))
     {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-        shouldMoveLight = true;
+        glfwSetInputMode(pSWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        bShouldMoveLight = true;
 
     }
     else
     {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        shouldMoveLight = false;
+        glfwSetInputMode(pSWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        bShouldMoveLight = false;
     }
 
-    if (!shouldMoveLight) return;
+    if (!bShouldMoveLight) return;
 
     double mouseX, mouseY;
-    glfwGetCursorPos(window, &mouseX, &mouseY);
+    glfwGetCursorPos(pSWindow, &mouseX, &mouseY);
 
-    float deltaX = mouseX - cursorPosLastFrameX;
-    float deltaY = mouseY - cursorPosLastFrameY;
+    float deltaX = mouseX - dCursorPosLastFrameX;
+    float deltaY = mouseY - dCursorPosLastFrameY;
 
-    lightPosition += glm::vec3(deltaX * lightMoveSens, 0.f, deltaY * lightMoveSens);
+    vLightPosition += glm::vec3(deltaX * dLightMoveSens, 0.f, deltaY * dLightMoveSens);
 
-    cursorPosLastFrameX = mouseX;
-    cursorPosLastFrameY = mouseY;
+    dCursorPosLastFrameX = mouseX;
+    dCursorPosLastFrameY = mouseY;
 }
 
-Application* Application::s_Instance = nullptr;
+CApplication* CApplication::s_pCInstance = nullptr;
 
-Application::Application(const AppConfig& config) :
-    m_Config{ config },
-    m_Camera{ glm::vec3{ 0.0f, 0.0f, 0.0f }, 1.f, 5000.f, m_Config.WindowWidth, m_Config.WindowHeight, 45.0f }
+CApplication::CApplication(const AppConfig& sConfig) :
+    m_sConfig{ sConfig },
+    m_cCamera{ glm::vec3{ 0.0f, 0.0f, 0.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
 {
 }
 
-Application::~Application()
+CApplication::~CApplication()
 {
-    m_Scene.CloseScene();
+    m_cScene.CloseScene();
     glfwTerminate();
 }
 
-Application* Application::Create(const AppConfig& config)
+CApplication* CApplication::Create(const AppConfig& sConfig)
 {
-	return s_Instance = (s_Instance == nullptr) ? new Application(config) : s_Instance;
+	return s_pCInstance = (s_pCInstance == nullptr) ? new CApplication(sConfig) : s_pCInstance;
 }
 
-bool Application::Init()
+bool CApplication::Init()
 {
     // Create the window
-    m_pMainWindow = std::make_unique<Window>(m_Config.WindowWidth, m_Config.WindowHeight, m_Config.ApplicationName);
+    m_pCMainWindow = std::make_unique<CWindow>(m_sConfig.WindowWidth, m_sConfig.WindowHeight, m_sConfig.ApplicationName);
 
     // Add on update callback
-    m_pMainWindow->AddUpdateCallback([&]() { OnUpdate(); });
+    m_pCMainWindow->AddUpdateCallback([&]() { OnUpdate(); });
 
     // Enable depth testing
-    m_pMainWindow->Enable(GL_DEPTH_TEST);
+    m_pCMainWindow->Enable(GL_DEPTH_TEST);
 
     // Initialize shader library
-    m_ShaderLibrary.Init();
+    m_cShaderLibrary.Init();
 
     // Get the phong shader model
     // TODO(void): Load this based on setting file
-    m_Shader = m_ShaderLibrary.GetShader("phong");
+    m_cShader = m_cShaderLibrary.GetShader("phong");
 
     // Add skybox
     // TODO(void): Move this to scene later
-    m_pSkybox = std::make_unique<Skybox>();
-    m_SkyboxShader = m_ShaderLibrary.GetShader("cubemap");
+    m_pCSkybox = std::make_unique<CSkybox>();
+    m_cSkyboxShader = m_cShaderLibrary.GetShader("cubemap");
 
-    m_Scene.InitScene();
+    m_cScene.InitScene();
 
     return true;
 }
 
-void Application::Run()
+void CApplication::Run()
 {
-    m_pMainWindow->OnUpdate(0.f);
+    m_pCMainWindow->OnUpdate(0.f);
 }
 
-void Application::OnUpdate()
+void CApplication::OnUpdate()
 {
-    UpdateLight(m_pMainWindow->GetHandle());
-    UpdateCamera(m_pMainWindow->GetHandle(), m_Camera);
+    UpdateLight(m_pCMainWindow->GetHandle());
+    UpdateCamera(m_pCMainWindow->GetHandle(), m_cCamera);
 
-    m_pSkybox->OnRender(m_SkyboxShader, m_Camera);
+    m_pCSkybox->OnRender(m_cSkyboxShader, m_cCamera);
 
-    m_Shader.Bind();
+    m_cShader.Bind();
 
     // Camera View projection matrix
-    m_Shader.SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());
+    m_cShader.SetUniformMatrix4("uVPMatrix", m_cCamera.GetVPMatrix());
 
     // Position properties
-    m_Shader.SetUniformVector3("light.position", lightPosition);
-    m_Shader.SetUniformVector3("uCameraPosition", m_Camera.GetPosition());
+    m_cShader.SetUniformVector3("light.position", vLightPosition);
+    m_cShader.SetUniformVector3("uCameraPosition", m_cCamera.GetPosition());
 
     // Light properties
-    m_Shader.SetUniformVector3("light.ambient", glm::vec3(0.2f));
-    m_Shader.SetUniformVector3("light.diffuse", glm::vec3(0.5f));
-    m_Shader.SetUniformVector3("light.specular", glm::vec3(1.0f));
+    m_cShader.SetUniformVector3("light.ambient", glm::vec3(0.2f));
+    m_cShader.SetUniformVector3("light.diffuse", glm::vec3(0.5f));
+    m_cShader.SetUniformVector3("light.specular", glm::vec3(1.0f));
 
     // Update scene
-    m_Scene.OnUpdate(m_Shader);
+    m_cScene.OnUpdate(m_cShader);
 }

@@ -10,28 +10,28 @@
 #include "Utility.h"
 
 class SceneObject;
-class Model;
-class Shader;
+class CModel;
+class CShader;
 
-class Scene
+class CScene
 {
 public:
-	Scene() = default;
-	~Scene() = default;
+	CScene() = default;
+	~CScene() = default;
 
 	void InitScene();
-	void OnUpdate(Shader& shader);
+	void OnUpdate(CShader& shader);
 	void CloseScene();
 
-	inline entt::registry& GetSceneRegistry() { return m_Registry; }
-	inline std::shared_ptr<Model>& GetEntityModel(const entt::entity entity) {
-		auto it = m_SceneObjects.find(entity);
-		ASSERT(it != m_SceneObjects.end());
+	inline entt::registry& GetSceneRegistry() { return m_cRegistry; }
+	inline std::shared_ptr<CModel>& GetEntityModel(const entt::entity entity) {
+		auto it = m_umSceneObjectMap.find(entity);
+		ASSERT(it != m_umSceneObjectMap.end());
 		return it->second;
 	}
 
 private:
 	// TODO: Replace with scene objects later
-	std::unordered_map<entt::entity, std::shared_ptr<Model>> m_SceneObjects;
-	entt::registry m_Registry;
+	std::unordered_map<entt::entity, std::shared_ptr<CModel>> m_umSceneObjectMap;
+	entt::registry m_cRegistry;
 };

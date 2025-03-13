@@ -3,10 +3,10 @@
 #include "Window.h"
 #include "Logger.h"
 
-Window::Window(float width, float height, const std::string& name) :
-	m_Handle { nullptr },
-	m_WindowBackgroundColor{ 0.1f, 0.1f, 0.1f },
-	m_EnabledFlags{ 0 }
+CWindow::CWindow(float width, float height, const std::string& name) :
+	m_pSHandle { nullptr },
+	m_VWindowBackgroundColor{ 0.1f, 0.1f, 0.1f },
+	m_uEnabledFlags{ 0 }
 {
 	// Init GLFW
 	if (!glfwInit())
@@ -15,9 +15,9 @@ Window::Window(float width, float height, const std::string& name) :
 		return;
 	}
 
-	m_Handle = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
+	m_pSHandle = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 
-	if (m_Handle == nullptr)
+	if (m_pSHandle == nullptr)
 	{
 		std::cerr << "Could not create GLFW window" << std::endl;
 		return;
@@ -26,7 +26,7 @@ Window::Window(float width, float height, const std::string& name) :
 	std::cout << "Window Created: " << name << std::endl;
 
 	// Setup context
-	glfwMakeContextCurrent(m_Handle);
+	glfwMakeContextCurrent(m_pSHandle);
 
 	// Init GLEW OpenGL loader
 	if (glewInit() != GLEW_OK)
@@ -39,12 +39,12 @@ Window::Window(float width, float height, const std::string& name) :
 	}
 }
 
-Window::~Window()
+CWindow::~CWindow()
 {
-	glfwDestroyWindow(m_Handle);
+	glfwDestroyWindow(m_pSHandle);
 }
 
-void Window::OnUpdate(float ts)
+void CWindow::OnUpdate(float ts)
 {
 	glDepthRange(0.0f, 1.0f);
 	glClearDepth(1.0f);
@@ -52,24 +52,24 @@ void Window::OnUpdate(float ts)
 	{
 		glfwPollEvents();
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		glClearColor(m_WindowBackgroundColor.r, m_WindowBackgroundColor.g, m_WindowBackgroundColor.b, 1.0f);
-		m_UpdateCallback();
-		glfwSwapBuffers(m_Handle);
+		glClearColor(m_VWindowBackgroundColor.r, m_VWindowBackgroundColor.g, m_VWindowBackgroundColor.b, 1.0f);
+		m_fnUpdateCallback();
+		glfwSwapBuffers(m_pSHandle);
 	}
 }
 
-void Window::AddUpdateCallback(const std::function<void()>& updateCallback)
+void CWindow::AddUpdateCallback(const std::function<void()>& updateCallback)
 {
-	m_UpdateCallback = updateCallback;
+	m_fnUpdateCallback = updateCallback;
 }
 
-bool Window::bShouldClose()
+bool CWindow::bShouldClose()
 {
-	return glfwWindowShouldClose(m_Handle);
+	return glfwWindowShouldClose(m_pSHandle);
 }
 
-void Window::Enable(uint32_t enableFlag)
+void CWindow::Enable(uint32_t enableFlag)
 {
 	glEnable(enableFlag);
-	m_EnabledFlags |= enableFlag;
+	m_uEnabledFlags |= enableFlag;
 }

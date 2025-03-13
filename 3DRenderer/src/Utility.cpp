@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <fstream>
 
-std::string Utility::ReadFile(const std::string& filePath)
+std::string CUtility::ReadFile(const std::string& filePath)
 {
 	std::filesystem::path file(filePath);
 	std::ifstream inputStream(filePath);
@@ -17,7 +17,7 @@ std::string Utility::ReadFile(const std::string& filePath)
 	return contents;
 }
 
-std::string Utility::GetFileNameFromPath(const std::string& filePath)
+std::string CUtility::GetFileNameFromPath(const std::string& filePath)
 {
 	std::filesystem::path file(filePath);
 	ASSERT(file.has_filename());

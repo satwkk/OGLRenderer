@@ -12,17 +12,17 @@ typedef std::string ShaderID;
 #define VERTEXSHADERSRCFILENAME "vertex.glsl"
 #define FRAGMENTSHADERSRCFILENAME "fragment.glsl"
 
-class ShaderLibrary
+class CShaderLibrary
 {
 public:
-	ShaderLibrary() {};
-	~ShaderLibrary() = default;
+	CShaderLibrary() {};
+	~CShaderLibrary() = default;
 
 	void Init();
-	static ShaderLibrary* Get();
-	Shader& GetShader(const ShaderID& shaderID);
+	static CShaderLibrary* Get();
+	CShader& GetShader(const ShaderID& shaderID);
 
 private:
-	static ShaderLibrary* s_Instance;
-	std::unordered_map<ShaderID, Shader> m_Library;
+	static CShaderLibrary* s_pCInstance;
+	std::unordered_map<ShaderID, CShader> m_LibraryMap;
 };

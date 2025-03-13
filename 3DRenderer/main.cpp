@@ -5,7 +5,7 @@
 
 int main()
 {
-	Application* app = Application::Create({ 
+	CApplication* app = CApplication::Create({ 
 		.WindowWidth = 1920, 
 		.WindowHeight = 1080, 
 		.BackgroundColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f),

@@ -13,14 +13,14 @@
 
 #define BASICFLAGS aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_PreTransformVertices 
 
-class ModelLoader
+class CModelLoader
 {
 private:
-	ModelLoader() = default;
-	~ModelLoader() = default;
+	CModelLoader() = default;
+	~CModelLoader() = default;
 	
 public:
-	static std::shared_ptr<Model> Load(const std::string& modelPath, unsigned int flags);
-	static std::string GetTextureFileNameFromMaterial(aiMaterial* material, aiTextureType type);
+	static std::shared_ptr<CModel> Load(const std::string& modelPath, unsigned int flags);
+	static std::string GetTextureFileNameFromMaterial(aiMaterial* pMaterial, aiTextureType type);
 	static std::string GetTextureLocalPath(const std::filesystem::path& modelPath, const std::string& searchFileName);
 };

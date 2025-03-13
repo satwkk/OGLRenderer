@@ -4,32 +4,32 @@
 #include "glm/glm.hpp"
 #include <memory>
 
-class Shader;
+class CShader;
 
-class Material
+class CMaterial
 {
 public:
-	Material();
-	~Material();
+	CMaterial();
+	~CMaterial();
 
 	void SetDiffuse(const std::string& texturePath, uint32_t slot);
     void SetSpecular(const std::string& texturePath, uint32_t slot);
 
 	void Enable();
 	void Disable();
-    void OnRender(Shader& shader);
+    void OnRender(CShader& shader);
 
-    static Material DefaultMaterial();
+    static CMaterial DefaultMaterial();
 
-	inline void SetShine(float shine) { m_Shine = shine; }
-	inline Texture& GetDiffuseMap() { return m_Diffuse; }
-	inline const float GetShine()  const { return m_Shine; }
-	inline uint32_t GetDiffuseMapSlotIndex() { return m_Diffuse.GetSlot(); }
+	inline void SetShine(float shine) { m_fShine = shine; }
+	inline CTexture& GetDiffuseMap() { return m_cDiffuse; }
+	inline const float GetShine()  const { return m_fShine; }
+	inline uint32_t GetDiffuseMapSlotIndex() { return m_cDiffuse.GetSlot(); }
 private:
-	Texture m_Diffuse;
-	Texture m_Specular;
-	float m_Shine;
-    glm::vec3 m_AmbientColor;
-    glm::vec3 m_DiffuseColor; 
-    glm::vec3 m_SpecularColor; 
+	CTexture m_cDiffuse;
+	CTexture m_cSpecular;
+	float m_fShine;
+    glm::vec3 m_VAmbientColor;
+    glm::vec3 m_VDiffuseColor; 
+    glm::vec3 m_VSpecularColor; 
 };

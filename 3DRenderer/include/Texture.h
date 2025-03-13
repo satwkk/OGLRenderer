@@ -3,22 +3,22 @@
 #include <string>
 #include "Utility.h"
 
-class Texture
+class CTexture
 {
 public:
-	Texture() = default;
-	Texture(const std::string& filePath, uint32_t slot);
-	~Texture();
+	CTexture() = default;
+	CTexture(const std::string& filePath, uint32_t slot);
+	~CTexture();
 
 	void Bind();
 	void UnBind();
 
-    bool IsLoaded() { return m_TextureID != 0; }
+    bool IsLoaded() { return m_uTextureID != 0; }
 
-	uint32_t GetSlot() { return m_Slot; }
-	uint32_t GetID() { return m_TextureID; }
+	uint32_t GetSlot() { return m_uSlot; }
+	uint32_t GetID() { return m_uTextureID; }
 
 private:
-	uint32_t m_TextureID;
-	uint32_t m_Slot;
+	uint32_t m_uTextureID;
+	uint32_t m_uSlot;
 };
