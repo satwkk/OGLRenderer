@@ -22,6 +22,7 @@ void CRenderer::ShutDown()
 	delete s_pCInstance;
 }
 
-void CRenderer::Render(std::shared_ptr<CShader>& shader, std::shared_ptr<CVertexArray>& vertexArray)
+void CRenderer::Render(CShader& shader, SMeshRendererComponent& meshRenderer, STransformComponent& transformComponent)
 {
+	verr << "Not Implemented\n";
 }

@@ -68,8 +68,19 @@ bool CWindow::bShouldClose()
 	return glfwWindowShouldClose(m_pSHandle);
 }
 
-void CWindow::Enable(uint32_t enableFlag)
+void CWindow::EnableFlag(uint32_t flag)
 {
-	glEnable(enableFlag);
-	m_uEnabledFlags |= enableFlag;
+	glEnable(flag);
+	m_uEnabledFlags |= flag;
+}
+
+void CWindow::DisableFlag(uint32_t flag)
+{
+	glDisable(flag);
+	m_uEnabledFlags &= ~flag;
+}
+
+bool CWindow::IsFlagEnabled(uint32_t flagBit)
+{
+	return (m_uEnabledFlags & flagBit) == flagBit;
 }

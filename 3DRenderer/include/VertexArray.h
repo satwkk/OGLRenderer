@@ -21,7 +21,7 @@ public:
 
 private:
 	uint32_t m_uVAO;
-	SVertexBufferData m_sVertexBufferData;
+	SVertexBufferData m_SVertexBufferData;
     BufferID m_uVertexBuffer;
     BufferID m_uIndexBuffer;
     uint32_t m_uIndexCount;

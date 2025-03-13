@@ -23,7 +23,7 @@ public:
 	void OnUpdate(CShader& shader);
 	void CloseScene();
 
-	inline entt::registry& GetSceneRegistry() { return m_cRegistry; }
+	inline entt::registry& GetSceneRegistry() { return m_CRegistry; }
 	inline std::shared_ptr<CModel>& GetEntityModel(const entt::entity entity) {
 		auto it = m_umSceneObjectMap.find(entity);
 		ASSERT(it != m_umSceneObjectMap.end());
@@ -33,5 +33,5 @@ public:
 private:
 	// TODO: Replace with scene objects later
 	std::unordered_map<entt::entity, std::shared_ptr<CModel>> m_umSceneObjectMap;
-	entt::registry m_cRegistry;
+	entt::registry m_CRegistry;
 };

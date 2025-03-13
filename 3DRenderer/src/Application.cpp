@@ -85,13 +85,13 @@ CApplication* CApplication::s_pCInstance = nullptr;
 
 CApplication::CApplication(const AppConfig& sConfig) :
     m_sConfig{ sConfig },
-    m_cCamera{ glm::vec3{ 0.0f, 0.0f, 0.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
+    m_CCamera{ glm::vec3{ 0.0f, 0.0f, 0.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
 {
 }
 
 CApplication::~CApplication()
 {
-    m_cScene.CloseScene();
+    m_CScene.CloseScene();
     glfwTerminate();
 }
 
@@ -109,21 +109,21 @@ bool CApplication::Init()
     m_pCMainWindow->AddUpdateCallback([&]() { OnUpdate(); });
 
     // Enable depth testing
-    m_pCMainWindow->Enable(GL_DEPTH_TEST);
+    m_pCMainWindow->EnableFlag(GL_DEPTH_TEST);
 
     // Initialize shader library
-    m_cShaderLibrary.Init();
+    m_CShaderLibrary.Init();
 
     // Get the phong shader model
     // TODO(void): Load this based on setting file
-    m_cShader = m_cShaderLibrary.GetShader("phong");
+    m_CShader = m_CShaderLibrary.GetShader("phong");
 
     // Add skybox
     // TODO(void): Move this to scene later
     m_pCSkybox = std::make_unique<CSkybox>();
-    m_cSkyboxShader = m_cShaderLibrary.GetShader("cubemap");
+    m_CSkyboxShader = m_CShaderLibrary.GetShader("cubemap");
 
-    m_cScene.InitScene();
+    m_CScene.InitScene();
 
     return true;
 }
@@ -136,24 +136,24 @@ void CApplication::Run()
 void CApplication::OnUpdate()
 {
     UpdateLight(m_pCMainWindow->GetHandle());
-    UpdateCamera(m_pCMainWindow->GetHandle(), m_cCamera);
+    UpdateCamera(m_pCMainWindow->GetHandle(), m_CCamera);
 
-    m_pCSkybox->OnRender(m_cSkyboxShader, m_cCamera);
+    m_pCSkybox->OnRender(m_CSkyboxShader, m_CCamera);
 
-    m_cShader.Bind();
+    m_CShader.Bind();
 
     // Camera View projection matrix
-    m_cShader.SetUniformMatrix4("uVPMatrix", m_cCamera.GetVPMatrix());
+    m_CShader.SetUniformMatrix4("uVPMatrix", m_CCamera.GetVPMatrix());
 
     // Position properties
-    m_cShader.SetUniformVector3("light.position", vLightPosition);
-    m_cShader.SetUniformVector3("uCameraPosition", m_cCamera.GetPosition());
+    m_CShader.SetUniformVector3("light.position", vLightPosition);
+    m_CShader.SetUniformVector3("uCameraPosition", m_CCamera.GetPosition());
 
     // Light properties
-    m_cShader.SetUniformVector3("light.ambient", glm::vec3(0.2f));
-    m_cShader.SetUniformVector3("light.diffuse", glm::vec3(0.5f));
-    m_cShader.SetUniformVector3("light.specular", glm::vec3(1.0f));
+    m_CShader.SetUniformVector3("light.ambient", glm::vec3(0.2f));
+    m_CShader.SetUniformVector3("light.diffuse", glm::vec3(0.5f));
+    m_CShader.SetUniformVector3("light.specular", glm::vec3(1.0f));
 
     // Update scene
-    m_cScene.OnUpdate(m_cShader);
+    m_CScene.OnUpdate(m_CShader);
 }

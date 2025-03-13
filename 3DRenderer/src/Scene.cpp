@@ -12,15 +12,15 @@ void CScene::InitScene()
         CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
     };
 
-    for (auto& pCModel : vModels)
+    for (auto& spCModel : vModels)
     {
-	    entt::entity uEntityID = m_cRegistry.create();
+	    entt::entity uEntityID = m_CRegistry.create();
         srand(rand());
-        float fXPos = rand() % 5000;
-        float fZPos = rand() % 5000;
-        m_cRegistry.emplace<STransformComponent>(uEntityID, glm::vec3{ fXPos, 0.0f, fZPos }, glm::vec3{ 0.3f });
-        m_cRegistry.emplace<SMeshRendererComponent>(uEntityID, pCModel);
-        m_umSceneObjectMap.insert({ uEntityID, pCModel });
+        const float fXPos = rand() % 5000;
+        const float fZPos = rand() % 5000;
+        m_CRegistry.emplace<STransformComponent>(uEntityID, glm::vec3{ fXPos, 0.0f, fZPos }, glm::vec3{ 0.3f });
+        m_CRegistry.emplace<SMeshRendererComponent>(uEntityID, spCModel);
+        m_umSceneObjectMap.insert({ uEntityID, spCModel });
     }
 }
 
@@ -34,7 +34,7 @@ void CScene::CloseScene()
 {
     for (auto& paSceneObject : m_umSceneObjectMap)
     {
-        std::shared_ptr<CModel> spModelRef = paSceneObject.second;
-        spModelRef.reset();
+        std::shared_ptr<CModel> spCModelRef = paSceneObject.second;
+        spCModelRef.reset();
     }
 }

@@ -58,12 +58,12 @@ static SVertexBufferData gSBufferData;
 class CSkybox
 {
 public:
-	CSkybox();
-	~CSkybox();
+    CSkybox();
+    ~CSkybox();
 
-	void OnRender(CShader& shader, CPerspectiveCamera& camera);
+    void OnRender(CShader& shader, CPerspectiveCamera& camera);
 
 private:
-	CCubeMap m_cCubeMap;
-    CVertexArray m_cVertexArray;
+    CCubeMap m_CCubeMap;
+    CVertexArray m_CVertexArray;
 };

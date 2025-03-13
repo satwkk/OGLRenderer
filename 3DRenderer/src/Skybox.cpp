@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 
 CSkybox::CSkybox() :
-	m_cVertexArray({})
+	m_CVertexArray({})
 {
 	std::vector<std::string> paths
 	{
@@ -15,31 +15,42 @@ CSkybox::CSkybox() :
 	};
 
 	gSBufferData.vVertices = gvVertices;
-	gSBufferData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
+	gSBufferData.vBufferLayouts.push_back(SVertexAttributeLayout{ EVertexAttributeType::Float3, 0 });
 
-	m_cVertexArray.SetVertexBuffer(gSBufferData);
-	m_cCubeMap.InitCubeMap(paths);
-	m_cVertexArray.PrepareVertexArray();
+	m_CVertexArray.SetVertexBuffer(gSBufferData);
+	m_CCubeMap.InitCubeMap(paths);
+	m_CVertexArray.PrepareVertexArray();
 }
 
 CSkybox::~CSkybox()
 {
-	m_cCubeMap.Release();
+	m_CCubeMap.Release();
 }
 
 void CSkybox::OnRender(CShader& shader, CPerspectiveCamera& camera)
 {
+	// Set depth properties
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_FALSE);
+
+	// Set shader params for view projection
 	shader.Bind();
 	shader.SetUniformMatrix4("uProjection", camera.GetProjectionMatrix());
 	shader.SetUniformMatrix4("uView", glm::mat4{ camera.GetViewMatrixWithoutTranslation() });
-	m_cVertexArray.Bind();
-	m_cCubeMap.Bind();
+
+	// Bind VAO and cubemap texture
+	m_CVertexArray.Bind();
+	m_CCubeMap.Bind();
+
+	// Draw the skybox
 	glDrawArrays(GL_TRIANGLES, 0, gvVertices.size());
-	m_cCubeMap.UnBind();
-	m_cVertexArray.UnBind();
+
+	// Unbind resources
+	m_CCubeMap.UnBind();
+	m_CVertexArray.UnBind();
 	shader.UnBind();
+
+	// Reset depth properties
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LESS);
 }

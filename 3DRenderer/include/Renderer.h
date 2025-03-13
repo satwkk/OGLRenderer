@@ -2,6 +2,10 @@
 
 #include <memory>
 
+#include "Shader.h"
+#include "Mesh.h"
+#include "Component.h"
+
 class CVertexArray;
 class CShader;
 
@@ -10,9 +14,9 @@ class CRenderer
 public:
 	bool Init();
 	void ShutDown();
+
+	void Render(CShader& shader, SMeshRendererComponent& meshRenderer, STransformComponent& transformComponent);	
 	inline CRenderer* Get() { return s_pCInstance; }
-	void Render(std::shared_ptr<CShader>& shader, std::shared_ptr<CVertexArray>& vertexArray);
-	
 private:
 	CRenderer() = default;
 	~CRenderer() = default;

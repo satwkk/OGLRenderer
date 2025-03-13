@@ -29,8 +29,8 @@ void CVertexArray::UnBind()
 void CVertexArray::SetVertexBuffer(const SVertexBufferData& vertexData)
 {
     Bind();
-	m_sVertexBufferData = vertexData;
-    m_uVertexBuffer = CreateBuffer(GL_ARRAY_BUFFER, m_sVertexBufferData.vVertices);
+	m_SVertexBufferData = vertexData;
+    m_uVertexBuffer = CreateBuffer(GL_ARRAY_BUFFER, m_SVertexBufferData.vVertices);
 }
 
 void CVertexArray::SetIndexBuffer(const std::vector<unsigned int>& indexData)
@@ -44,14 +44,14 @@ void CVertexArray::PrepareVertexArray()
 {
 	Bind();
 
-	for (uint32_t i = 0; i < m_sVertexBufferData.vBufferLayouts.size(); i++)
+	for (uint32_t i = 0; i < m_SVertexBufferData.vBufferLayouts.size(); i++)
 	{
-		auto attribLayout = m_sVertexBufferData.vBufferLayouts[i];
-		auto elementCount = GetCountFromAttribType(attribLayout.eAttributeType);
-		auto type = GetGLTypeFromAttribType(attribLayout.eAttributeType);
-		auto stride = m_sVertexBufferData.GetStride();
+		auto vAttribLayout = m_SVertexBufferData.vBufferLayouts[i];
+		auto uElementCount = GetCountFromAttribType(vAttribLayout.eAttributeType);
+		auto eType = GetGLTypeFromAttribType(vAttribLayout.eAttributeType);
+		auto uStride = m_SVertexBufferData.GetStride();
 		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, elementCount, type, GL_FALSE, stride, (void*)attribLayout.nOffset);
+		glVertexAttribPointer(i, uElementCount, eType, GL_FALSE, uStride, (void*)vAttribLayout.nOffset);
 	}
 
 	UnBind();

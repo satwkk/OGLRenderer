@@ -14,10 +14,12 @@ public:
 	CWindow(float width, float height, const std::string& name);
 	~CWindow();
 
-	void Enable(uint32_t enableFlag);
 	void OnUpdate(float ts);
 	void AddUpdateCallback(const std::function<void()>& updateCallback);
+	void EnableFlag(uint32_t flag);
+	void DisableFlag(uint32_t flag);
 	bool bShouldClose();
+	bool IsFlagEnabled(uint32_t flagBit);
 	
 	GLFWwindow* GetHandle() const { return m_pSHandle; }
 	void SetBackgroundColor(const glm::vec3& color) { m_VWindowBackgroundColor = color; }

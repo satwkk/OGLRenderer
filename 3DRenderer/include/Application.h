@@ -40,8 +40,8 @@ public:
 	void OnUpdate();
 	void Run();
 
-	inline CShader& GetShader() { return m_cShader; }
-	inline CPerspectiveCamera& GetSceneCamera() { return m_cCamera; }
+	inline CShader& GetShader() { return m_CShader; }
+	inline CPerspectiveCamera& GetSceneCamera() { return m_CCamera; }
 
 private:
 	CApplication() = default;
@@ -56,11 +56,11 @@ private:
 	AppConfig m_sConfig;
 	std::unique_ptr<CWindow> m_pCMainWindow;
 	std::unique_ptr<CSkybox> m_pCSkybox;
-	CPerspectiveCamera m_cCamera;
-	CScene m_cScene;
-	CShader m_cSkyboxShader;
-	CShaderLibrary m_cShaderLibrary;
-	CShader m_cShader;
+	CPerspectiveCamera m_CCamera;
+	CScene m_CScene;
+	CShader m_CSkyboxShader;
+	CShaderLibrary m_CShaderLibrary;
+	CShader m_CShader;
 };
 
 

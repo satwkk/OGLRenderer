@@ -4,31 +4,31 @@
 #include "Shader.h"
 #include "Mesh.h"
 
-void CSceneRenderer::Draw(const std::shared_ptr<CMesh>& pMesh, glm::mat4& modelMatrix, const glm::vec3& position, CShader& shader)
+void CSceneRenderer::Draw(const std::shared_ptr<CMesh>& spMesh, glm::mat4& modelMatrix, const glm::vec3& position, CShader& shader)
 {
-    pMesh->BeginRender();
+    spMesh->BeginRender();
 
     // Setup model matrix
     modelMatrix = glm::mat4(1.0f) *
-        glm::translate(glm::mat4(1.0), position) *
-        glm::scale(glm::mat4(1.0), glm::vec3(0.3f));
+        translate(glm::mat4(1.0), position) *
+        scale(glm::mat4(1.0), glm::vec3(0.3f));
 
     shader.SetUniformMatrix4("uModelMatrix", modelMatrix);
 
     // Setup material params
-    pMesh->OnRender(shader);
+    spMesh->OnRender(shader);
 
     // Draw call
-    glDrawElements(GL_TRIANGLES, pMesh->GetIndicesCount(), GL_UNSIGNED_INT, (void*)0);
+    glDrawElements(GL_TRIANGLES, spMesh->GetIndicesCount(), GL_UNSIGNED_INT, (void*)0);
 
-    pMesh->EndRender();
+    spMesh->EndRender();
 }
 
-void CSceneRenderer::Draw(const std::shared_ptr<CModel>& pModel, const glm::vec3& position, CShader& shader)
+void CSceneRenderer::Draw(const std::shared_ptr<CModel>& pCModel, const glm::vec3& position, CShader& shader)
 {
-    for (auto& mesh : pModel->GetMeshArray())
+    for (auto& spCMesh : pCModel->GetMeshArray())
     {
-        Draw(mesh, pModel->m_MModelMatrix, position, shader);
+        Draw(spCMesh, pCModel->m_MModelMatrix, position, shader);
     }
 }
 
