@@ -3,11 +3,16 @@
 A CPP 3D renderer implemented in OpenGL.
 
 # POC
-https://github.com/user-attachments/assets/2c47a67e-fb77-4ab4-b518-5a45a020c689
+![Screenshots](./Screenshots/SS_13_03_25.png)
 
-TODO:
+Features:
 - [x] Model loading
 - [x] PHONG lightning model
 - [x] Multi Model Renderer
+- [x] Entity Component System
+- [x] Cubemaps and Skyboxes
+- [ ] Editor Layer
+- [ ] Shadow mapping
+- [ ] Normal mapping
 - [ ] PBR Support
 - [ ] Application Layer Abstraction

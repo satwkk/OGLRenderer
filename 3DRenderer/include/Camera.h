@@ -18,6 +18,7 @@ public:
 	inline const float GetSpeed() const { return m_MoveSpeed; }
 	inline const glm::vec3& GetPosition() const { return m_Position; }
 	inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+	inline glm::mat3 GetViewMatrixWithoutTranslation() { return glm::mat3(m_ViewMatrix); }
 	inline const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 	inline const glm::mat4& GetVPMatrix() const { return m_ViewProjectionMatrix; }
 

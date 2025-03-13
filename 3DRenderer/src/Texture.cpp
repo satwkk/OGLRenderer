@@ -3,11 +3,13 @@
 
 #include "Texture.h"
 #define STB_IMAGE_IMPLEMENTATION
+#include <GL/glew.h>
+
 #include "stbi_image.h"
 
 Texture::Texture(const std::string& filePath, uint32_t slot) :
-    m_TextureID(0),
-    m_Slot(slot)
+m_TextureID{0},
+m_Slot{slot}
 {
     int width, height, channels;
     
@@ -49,3 +51,4 @@ void Texture::UnBind()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+

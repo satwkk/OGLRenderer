@@ -21,6 +21,7 @@ void ShaderLibrary::Init()
 
 			if (std::filesystem::exists({ vertexFile }) && std::filesystem::exists({ fragmentFile }))
 			{
+				vlog << "Adding shaders for: " << dirName << nl;
 				m_Library.emplace(dirName, Shader{ vertexFile, fragmentFile });
 			}
 		}
@@ -38,7 +39,7 @@ ShaderLibrary* ShaderLibrary::Get()
 
 Shader& ShaderLibrary::GetShader(const ShaderID& id)
 {
-	auto it = m_Library.find(id);
+	const auto it = m_Library.find(id);
 	ASSERT(it != m_Library.end());
 	return it->second;
 }

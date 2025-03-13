@@ -40,7 +40,6 @@ void SceneRenderer::Draw(Scene& scene, Shader& shader)
     for (auto entity : group)
     {
         auto [transform, meshRenderer] = group.get<TransformComponent, MeshRendererComponent>(entity);  
-        vlog << "Model " << meshRenderer.ModelRef->Name << " at location " << transform.Position.x << ", " << transform.Position.z << nl;
         Draw(meshRenderer.ModelRef, transform.Position, shader);
     }
 }

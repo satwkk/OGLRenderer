@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "ShaderLibrary.h"
 #include "Texture.h"
+#include "Skybox.h"
 
 struct GLFWwindow;
 class Model;
@@ -36,6 +37,7 @@ public:
 	inline static Application* Get() { return s_Instance; }
 
 	bool Init();
+	void OnUpdate();
 	void Run();
 
 	inline Shader& GetShader() { return m_Shader; }
@@ -52,9 +54,11 @@ private:
 	static Application* s_Instance;
 
 	AppConfig m_Config;
-	Window m_MainWindow;
+	std::unique_ptr<Window> m_pMainWindow;
+	std::unique_ptr<Skybox> m_pSkybox;
 	Camera m_Camera;
 	Scene m_Scene;
+	Shader m_SkyboxShader;
 	ShaderLibrary m_ShaderLibrary;
 	Shader m_Shader;
 };

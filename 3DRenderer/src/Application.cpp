@@ -1,11 +1,10 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "Application.h"
+
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Application.h"
 #include "Utility.h"
 #include "Buffer.h"
 #include "VertexArray.h"
@@ -85,8 +84,8 @@ void UpdateLight(GLFWwindow* window)
 Application* Application::s_Instance = nullptr;
 
 Application::Application(const AppConfig& config) :
-	m_Config(config),
-    m_Camera(glm::vec3(0.0f, 0.0f, 0.0f), 0.1f, 1000.f, m_Config.WindowWidth, m_Config.WindowHeight, 45.0f)
+    m_Config{ config },
+    m_Camera{ glm::vec3{ 0.0f, 0.0f, 0.0f }, 1.f, 5000.f, m_Config.WindowWidth, m_Config.WindowHeight, 45.0f }
 {
 }
 
@@ -103,29 +102,14 @@ Application* Application::Create(const AppConfig& config)
 
 bool Application::Init()
 {
-    // Init GLFW
-    if (!glfwInit())
-    {
-        verr << "GLFW Failed to initialize\n";
-        return false;
-    }
-
     // Create the window
-    m_MainWindow = Window{ m_Config.WindowWidth, m_Config.WindowHeight, m_Config.ApplicationName };
+    m_pMainWindow = std::make_unique<Window>(m_Config.WindowWidth, m_Config.WindowHeight, m_Config.ApplicationName);
 
-    // Setup context
-    glfwMakeContextCurrent(m_MainWindow.GetHandle());
+    // Add on update callback
+    m_pMainWindow->AddUpdateCallback([&]() { OnUpdate(); });
 
-    // Init GLEW OpenGL loader
-    if (glewInit() != GLEW_OK)
-    {
-        unsigned int errCode = glGetError();
-        const GLubyte* errStr = glewGetErrorString(errCode);
-        verr << "GLEW Failed to initialize\n";
-        printf("%s\n", errStr);
-        glfwTerminate();
-        return false;
-    }
+    // Enable depth testing
+    m_pMainWindow->Enable(GL_DEPTH_TEST);
 
     // Initialize shader library
     m_ShaderLibrary.Init();
@@ -134,42 +118,42 @@ bool Application::Init()
     // TODO(void): Load this based on setting file
     m_Shader = m_ShaderLibrary.GetShader("phong");
 
-    m_Scene.InitScene();
+    // Add skybox
+    // TODO(void): Move this to scene later
+    m_pSkybox = std::make_unique<Skybox>();
+    m_SkyboxShader = m_ShaderLibrary.GetShader("cubemap");
 
-    // Enable depth testing
-    glEnable(GL_DEPTH_TEST);
+    m_Scene.InitScene();
 
     return true;
 }
 
 void Application::Run()
 {
-    while (!glfwWindowShouldClose(m_MainWindow.GetHandle()))
-    {
-        glfwPollEvents();
-        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-        glClearColor(m_Config.BackgroundColor.x, m_Config.BackgroundColor.y, m_Config.BackgroundColor.z, m_Config.BackgroundColor.w);
+    m_pMainWindow->OnUpdate(0.f);
+}
 
-        UpdateLight(m_MainWindow.GetHandle());
-        UpdateCamera(m_MainWindow.GetHandle(), m_Camera);
+void Application::OnUpdate()
+{
+    UpdateLight(m_pMainWindow->GetHandle());
+    UpdateCamera(m_pMainWindow->GetHandle(), m_Camera);
 
-        m_Shader.Bind();
+    m_pSkybox->OnRender(m_SkyboxShader, m_Camera);
 
-        // Camera View projection matrix
-        m_Shader.SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());
+    m_Shader.Bind();
 
-        // Position properties
-        m_Shader.SetUniformVector3("light.position", lightPosition);
-        m_Shader.SetUniformVector3("uCameraPosition", m_Camera.GetPosition());
+    // Camera View projection matrix
+    m_Shader.SetUniformMatrix4("uVPMatrix", m_Camera.GetVPMatrix());
 
-        // Light properties
-        m_Shader.SetUniformVector3("light.ambient", glm::vec3(0.2f));
-        m_Shader.SetUniformVector3("light.diffuse", glm::vec3(0.5f));
-        m_Shader.SetUniformVector3("light.specular", glm::vec3(1.0f));
+    // Position properties
+    m_Shader.SetUniformVector3("light.position", lightPosition);
+    m_Shader.SetUniformVector3("uCameraPosition", m_Camera.GetPosition());
 
-        // Update scene
-        m_Scene.OnUpdate(m_Shader);
+    // Light properties
+    m_Shader.SetUniformVector3("light.ambient", glm::vec3(0.2f));
+    m_Shader.SetUniformVector3("light.diffuse", glm::vec3(0.5f));
+    m_Shader.SetUniformVector3("light.specular", glm::vec3(1.0f));
 
-        glfwSwapBuffers(m_MainWindow.GetHandle());
-    }
+    // Update scene
+    m_Scene.OnUpdate(m_Shader);
 }

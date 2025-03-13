@@ -143,11 +143,86 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CubeMap.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
+      <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>x64\Debug\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>x64\Debug\3DRenderer.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>x64\Debug\3DRenderer.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <BuildStlModules>false</BuildStlModules>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="src\DirectionalLight.cpp" />
     <ClCompile Include="src\SceneObject.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneRenderer.cpp" />
     <ClCompile Include="src\ShaderLibrary.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\ufbx.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -168,6 +243,8 @@
     <None Include="res\models\Cube.FBX" />
     <None Include="res\models\Green_Sea_Turtle.fbx" />
     <None Include="res\models\SimpleRig_cube.fbx" />
+    <None Include="shaders\cubemap\fragment.glsl" />
+    <None Include="shaders\cubemap\vertex.glsl" />
     <None Include="shaders\phong\fragment.glsl" />
     <None Include="shaders\phong\fragment_2.glsl" />
     <None Include="shaders\phong\vertex.glsl" />
@@ -176,6 +253,7 @@
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\CubeMap.h" />
     <ClInclude Include="include\DirectionalLight.h" />
     <ClInclude Include="include\entt.hpp" />
     <ClInclude Include="include\SceneObject.h" />
@@ -189,6 +267,7 @@
     <ClInclude Include="include\SceneRenderer.h" />
     <ClInclude Include="include\Shader.h" />
     <ClInclude Include="include\ShaderLibrary.h" />
+    <ClInclude Include="include\Skybox.h" />
     <ClInclude Include="include\stbi_image.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\Utility.h" />
@@ -199,6 +278,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\models\container.jpg" />
+    <Image Include="res\skybox\back.jpg" />
+    <Image Include="res\skybox\bottom.jpg" />
+    <Image Include="res\skybox\front.jpg" />
+    <Image Include="res\skybox\left.jpg" />
+    <Image Include="res\skybox\right.jpg" />
+    <Image Include="res\skybox\top.jpg" />
     <Image Include="res\textures\ContainerDiffuse.png" />
     <Image Include="res\textures\ContainerSpecular.png" />
     <Image Include="res\textures\Tortoise.jpg" />

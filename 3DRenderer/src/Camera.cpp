@@ -5,7 +5,7 @@
 
 Camera::Camera(const glm::vec3& initialPosition, float nearClipPlane, float farClipPlane, float winWidth, float winHeight, float fov) :
 	m_ViewMatrix(glm::mat4(1.0f)),
-	m_ProjectionMatrix(glm::perspective(fov, winWidth / winHeight, nearClipPlane, farClipPlane)),
+	m_ProjectionMatrix(glm::perspective(glm::radians(fov), winWidth / winHeight, nearClipPlane, farClipPlane)),
 	m_MoveSpeed(1.f),
 	m_Position(initialPosition),
 	m_Yaw(0.0f),

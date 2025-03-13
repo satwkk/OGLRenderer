@@ -10,15 +10,29 @@ void Scene::InitScene()
     std::vector<std::shared_ptr<Model>> models = {
         ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS),
         ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_3.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_5.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
     };
 
     for (auto& model : models)
     {
 	    entt::entity ent = m_Registry.create();
         srand(rand());
-        float x = rand() % 500;
-        float z = rand() % 500;
-        m_Registry.emplace<TransformComponent>(ent, glm::vec3(x, 0.0f, z));
+        float x = rand() % 5000;
+        float z = rand() % 5000;
+        m_Registry.emplace<TransformComponent>(ent, glm::vec3{ x, 0.0f, z }, glm::vec3{ 0.3f });
         m_Registry.emplace<MeshRendererComponent>(ent, model);
         m_SceneObjects.insert({ ent, model });
     }

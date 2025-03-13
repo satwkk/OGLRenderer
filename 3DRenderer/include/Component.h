@@ -12,10 +12,14 @@ class Model;
 struct TransformComponent
 {
 	glm::vec3 Position{ glm::vec3(1.0) };
+	glm::vec3 Scale{ glm::vec3(1.0f) };
 
 	TransformComponent() = default;
 	TransformComponent(const glm::vec3& pos) :
 		Position(pos) {}
+	TransformComponent(const glm::vec3& pos, const glm::vec3& scale) :
+		Position(pos), Scale(scale) {
+	}
 };
 
 struct MeshRendererComponent
