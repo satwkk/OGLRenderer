@@ -10,20 +10,6 @@ void Scene::InitScene()
     std::vector<std::shared_ptr<Model>> models = {
         ModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS),
         ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_3.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_5.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_6.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
-        ModelLoader::Load("./res/models/tree/Gledista_Triacanthos_4.fbx", BASICFLAGS),
     };
 
     for (auto& model : models)

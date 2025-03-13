@@ -13,11 +13,13 @@ Skybox::Skybox() :
 		"./res/skybox/front.jpg",
 		"./res/skybox/back.jpg",
 	};
-	m_VAO.SetVertexBuffer(vertices);
-	m_CubeMap.InitCubeMap(paths);
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+	gBufferData.Vertices = gVertices;
+	gBufferData.BufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
+
+	m_VAO.SetVertexBuffer(gBufferData);
+	m_CubeMap.InitCubeMap(paths);
+	m_VAO.PrepareVertexArray();
 }
 
 Skybox::~Skybox()
@@ -34,7 +36,7 @@ void Skybox::OnRender(Shader& shader, Camera& camera)
 	shader.SetUniformMatrix4("uView", glm::mat4{ camera.GetViewMatrixWithoutTranslation() });
 	m_VAO.Bind();
 	m_CubeMap.Bind();
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawArrays(GL_TRIANGLES, 0, gVertices.size());
 	m_CubeMap.UnBind();
 	m_VAO.UnBind();
 	shader.UnBind();

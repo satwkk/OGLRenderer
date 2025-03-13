@@ -23,7 +23,7 @@ std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned 
     {
         auto* mesh = scene->mMeshes[meshIdx];
         auto modelMesh = std::make_shared<Mesh>();
-        std::vector<float> vertexData = {};
+        SVertexBufferData vertexData = {};
         std::vector<uint32_t> indexData = {};
 
         // Vertex Data Setup
@@ -31,18 +31,18 @@ std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned 
         {
             auto vertex = mesh->mVertices[i];
 
-            vertexData.push_back(vertex.x);
-            vertexData.push_back(vertex.y);
-            vertexData.push_back(vertex.z);
+            vertexData.Vertices.push_back(vertex.x);
+            vertexData.Vertices.push_back(vertex.y);
+            vertexData.Vertices.push_back(vertex.z);
 
             auto texCoord = mesh->mTextureCoords[0][i];
-            vertexData.push_back(texCoord.x);
-            vertexData.push_back(texCoord.y);
+            vertexData.Vertices.push_back(texCoord.x);
+            vertexData.Vertices.push_back(texCoord.y);
 
             auto normal = mesh->mNormals[i];
-            vertexData.push_back(normal.x);
-            vertexData.push_back(normal.y);
-            vertexData.push_back(normal.z);
+            vertexData.Vertices.push_back(normal.x);
+            vertexData.Vertices.push_back(normal.y);
+            vertexData.Vertices.push_back(normal.z);
         }
 
         // Index data setup
@@ -55,46 +55,13 @@ std::shared_ptr<Model> ModelLoader::Load(const std::string& modelPath, unsigned 
             }
         }
 
-        // Bind VAO VBO and IBO
-        // TODO(void): Find a better way to do the following. Three calls for a simple setup is unnecessary and can be easily mistakened.
-        // NOTE(void): I think creating the vao, vbo and ibo here directly will make the process much more clear instead of doing it inside RenderSetup
+        vertexData.BufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
+        vertexData.BufferLayouts.push_back({ EVertexAttributeType::Float2, 12 });
+        vertexData.BufferLayouts.push_back({ EVertexAttributeType::Float3, 20 });
+
         modelMesh->SetVertices(vertexData);
         modelMesh->SetIndices(indexData);
         modelMesh->PrepareMesh();
-
-        /**
-        // Prepare materials
-        uint32_t materialIndex = mesh->mMaterialIndex;
-        aiMaterial* mat = scene->mMaterials[materialIndex];
-        
-        std::string diffuseFile = GetTextureFileNameFromMaterial(mat, aiTextureType_DIFFUSE);
-        std::string diffuseFilePath = GetTextureLocalPath(model->AssetPath, diffuseFile);
-
-        std::string specularFile = GetTextureFileNameFromMaterial(mat, aiTextureType_SPECULAR);
-        std::string specularFilePath = GetTextureLocalPath(model->AssetPath, specularFile);
-
-        // TODO: we will control which diffuse texture should be assigned when editor layer is implemented
-        if (!diffuseFilePath.empty())
-        {
-            vlog << "Adding diffuse " << diffuseFilePath << " for mesh " << meshIdx << nl;
-            modelMesh->m_Material.SetDiffuse(diffuseFilePath, meshIdx);
-        }
-        else 
-        {
-            vlog << "No diffuse texture for mesh " << meshIdx << " will be defaulting to diffuse color only" << nl;
-        }
-
-        if (!specularFilePath.empty())
-        {
-            vlog << "Adding specular " << specularFilePath << " for mesh " << meshIdx << nl;
-            modelMesh->m_Material.SetSpecular(specularFilePath, meshIdx);
-        }
-        else 
-        {
-            vlog << "No specular texture for mesh " << meshIdx << " will be defaulting to diffuse color only" << nl;
-        }
-         */
-
         model->AddMesh(modelMesh);
     }
 

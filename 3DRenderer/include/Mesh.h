@@ -29,7 +29,7 @@ public:
 	inline const Material& GetMaterial() const { return m_Material; }
 
 private:
-    void SetVertices(const std::vector<float>& vertexData);
+    void SetVertices(const SVertexBufferData& vertexData);
     void SetIndices(const std::vector<uint32_t>& indexData);
     void PrepareMesh();
 

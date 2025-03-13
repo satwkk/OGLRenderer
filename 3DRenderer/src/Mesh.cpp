@@ -16,9 +16,9 @@ Mesh::~Mesh()
     vlog << "mesh destructed\n";
 }
 
-void Mesh::SetVertices(const std::vector<float>& vertexData)
+void Mesh::SetVertices(const SVertexBufferData& vertexData)
 {
-    m_Vertices = vertexData;
+    m_Vertices = vertexData.Vertices;
     m_VertexArray->SetVertexBuffer(vertexData);
 }
 
@@ -30,7 +30,7 @@ void Mesh::SetIndices(const std::vector<uint32_t>& indexData)
 
 void Mesh::PrepareMesh()
 {
-    m_VertexArray->SetupLayouts();
+    m_VertexArray->PrepareVertexArray();
 }
 
 void Mesh::OnRender(Shader& shader)

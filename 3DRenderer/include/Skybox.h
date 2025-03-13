@@ -8,7 +8,7 @@
 #include "Buffer.h"
 #include "VertexArray.h"
 
-static std::vector<float> vertices =
+static std::vector<float> gVertices =
 {
     -1.0f,  1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,
@@ -52,6 +52,8 @@ static std::vector<float> vertices =
     -1.0f, -1.0f,  1.0f,
      1.0f, -1.0f,  1.0f
 };
+
+static SVertexBufferData gBufferData;
 
 class Skybox
 {
