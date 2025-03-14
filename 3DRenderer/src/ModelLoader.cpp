@@ -63,9 +63,6 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
         spModelMesh->SetIndices(std::move(vIndexData));
         spModelMesh->PrepareMesh();
         spModel->AddMesh(spModelMesh);
-
-        vlog << "VertexData from model loader: " << sVertexData.vVertices.size() << nl;
-        vlog << "IndexData size from model loader: " << vIndexData.size() << nl;
     }
 
     return spModel;
