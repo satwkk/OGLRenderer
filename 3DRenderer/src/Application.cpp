@@ -143,7 +143,7 @@ void CApplication::OnUpdate()
     m_CShader.Bind();
 
     // Camera View projection matrix
-    m_CShader.SetUniformMatrix4("uVPMatrix", m_CCamera.GetVPMatrix());
+    m_CCamera.OnUpdate(m_CShader);
 
     // Position properties
     m_CShader.SetUniformVector3("light.position", vLightPosition);

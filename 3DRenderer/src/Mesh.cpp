@@ -16,10 +16,22 @@ CMesh::~CMesh()
     vlog << "mesh destructed\n";
 }
 
+void CMesh::SetVertices(SVertexBufferData&& vertexData)
+{
+    m_vVertices = vertexData.vVertices;
+    m_spCVertexArray->SetVertexBuffer(std::move(vertexData));
+}
+
 void CMesh::SetVertices(const SVertexBufferData& vertexData)
 {
     m_vVertices = vertexData.vVertices;
     m_spCVertexArray->SetVertexBuffer(vertexData);
+}
+
+void CMesh::SetIndices(std::vector<uint32_t>&& indexData)
+{
+    m_vIndices = indexData;
+    m_spCVertexArray->SetIndexBuffer(std::move(indexData));
 }
 
 void CMesh::SetIndices(const std::vector<uint32_t>& indexData)

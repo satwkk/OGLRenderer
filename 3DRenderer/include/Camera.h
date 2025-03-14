@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Shader.h"
 
 class CPerspectiveCamera
 {
@@ -8,6 +9,8 @@ public:
 	CPerspectiveCamera() = default;
 	CPerspectiveCamera(const glm::vec3& initialPosition, float nearClipPlane, float farClipPlane, float winWidth, float winHeight, float fov);
 	~CPerspectiveCamera();
+
+	void OnUpdate(CShader& cameraShaderInstance);
 
 	void Move(const glm::vec3& direction);
 	void Rotate(float pitchOffset, float yawOffset);

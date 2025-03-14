@@ -21,6 +21,13 @@ CPerspectiveCamera::~CPerspectiveCamera()
 {
 }
 
+void CPerspectiveCamera::OnUpdate(CShader& cameraShaderInstance)
+{
+	if (!cameraShaderInstance.IsBound()) 
+		cameraShaderInstance.Bind();
+	cameraShaderInstance.SetUniformMatrix4("uVPMatrix", m_MViewProjectionMatrix);
+}
+
 void CPerspectiveCamera::Move(const glm::vec3& direction)
 {
 	if (direction == glm::vec3(0.0f, 0.0f, 0.0f))

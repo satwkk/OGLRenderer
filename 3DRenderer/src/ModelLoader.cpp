@@ -29,17 +29,17 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
         // Vertex Data Setup
         for (uint32_t i = 0; i < pMesh->mNumVertices; i++)
         {
-            auto VVertex = pMesh->mVertices[i];
+            aiVector3D& VVertex = pMesh->mVertices[i];
 
             sVertexData.vVertices.push_back(VVertex.x);
             sVertexData.vVertices.push_back(VVertex.y);
             sVertexData.vVertices.push_back(VVertex.z);
 
-            auto VTexCoord = pMesh->mTextureCoords[0][i];
+            aiVector3D& VTexCoord = pMesh->mTextureCoords[0][i];
             sVertexData.vVertices.push_back(VTexCoord.x);
             sVertexData.vVertices.push_back(VTexCoord.y);
 
-            auto VNormal = pMesh->mNormals[i];
+            aiVector3D& VNormal = pMesh->mNormals[i];
             sVertexData.vVertices.push_back(VNormal.x);
             sVertexData.vVertices.push_back(VNormal.y);
             sVertexData.vVertices.push_back(VNormal.z);
@@ -59,10 +59,13 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
         sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float2, 12 });
         sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 20 });
 
-        spModelMesh->SetVertices(sVertexData);
-        spModelMesh->SetIndices(vIndexData);
+        spModelMesh->SetVertices(std::move(sVertexData));
+        spModelMesh->SetIndices(std::move(vIndexData));
         spModelMesh->PrepareMesh();
         spModel->AddMesh(spModelMesh);
+
+        vlog << "VertexData from model loader: " << sVertexData.vVertices.size() << nl;
+        vlog << "IndexData size from model loader: " << vIndexData.size() << nl;
     }
 
     return spModel;

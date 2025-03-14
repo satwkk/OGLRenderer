@@ -12,7 +12,9 @@ public:
 	void Bind();
 	void UnBind();
 
+    void SetVertexBuffer(SVertexBufferData&& vertexData);
     void SetVertexBuffer(const SVertexBufferData& vertexData);
+    void SetIndexBuffer(std::vector<unsigned int>&& indexData);
     void SetIndexBuffer(const std::vector<unsigned int>& indexData);
 	void PrepareVertexArray();
 
@@ -22,6 +24,7 @@ public:
 private:
 	uint32_t m_uVAO;
 	SVertexBufferData m_SVertexBufferData;
+	std::vector<uint32_t> m_vIndexBufferData;
     BufferID m_uVertexBuffer;
     BufferID m_uIndexBuffer;
     uint32_t m_uIndexCount;

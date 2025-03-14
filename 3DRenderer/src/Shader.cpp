@@ -32,7 +32,6 @@ CShader::CShader(const std::string& vertexShaderPath, const std::string& fragmen
 
     glDeleteShader(vs);
     glDeleteShader(fs);
-    glUseProgram(0);
 }
 
 CShader::~CShader()
@@ -70,11 +69,13 @@ CShader& CShader::operator=(CShader&& other) noexcept
 
 void CShader::Bind()
 {
+    m_bIsInUse = true;
     glUseProgram(m_uRendererID);
 }
 
 void CShader::UnBind()
 {
+    m_bIsInUse = false;
     glUseProgram(0);
 }
 

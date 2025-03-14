@@ -26,18 +26,34 @@ void CVertexArray::UnBind()
 	glBindVertexArray(0);
 }
 
+void CVertexArray::SetVertexBuffer(SVertexBufferData&& vertexData)
+{
+	Bind();
+	m_SVertexBufferData = std::move(vertexData);
+	m_uVertexBuffer = CreateBuffer(GL_ARRAY_BUFFER, m_SVertexBufferData.vVertices);
+}
+
 void CVertexArray::SetVertexBuffer(const SVertexBufferData& vertexData)
 {
-    Bind();
+	Bind();
 	m_SVertexBufferData = vertexData;
-    m_uVertexBuffer = CreateBuffer(GL_ARRAY_BUFFER, m_SVertexBufferData.vVertices);
+	m_uVertexBuffer = CreateBuffer(GL_ARRAY_BUFFER, m_SVertexBufferData.vVertices);
+}
+
+void CVertexArray::SetIndexBuffer(std::vector<unsigned int>&& indexData)
+{
+	Bind();
+	m_vIndexBufferData = std::move(indexData);
+	m_uIndexBuffer = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vIndexBufferData);
+	m_uIndexCount = (uint32_t)m_vIndexBufferData.size();
 }
 
 void CVertexArray::SetIndexBuffer(const std::vector<unsigned int>& indexData)
 {
-    Bind();
-    m_uIndexBuffer = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, indexData);
-    m_uIndexCount = (uint32_t)indexData.size();
+	Bind();
+	m_vIndexBufferData = indexData;
+	m_uIndexBuffer = CreateBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vIndexBufferData);
+	m_uIndexCount = (uint32_t)m_vIndexBufferData.size();
 }
 
 void CVertexArray::PrepareVertexArray()

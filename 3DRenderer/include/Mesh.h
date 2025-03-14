@@ -29,7 +29,9 @@ public:
 	inline const CMaterial& GetMaterial() const { return m_cMaterial; }
 
 private:
+    void SetVertices(SVertexBufferData&& vertexData);
     void SetVertices(const SVertexBufferData& vertexData);
+    void SetIndices(std::vector<uint32_t>&& indexData);
     void SetIndices(const std::vector<uint32_t>& indexData);
     void PrepareMesh();
 

@@ -25,9 +25,12 @@ public:
 	void SetUniformFloat(const std::string& name, float value);
 	void SetUniformInt(const std::string& name, int value);
 
+	inline const bool IsBound() const { return m_bIsInUse; }
+
 private:
 	uint32_t LoadShader(const std::string& shaderPath, unsigned int shaderType);
 
 private:
 	unsigned int m_uRendererID;
+	bool m_bIsInUse;
 };

@@ -105,19 +105,6 @@ struct SVertexAttributeLayout
         nOffset{offset}
     {
     }
-
-    SVertexAttributeLayout(const SVertexAttributeLayout& other) :
-        eAttributeType{ other.eAttributeType },
-        nOffset{ other.nOffset } 
-    {
-    }
-
-    SVertexAttributeLayout& operator=(const SVertexAttributeLayout& other)
-    {
-        eAttributeType = other.eAttributeType;
-        nOffset = other.nOffset;
-        return *this;
-    }
 };
 
 struct SVertexBufferData
