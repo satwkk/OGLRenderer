@@ -12,7 +12,7 @@
 
 #include "Model.h"
 
-#define BASICFLAGS aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals
+#define BASICFLAGS aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_MakeLeftHanded
 
 class CModelLoader
 {
@@ -22,8 +22,7 @@ private:
 	
 public:
 	static std::shared_ptr<CModel> Load(const std::string& modelPath, unsigned int flags);
-	static std::string GetTextureFileNameFromMaterial(aiMaterial* pMaterial, aiTextureType type);
-	static std::string GetTextureLocalPath(const std::filesystem::path& modelPath, const std::string& searchFileName);
+
 	static CModelLoader* GetInstance()
 	{
 		if (s_pCInstance == nullptr)

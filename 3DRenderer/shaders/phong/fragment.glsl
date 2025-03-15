@@ -46,16 +46,8 @@ void main()
 {
 	// Get the world normal based on normal map is set or not
 	vec3 normalMapValue = texture(material.normalMap, TexCoord).rgb;
-	vec3 worldNormal = vec3(0.0);
-	if (length(normalMapValue) == 0.0)
-	{
-		worldNormal = TBN[2];
-	}
-	else 
-	{
-		normalMapValue = normalMapValue * 2.0 - 1.0;
-		worldNormal = normalize(TBN * normalMapValue);
-	}
+    normalMapValue = normalMapValue * 2.0 - 1.0;
+	vec3 worldNormal = normalize(TBN * normalMapValue);
 
 	// Diffuse reflection
 	vec3 directionToLight = normalize(light.position - FragmentWorldPosition);
@@ -68,11 +60,13 @@ void main()
 
     // Diffuse light
     vec3 diffuseTextureColor = texture(material.diffuse, TexCoord).rgb;
-    vec3 diffuseColor = mix(material.diffuseColor, diffuseTextureColor, step(0.01, length(diffuseTextureColor)));
+	bool isDiffuseTextureSet = length(diffuseTextureColor) > 0.01;
+    vec3 diffuseColor = isDiffuseTextureSet ? diffuseTextureColor : material.diffuseColor;
 
     // Specular light
     vec3 specularTextureColor = texture(material.specular, TexCoord).rgb;
-    vec3 specularColor = mix(material.specularColor, specularTextureColor, step(0.01, length(specularTextureColor)));
+	bool isSpecularTextureSet = length(specularTextureColor) > 0.01;
+    vec3 specularColor = isSpecularTextureSet ? specularTextureColor : material.specularColor;
 
     // Final calculations
 	vec3 ambient = light.ambient * material.ambientColor * diffuseColor;

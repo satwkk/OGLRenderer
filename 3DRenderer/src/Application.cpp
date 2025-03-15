@@ -85,7 +85,7 @@ CApplication* CApplication::s_pCInstance = nullptr;
 
 CApplication::CApplication(const AppConfig& sConfig) :
     m_sConfig{ sConfig },
-    m_CCamera{ glm::vec3{ 0.0f, 0.0f, 0.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
+    m_CCamera{ glm::vec3{ 0.0f, 0.0f, 50.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
 {
 }
 

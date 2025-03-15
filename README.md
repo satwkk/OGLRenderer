@@ -11,8 +11,8 @@ Features:
 - [x] Multi Model Renderer
 - [x] Entity Component System
 - [x] Cubemaps and Skyboxes
+- [x] Normal mapping
 - [ ] Editor Layer
 - [ ] Shadow mapping
-- [ ] Normal mapping
 - [ ] PBR Support
 - [ ] Application Layer Abstraction

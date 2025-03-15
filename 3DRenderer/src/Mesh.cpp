@@ -45,15 +45,15 @@ void CMesh::PrepareMesh()
     m_spCVertexArray->PrepareVertexArray();
 }
 
-void CMesh::OnRender(CShader& shader)
-{
-    m_CMaterial.OnRender(shader);
-}
-
 void CMesh::BeginRender()
 {
 	m_spCVertexArray->Bind();
 	m_CMaterial.Enable();
+}
+
+void CMesh::OnRender(CShader& shader)
+{
+    m_CMaterial.OnRender(shader);
 }
 
 void CMesh::EndRender()

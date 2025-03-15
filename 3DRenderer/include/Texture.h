@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "Utility.h"
 
 class CTexture
 {
@@ -19,6 +18,6 @@ public:
 	uint32_t GetID() { return m_uTextureID; }
 
 private:
-	uint32_t m_uTextureID;
-	uint32_t m_uSlot;
+	uint32_t m_uTextureID = 0;
+	uint32_t m_uSlot = 0;
 };

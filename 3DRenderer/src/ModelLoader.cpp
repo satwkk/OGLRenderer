@@ -1,15 +1,76 @@
-#include <iostream>
 #include <assert.h>
+#include <memory>
 #include <vector>
 
 #include "assimp/material.h"
-#include "ufbx.h"
 #include "ModelLoader.h"
 #include "Utility.h"
 #include "Logger.h"
 #include "Material.h"
 
 CModelLoader* CModelLoader::s_pCInstance = nullptr;
+
+std::string CheckIfFileExistsInDir(const std::filesystem::path& CPath, const std::string& szFileName)
+{
+    if (std::filesystem::is_directory(CPath))
+    {
+        for (const std::filesystem::directory_entry& CEntry : std::filesystem::directory_iterator(CPath))
+        {
+            std::string szEntryName{ CUtility::GetFileNameFromPath(CEntry.path().string()) };
+            if (szEntryName == szFileName)
+            {
+                return CEntry.path().string();
+            }
+        }
+    }
+    else
+    {
+        verr << "Provided path is not a directory\n";
+    }
+    return std::string{};
+}
+
+void SetMaterialTexture(aiMaterial* pMaterial, aiTextureType eTextureType, CMaterial& cMat, uint32_t uBindSlot, const std::string& szModelPath)
+{
+    aiString szPath{};
+    if (pMaterial->GetTexture(eTextureType, 0, &szPath) == AI_SUCCESS)
+    {
+        // Get the local file path because for some reason assimp returns the remote path where asset was made.
+        std::string szFileName{ CUtility::GetFileNameFromPath(std::string{ szPath.C_Str()})};
+        std::filesystem::path szLocalPath{ szModelPath };
+        std::string szTexturePath{ CheckIfFileExistsInDir(szLocalPath.parent_path(), szFileName)};
+
+        if (szTexturePath.empty())
+        {
+            verr << "No texture file found in model directory...\n";
+            return;
+        }
+
+        switch (eTextureType)
+        {
+            case aiTextureType_DIFFUSE:
+            {
+                cMat.SetDiffuse(szTexturePath, uBindSlot);
+                break;
+            }
+            case aiTextureType_SPECULAR:
+            {
+                cMat.SetSpecular(szTexturePath, uBindSlot);
+                break;
+            }
+            case aiTextureType_HEIGHT:
+            {
+                cMat.SetNormalMap(szTexturePath, uBindSlot);
+                break;
+            }
+            default:
+            {
+                verr << "Unsupported texture path specified\n";
+                break;
+            }
+        }
+    }
+}
 
 std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigned int flags)
 {
@@ -24,15 +85,15 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
 
     auto importer = Assimp::Importer();
     const aiScene* pScene = importer.ReadFile(modelPath, flags);
-    assert(pScene != nullptr);
+    ASSERT(pScene != nullptr);
 
     std::shared_ptr<CModel> spModel = std::make_shared<CModel>();
     spModel->m_fsAssetPath = modelPath;
     spModel->m_sName = szModelName;
 
-    for (uint32_t meshIdx = 0; meshIdx < pScene->mNumMeshes; meshIdx++)
+    for (uint32_t uMeshIndex = 0; uMeshIndex < pScene->mNumMeshes; uMeshIndex++)
     {
-        auto* pMesh = pScene->mMeshes[meshIdx];
+        auto* pMesh = pScene->mMeshes[uMeshIndex];
         std::shared_ptr<CMesh> spModelMesh = std::make_shared<CMesh>();
         SVertexBufferData sVertexData = {};
         std::vector<uint32_t> vIndexData = {};
@@ -82,51 +143,34 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
         // TEMP: Get normal map
         aiMaterial* pMeshMaterial = pScene->mMaterials[pMesh->mMaterialIndex];
         CMaterial cMyMaterial{};
-        aiString szNormalMapTexturePath{};
-        if (pMeshMaterial->GetTexture(aiTextureType_NORMALS, 0, &szNormalMapTexturePath) == AI_SUCCESS)
-        {
-            cMyMaterial.SetNormalMap(std::string{ szNormalMapTexturePath.C_Str() }, meshIdx);
-            spModelMesh->SetMaterial(std::move(cMyMaterial));
-        }
 
+        aiColor3D sDiffuseColor{};
+        aiColor3D sSpecularColor{};
+        aiColor3D sAmbientColor{};
+
+        pMeshMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, sDiffuseColor);
+        pMeshMaterial->Get(AI_MATKEY_COLOR_SPECULAR, sSpecularColor);
+        pMeshMaterial->Get(AI_MATKEY_COLOR_AMBIENT, sAmbientColor);
+
+        cMyMaterial.SetAmbientColor({ sDiffuseColor.r, sDiffuseColor.g, sDiffuseColor.b });
+        cMyMaterial.SetDiffuseColor({ sDiffuseColor.r, sDiffuseColor.g, sDiffuseColor.b });
+        cMyMaterial.SetSpecularColor({ sDiffuseColor.r, sDiffuseColor.g, sDiffuseColor.b });
+
+        // TEMP: Remove later 
+        cMyMaterial.SetDiffuse("./res/models/cottage/cottage_diffuse.png", uMeshIndex);
+        cMyMaterial.SetNormalMap("./res/models/cottage/cottage_normal.png", uMeshIndex);
+
+        /**
+        SetMaterialTexture(pMeshMaterial, aiTextureType_DIFFUSE, cMyMaterial, uMeshIndex, modelPath);
+        SetMaterialTexture(pMeshMaterial, aiTextureType_SPECULAR, cMyMaterial, uMeshIndex, modelPath);
+        SetMaterialTexture(pMeshMaterial, aiTextureType_HEIGHT, cMyMaterial, uMeshIndex, modelPath);
+         */
+
+        spModelMesh->SetMaterial(std::move(cMyMaterial));
         spModelMesh->PrepareMesh();
         spModel->AddMesh(spModelMesh);
     }
 
     umLoadedModels.insert({ szModelName, *spModel });
     return spModel;
-}
-
-std::string CModelLoader::GetTextureFileNameFromMaterial(aiMaterial* pMaterial, aiTextureType type)
-{
-    aiString sPath = {};
-    if (pMaterial->GetTextureCount(type) <= 0)
-    {
-        return std::string{};
-    }
-
-    if (pMaterial->GetTexture(type, 0, &sPath) != AI_SUCCESS)
-    {
-        verr << "Could not load texture " << type << " from path: " << sPath.data << nl;
-        return std::string{};
-    }
-
-    std::string sPathStr{ sPath.C_Str()};
-    return CUtility::GetFileNameFromPath(sPathStr);
-
-}
-
-std::string CModelLoader::GetTextureLocalPath(const std::filesystem::path& modelPath, const std::string& searchFileName)
-{
-    for (const auto szEntry : std::filesystem::directory_iterator(modelPath.parent_path()))
-    {
-        std::string szEntryStr = szEntry.path().string();
-        std::string szFileName = CUtility::GetFileNameFromPath(szEntryStr);
-        if (szFileName == searchFileName)
-        {
-            return szEntryStr;
-        }
-    }
-
-    return std::string{};
 }
