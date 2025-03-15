@@ -89,13 +89,13 @@ std::string CModelLoader::GetTextureFileNameFromMaterial(aiMaterial* pMaterial, 
 
 std::string CModelLoader::GetTextureLocalPath(const std::filesystem::path& modelPath, const std::string& searchFileName)
 {
-    for (const auto entry : std::filesystem::directory_iterator(modelPath.parent_path()))
+    for (const auto szEntry : std::filesystem::directory_iterator(modelPath.parent_path()))
     {
-        std::string entryStr = entry.path().string();
-        std::string fileName = CUtility::GetFileNameFromPath(entryStr);
-        if (fileName == searchFileName)
+        std::string szEntryStr = szEntry.path().string();
+        std::string szFileName = CUtility::GetFileNameFromPath(szEntryStr);
+        if (szFileName == searchFileName)
         {
-            return entryStr;
+            return szEntryStr;
         }
     }
 

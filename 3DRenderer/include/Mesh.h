@@ -18,15 +18,15 @@ public:
 	void BeginRender();
 	void EndRender();
 
-	inline CMaterial& GetMaterial() { return m_cMaterial; }
+	inline CMaterial& GetMaterial() { return m_CMaterial; }
 	inline std::shared_ptr<CVertexArray>& GetVertexArray() { return m_spCVertexArray; }
     void OnRender(CShader& shader);
 
     inline std::vector<float>& GetVertices() { return m_vVertices; }
     inline std::vector<uint32_t>& GetIndices() { return m_vIndices; }
     inline const uint32_t GetIndicesCount() const { return (uint32_t)m_vIndices.size(); }
-    inline void SetMaterial(const CMaterial& material) { m_cMaterial = material; }
-	inline const CMaterial& GetMaterial() const { return m_cMaterial; }
+    inline void SetMaterial(const CMaterial& material) { m_CMaterial = material; }
+	inline const CMaterial& GetMaterial() const { return m_CMaterial; }
 
 private:
     void SetVertices(SVertexBufferData&& vertexData);
@@ -36,7 +36,7 @@ private:
     void PrepareMesh();
 
 public:
-	CMaterial m_cMaterial;
+	CMaterial m_CMaterial;
     std::vector<float> m_vVertices;
     std::vector<uint32_t> m_vIndices;
 	std::shared_ptr<CVertexArray> m_spCVertexArray;

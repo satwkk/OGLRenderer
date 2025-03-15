@@ -5,7 +5,7 @@
 #include "VertexArray.h"
 
 CMesh::CMesh() :
-    m_cMaterial{}
+    m_CMaterial{}
 {
     vlog << "mesh constructed\n";
     m_spCVertexArray = std::make_shared<CVertexArray>();
@@ -47,17 +47,17 @@ void CMesh::PrepareMesh()
 
 void CMesh::OnRender(CShader& shader)
 {
-    m_cMaterial.OnRender(shader);
+    m_CMaterial.OnRender(shader);
 }
 
 void CMesh::BeginRender()
 {
 	m_spCVertexArray->Bind();
-	m_cMaterial.Enable();
+	m_CMaterial.Enable();
 }
 
 void CMesh::EndRender()
 {
-	m_cMaterial.Disable();
+	m_CMaterial.Disable();
 	m_spCVertexArray->UnBind();
 }
