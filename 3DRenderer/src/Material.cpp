@@ -17,13 +17,19 @@ CMaterial::~CMaterial()
 void CMaterial::SetDiffuse(const std::string& texturePath, uint32_t slot)
 {
 	assert(texturePath.empty() == false);
-	m_cDiffuse = CTexture(texturePath, slot);
+	m_CDiffuse = CTexture(texturePath, slot);
 }
 
 void CMaterial::SetSpecular(const std::string& texturePath, uint32_t slot)
 {
     assert(texturePath.empty() == false);
-    m_cSpecular = CTexture(texturePath, slot);
+    m_CSpecular = CTexture(texturePath, slot);
+}
+
+void CMaterial::SetNormalMap(const std::string& texturePath, uint32_t slot)
+{
+    assert(texturePath.empty() == false);
+    m_CNormalMap = CTexture(texturePath, slot);
 }
 
 void CMaterial::OnRender(CShader& shader)
@@ -33,26 +39,30 @@ void CMaterial::OnRender(CShader& shader)
     shader.SetUniformVector3("material.ambientColor", m_VAmbientColor);
     shader.SetUniformFloat("material.shine", m_fShine);
 
-    if (m_cDiffuse.IsLoaded())
+    if (m_CDiffuse.IsLoaded())
     {
-        shader.SetUniformInt("material.diffuse", m_cDiffuse.GetSlot());
+        shader.SetUniformInt("material.diffuse", m_CDiffuse.GetSlot());
     }
-    if (m_cSpecular.IsLoaded())
+    if (m_CSpecular.IsLoaded())
     {
-        shader.SetUniformInt("material.specular", m_cSpecular.GetSlot());
+        shader.SetUniformInt("material.specular", m_CSpecular.GetSlot());
+    }
+    if (m_CNormalMap.IsLoaded())
+    {
+        shader.SetUniformInt("material.normalMap", m_CNormalMap.GetSlot());
     }
 }
 
 void CMaterial::Enable()
 {
-    if (m_cDiffuse.IsLoaded())
-        m_cDiffuse.Bind();
+    if (m_CDiffuse.IsLoaded())
+        m_CDiffuse.Bind();
 }
 
 void CMaterial::Disable()
 {
-    if (m_cDiffuse.IsLoaded())
-        m_cDiffuse.UnBind();
+    if (m_CDiffuse.IsLoaded())
+        m_CDiffuse.UnBind();
 }
 
 CMaterial CMaterial::DefaultMaterial()

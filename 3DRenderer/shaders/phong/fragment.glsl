@@ -7,6 +7,7 @@ struct Material
 {
 	sampler2D diffuse;
 	sampler2D specular;
+	sampler2D normalMap;
     vec3 diffuseColor;
     vec3 specularColor;
     vec3 ambientColor;
@@ -25,7 +26,7 @@ struct Light
 // IN PARAMS
 // =====================
 in vec2 TexCoord;
-in vec3 Normal;
+in mat3 TBN;
 in vec3 FragmentWorldPosition;
 
 
@@ -43,13 +44,25 @@ uniform Light light;
 
 void main() 
 {
+	// Get the world normal based on normal map is set or not
+	vec3 normalMapValue = texture(material.normalMap, TexCoord).rgb;
+	vec3 worldNormal = vec3(0.0);
+	if (length(normalMapValue) == 0.0)
+	{
+		worldNormal = TBN[2];
+	}
+	else 
+	{
+		normalMapValue = normalMapValue * 2.0 - 1.0;
+		worldNormal = normalize(TBN * normalMapValue);
+	}
+
 	// Diffuse reflection
-	vec3 norm = normalize(Normal);
 	vec3 directionToLight = normalize(light.position - FragmentWorldPosition);
-	float diffuseFactor = max(dot(norm, directionToLight), 0.0);
+	float diffuseFactor = max(dot(worldNormal, directionToLight), 0.0);
 
 	// Specular reflection
-	vec3 reflectedLight = reflect(-directionToLight, norm);
+	vec3 reflectedLight = reflect(-directionToLight, worldNormal);
 	vec3 directionToCamera = normalize(uCameraPosition - FragmentWorldPosition);
 	float specularFactor = pow(max(dot(directionToCamera, reflectedLight), 0.0), material.shine);
 

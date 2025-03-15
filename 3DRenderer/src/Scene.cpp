@@ -8,7 +8,26 @@
 void CScene::InitScene()
 {
     std::vector<std::shared_ptr<CModel>> vModels = {
-        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
         CModelLoader::Load("./res/models/tree/Gledista_Triacanthos_2.fbx", BASICFLAGS),
     };
 
@@ -16,9 +35,9 @@ void CScene::InitScene()
     {
 	    entt::entity uEntityID = m_CRegistry.create();
         srand(rand());
-        const float fXPos = rand() % 5000;
-        const float fZPos = rand() % 5000;
-        m_CRegistry.emplace<STransformComponent>(uEntityID, glm::vec3{ fXPos, 0.0f, fZPos }, glm::vec3{ 0.3f });
+        const float fXPos = rand() % 200;
+        const float fZPos = rand() % 200;
+        m_CRegistry.emplace<STransformComponent>(uEntityID, glm::vec3{ fXPos, 0.0f, fZPos }, glm::vec3{ 0.7f });
         m_CRegistry.emplace<SMeshRendererComponent>(uEntityID, spCModel);
         m_umSceneObjectMap.insert({ uEntityID, spCModel });
     }

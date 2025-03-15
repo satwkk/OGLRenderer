@@ -14,6 +14,12 @@ public:
 	CModel() = default;
 	~CModel() = default;
 
+	CModel(const CModel&);
+	CModel& operator=(const CModel&);
+
+	CModel(CModel&&);
+	CModel& operator=(CModel&&);
+
 	void AddMesh(const std::shared_ptr<CMesh>& pMesh);
 	inline std::vector<std::shared_ptr<CMesh>>& GetMeshArray() { return m_vMeshes; }
 

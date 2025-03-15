@@ -88,7 +88,6 @@
     <None Include="shaders\phong\vertex.glsl" />
     <None Include="res\models\Green_Sea_Turtle.fbx" />
     <None Include="res\models\SimpleRig_cube.fbx" />
-    <None Include="shaders\phong\fragment_2.glsl" />
     <None Include="shaders\cubemap\fragment.glsl" />
     <None Include="shaders\cubemap\vertex.glsl" />
   </ItemGroup>

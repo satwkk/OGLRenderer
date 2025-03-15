@@ -9,15 +9,26 @@
 #include "Logger.h"
 #include "Material.h"
 
+CModelLoader* CModelLoader::s_pCInstance = nullptr;
+
 std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigned int flags)
 {
+    std::string szModelName{ CUtility::GetFileNameFromPath(modelPath) };
+    auto& umLoadedModels = CModelLoader::GetInstance()->GetLoadedModels();
+    auto itrModel = umLoadedModels.find(szModelName);
+    if (itrModel != umLoadedModels.end())
+    {
+        vlog << "Found loaded model in cache, returning that ....\n";
+        return std::make_shared<CModel>(itrModel->second);
+    }
+
     auto importer = Assimp::Importer();
     const aiScene* pScene = importer.ReadFile(modelPath, flags);
     assert(pScene != nullptr);
 
     std::shared_ptr<CModel> spModel = std::make_shared<CModel>();
     spModel->m_fsAssetPath = modelPath;
-    spModel->m_sName = CUtility::GetFileNameFromPath(modelPath);
+    spModel->m_sName = szModelName;
 
     for (uint32_t meshIdx = 0; meshIdx < pScene->mNumMeshes; meshIdx++)
     {
@@ -26,7 +37,7 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
         SVertexBufferData sVertexData = {};
         std::vector<uint32_t> vIndexData = {};
 
-        // Vertex Data Setup
+        // Vertex buffer Setup
         for (uint32_t i = 0; i < pMesh->mNumVertices; i++)
         {
             aiVector3D& VVertex = pMesh->mVertices[i];
@@ -43,6 +54,11 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
             sVertexData.vVertices.push_back(VNormal.x);
             sVertexData.vVertices.push_back(VNormal.y);
             sVertexData.vVertices.push_back(VNormal.z);
+
+            aiVector3D& VTangent = pMesh->mTangents[i];
+            sVertexData.vVertices.push_back(VTangent.x);
+            sVertexData.vVertices.push_back(VTangent.y);
+            sVertexData.vVertices.push_back(VTangent.z);
         }
 
         // Index data setup
@@ -58,13 +74,26 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
         sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
         sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float2, 12 });
         sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 20 });
+        sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 32 });
 
         spModelMesh->SetVertices(std::move(sVertexData));
         spModelMesh->SetIndices(std::move(vIndexData));
+
+        // TEMP: Get normal map
+        aiMaterial* pMeshMaterial = pScene->mMaterials[pMesh->mMaterialIndex];
+        CMaterial cMyMaterial{};
+        aiString szNormalMapTexturePath{};
+        if (pMeshMaterial->GetTexture(aiTextureType_NORMALS, 0, &szNormalMapTexturePath) == AI_SUCCESS)
+        {
+            cMyMaterial.SetNormalMap(std::string{ szNormalMapTexturePath.C_Str() }, meshIdx);
+            spModelMesh->SetMaterial(std::move(cMyMaterial));
+        }
+
         spModelMesh->PrepareMesh();
         spModel->AddMesh(spModelMesh);
     }
 
+    umLoadedModels.insert({ szModelName, *spModel });
     return spModel;
 }
 

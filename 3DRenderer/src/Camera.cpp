@@ -32,9 +32,9 @@ void CPerspectiveCamera::Move(const glm::vec3& direction)
 {
 	if (direction == glm::vec3(0.0f, 0.0f, 0.0f))
 		return;
-	auto MRotationMatrix = glm::mat3(m_MViewMatrix);
-	auto MWorldDirection = glm::transpose(MRotationMatrix) * direction;
-	m_VPosition += MWorldDirection * m_fMoveSpeed;
+	glm::mat3 MRotationMatrix = glm::mat3(m_MViewMatrix);
+	glm::vec3 VWorldDirection = glm::transpose(MRotationMatrix) * direction;
+	m_VPosition += VWorldDirection * m_fMoveSpeed;
 	SetupVPMatrix();
 }
 

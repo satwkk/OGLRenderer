@@ -14,6 +14,7 @@ public:
 
 	void SetDiffuse(const std::string& texturePath, uint32_t slot);
     void SetSpecular(const std::string& texturePath, uint32_t slot);
+    void SetNormalMap(const std::string& texturePath, uint32_t slot);
 
 	void Enable();
 	void Disable();
@@ -22,12 +23,13 @@ public:
     static CMaterial DefaultMaterial();
 
 	inline void SetShine(float shine) { m_fShine = shine; }
-	inline CTexture& GetDiffuseMap() { return m_cDiffuse; }
+	inline CTexture& GetDiffuseMap() { return m_CDiffuse; }
 	inline const float GetShine()  const { return m_fShine; }
-	inline uint32_t GetDiffuseMapSlotIndex() { return m_cDiffuse.GetSlot(); }
+	inline uint32_t GetDiffuseMapSlotIndex() { return m_CDiffuse.GetSlot(); }
 private:
-	CTexture m_cDiffuse;
-	CTexture m_cSpecular;
+	CTexture m_CDiffuse;
+	CTexture m_CSpecular;
+	CTexture m_CNormalMap;
 	float m_fShine;
     glm::vec3 m_VAmbientColor;
     glm::vec3 m_VDiffuseColor; 

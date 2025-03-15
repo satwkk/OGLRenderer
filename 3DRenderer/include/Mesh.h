@@ -22,10 +22,12 @@ public:
 	inline std::shared_ptr<CVertexArray>& GetVertexArray() { return m_spCVertexArray; }
     void OnRender(CShader& shader);
 
+    inline void SetMaterial(const CMaterial& material) { m_CMaterial = material; }
+    inline void SetMaterial(CMaterial&& material) { m_CMaterial = std::move(material); }
+
     inline std::vector<float>& GetVertices() { return m_vVertices; }
     inline std::vector<uint32_t>& GetIndices() { return m_vIndices; }
     inline const uint32_t GetIndicesCount() const { return (uint32_t)m_vIndices.size(); }
-    inline void SetMaterial(const CMaterial& material) { m_CMaterial = material; }
 	inline const CMaterial& GetMaterial() const { return m_CMaterial; }
 
 private:
