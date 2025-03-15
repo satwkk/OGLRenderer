@@ -46,7 +46,7 @@ void UpdateCamera(GLFWwindow* pSWindow, CPerspectiveCamera& cCamera)
     double deltaX = cursorPosX - dCursorPosLastFrameX;
     double deltaY = cursorPosY - dCursorPosLastFrameY;
 
-    cCamera.Rotate(-deltaY, -deltaX);
+    cCamera.Rotate(deltaY, deltaX);
     cCamera.Move(targetDir);
 
     dCursorPosLastFrameX = cursorPosX;

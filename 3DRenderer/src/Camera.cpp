@@ -53,12 +53,12 @@ void CPerspectiveCamera::SetupVPMatrix()
 	glm::mat4 MPitchMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(m_fPitch), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	// Combine both to get composite rotation
-	glm::mat4 MRotationMatrix = MYawMatrix * MPitchMatrix;
+	glm::mat4 MRotationMatrix = MPitchMatrix * MYawMatrix;
 
 	// Translation for view matrix
 	glm::mat4 MTranslationMatrix = glm::translate(glm::mat4(1.0f), -m_VPosition);
 
 	// Combine all together to get final view projection matrix
-	m_MViewMatrix = glm::transpose(MRotationMatrix) * MTranslationMatrix;
+	m_MViewMatrix = MRotationMatrix * MTranslationMatrix;
 	m_MViewProjectionMatrix = m_MProjectionMatrix * m_MViewMatrix;
 }
