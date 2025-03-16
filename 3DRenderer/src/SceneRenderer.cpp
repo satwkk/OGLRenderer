@@ -8,15 +8,14 @@ void CSceneRenderer::Draw(const std::shared_ptr<CMesh>& spMesh, glm::mat4& model
     spMesh->BeginRender();
 
     glm::mat4 MRotationMatrix = 
-        glm::rotate(glm::mat4(1.0), glm::radians(transform.VRotation.x), glm::vec3(1.0, 0.0, 0.0)) * 
         glm::rotate(glm::mat4(1.0), glm::radians(transform.VRotation.y), glm::vec3(0.0, 1.0, 0.0)) * 
+        glm::rotate(glm::mat4(1.0), glm::radians(transform.VRotation.x), glm::vec3(1.0, 0.0, 0.0)) * 
         glm::rotate(glm::mat4(1.0), glm::radians(transform.VRotation.z), glm::vec3(0.0, 0.0, 1.0));
 
     // Setup model matrix
-    modelMatrix = glm::mat4(1.0f) *
-        translate(glm::mat4(1.0), transform.VPosition) *
+    modelMatrix = glm::translate(glm::mat4(1.0), transform.VPosition) *
         MRotationMatrix *
-        scale(glm::mat4(1.0), transform.VScale);
+        glm::scale(glm::mat4(1.0), transform.VScale);
 
     shader.SetUniformMatrix4("uModelMatrix", modelMatrix);
 

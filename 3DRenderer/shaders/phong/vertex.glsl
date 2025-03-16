@@ -25,5 +25,5 @@ void main()
     vec3 B = cross(N, T);
     TBN = mat3(T, B, N);
 
-    gl_Position = uVPMatrix * uModelMatrix * vec4(aPos, 1.0);
+    gl_Position = uVPMatrix * vec4(FragmentWorldPosition, 1.0);
 }

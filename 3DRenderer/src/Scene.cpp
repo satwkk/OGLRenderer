@@ -5,13 +5,14 @@
 #include "SceneRenderer.h"
 #include "Mesh.h"
 
+#include <GLFW/glfw3.h>
+
 void CScene::InitScene()
 {
     std::vector<std::shared_ptr<CModel>> vModels = {
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
-        CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
-        CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS)
     };
 
     for (auto& spCModel : vModels)
@@ -26,9 +27,9 @@ void CScene::InitScene()
         fXPos *= posMultiply1 ? 1 : -1;
         fZPos *= posMultiply2 ? 1 : -1;
 
-        glm::vec3 sPosition { fXPos, 0.0f, fZPos };
-        glm::vec3 sRotation{ 90.0f, 0.0f, 0.0f };
-        glm::vec3 sScale { 500.0f, 500.0f, 200.0f };
+        glm::vec3 sPosition{ fXPos, 0.0f, fZPos };
+        glm::vec3 sRotation{ -90.0f, 0.0f, 0.0f };
+        glm::vec3 sScale{ 100.0f, 100.0f, 50.0f };
 
         m_CRegistry.emplace<STransformComponent>(uEntityID, sPosition, sRotation, sScale);
         m_CRegistry.emplace<SMeshRendererComponent>(uEntityID, spCModel);
