@@ -1,5 +1,7 @@
 #pragma once
 
+#include <initializer_list>
+#include <utility>
 #include <vector>
 #include <string>
 #include <Gl/glew.h>
@@ -95,29 +97,23 @@ static GLenum GetGLTypeFromAttribType(EVertexAttributeType eType)
     return -1;
 }
 
-struct SVertexAttributeLayout
-{
-    EVertexAttributeType eAttributeType;
-    int nOffset;
-
-    SVertexAttributeLayout(EVertexAttributeType type, int offset) :
-        eAttributeType{type},
-        nOffset{offset}
-    {
-    }
-};
-
 struct SVertexBufferData
 {
     std::vector<float> vVertices;
-    std::vector<SVertexAttributeLayout> vBufferLayouts;
+    std::vector<EVertexAttributeType> vBufferLayouts;
+
+    template<typename... Args>
+    void AddLayout(Args&&... layout)
+    {
+        (vBufferLayouts.emplace_back(std::forward<EVertexAttributeType>(layout)), ...);
+    }
 
     uint32_t GetStride()
     {
         uint32_t uStride = 0;
         for (auto& layout : vBufferLayouts)
         {
-            uStride += GetSizeFromAttribType(layout.eAttributeType);
+            uStride += GetSizeFromAttribType(layout);
         }
 
         return uStride;

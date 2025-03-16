@@ -60,14 +60,16 @@ void CVertexArray::PrepareVertexArray()
 {
 	Bind();
 
+    uint32_t uOffset = 0;
 	for (uint32_t i = 0; i < m_SVertexBufferData.vBufferLayouts.size(); i++)
 	{
-		auto vAttribLayout = m_SVertexBufferData.vBufferLayouts[i];
-		auto uElementCount = GetCountFromAttribType(vAttribLayout.eAttributeType);
-		auto eType = GetGLTypeFromAttribType(vAttribLayout.eAttributeType);
+		EVertexAttributeType eLayout = m_SVertexBufferData.vBufferLayouts[i];
+		uint32_t uElementCount = GetCountFromAttribType(eLayout);
+		auto eType = GetGLTypeFromAttribType(eLayout);
 		auto uStride = m_SVertexBufferData.GetStride();
 		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, uElementCount, eType, GL_FALSE, uStride, (void*)vAttribLayout.nOffset);
+		glVertexAttribPointer(i, uElementCount, eType, GL_FALSE, uStride, (void*)uOffset);
+        uOffset += GetSizeFromAttribType(eLayout);
 	}
 
 	UnBind();

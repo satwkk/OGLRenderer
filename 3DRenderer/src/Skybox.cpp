@@ -1,4 +1,5 @@
 #include "Skybox.h"
+#include "Buffer.h"
 #include <GL/glew.h>
 
 CSkybox::CSkybox() :
@@ -15,7 +16,7 @@ CSkybox::CSkybox() :
 	};
 
 	gSBufferData.vVertices = gvVertices;
-	gSBufferData.vBufferLayouts.push_back(SVertexAttributeLayout{ EVertexAttributeType::Float3, 0 });
+    gSBufferData.AddLayout(EVertexAttributeType::Float3);
 
 	m_CVertexArray.SetVertexBuffer(gSBufferData);
 	m_CCubeMap.InitCubeMap(paths);

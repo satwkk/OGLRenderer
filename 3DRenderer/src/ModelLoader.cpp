@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 
+#include "Buffer.h"
 #include "assimp/material.h"
 #include "ModelLoader.h"
 #include "Utility.h"
@@ -132,10 +133,12 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
             }
         }
 
-        sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 0 });
-        sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float2, 12 });
-        sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 20 });
-        sVertexData.vBufferLayouts.push_back({ EVertexAttributeType::Float3, 32 });
+        sVertexData.AddLayout(
+            EVertexAttributeType::Float3,
+            EVertexAttributeType::Float2,
+            EVertexAttributeType::Float3,
+            EVertexAttributeType::Float3
+        );
 
         spModelMesh->SetVertices(std::move(sVertexData));
         spModelMesh->SetIndices(std::move(vIndexData));
