@@ -218,10 +218,12 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="src\DirectionalLight.cpp" />
+    <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\SceneObject.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneRenderer.cpp" />
     <ClCompile Include="src\ShaderLibrary.cpp" />
+    <ClCompile Include="src\ShadowPass.cpp" />
     <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\ufbx.c" />
     <ClCompile Include="main.cpp" />
@@ -245,7 +247,11 @@
     <None Include="res\models\SimpleRig_cube.fbx" />
     <None Include="shaders\cubemap\fragment.glsl" />
     <None Include="shaders\cubemap\vertex.glsl" />
+    <None Include="shaders\phong\DebugShadowFragmentShader.glsl" />
+    <None Include="shaders\phong\DebugShadowVertexShader.glsl" />
     <None Include="shaders\phong\fragment.glsl" />
+    <None Include="shaders\phong\ShadowMapFragmentShader.glsl" />
+    <None Include="shaders\phong\ShadowMapVertexShader.glsl" />
     <None Include="shaders\phong\vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +261,7 @@
     <ClInclude Include="include\CubeMap.h" />
     <ClInclude Include="include\DirectionalLight.h" />
     <ClInclude Include="include\entt.hpp" />
+    <ClInclude Include="include\Framebuffer.h" />
     <ClInclude Include="include\SceneObject.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\Material.h" />
@@ -266,6 +273,7 @@
     <ClInclude Include="include\SceneRenderer.h" />
     <ClInclude Include="include\Shader.h" />
     <ClInclude Include="include\ShaderLibrary.h" />
+    <ClInclude Include="include\ShadowPass.h" />
     <ClInclude Include="include\Skybox.h" />
     <ClInclude Include="include\stbi_image.h" />
     <ClInclude Include="include\Texture.h" />

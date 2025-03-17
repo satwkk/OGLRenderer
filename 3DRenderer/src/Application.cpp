@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "ShadowPass.h"
 #include "Utility.h"
 #include "Buffer.h"
 #include "VertexArray.h"
@@ -12,6 +13,7 @@
 #include "Shader.h"
 #include "SceneObject.h"
 #include "Logger.h"
+#include "Window.h"
 
 void UpdateCamera(GLFWwindow* pSWindow, CPerspectiveCamera& cCamera)
 {
@@ -53,9 +55,9 @@ void UpdateCamera(GLFWwindow* pSWindow, CPerspectiveCamera& cCamera)
     dCursorPosLastFrameY = cursorPosY;
 }
 
-void UpdateLight(GLFWwindow* pSWindow)
+void UpdateLight(GLFWwindow* pSWindow, CDirectionalLight& light)
 {
-    if (glfwGetKey(pSWindow, GLFW_KEY_L))
+    if (glfwGetKey(pSWindow, GLFW_KEY_Q))
     {
         glfwSetInputMode(pSWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         bShouldMoveLight = true;
@@ -75,7 +77,11 @@ void UpdateLight(GLFWwindow* pSWindow)
     float deltaX = mouseX - dCursorPosLastFrameX;
     float deltaY = mouseY - dCursorPosLastFrameY;
 
-    vLightPosition += glm::vec3(deltaX * dLightMoveSens, 0.f, deltaY * dLightMoveSens);
+
+    glm::vec3 VLightPos = light.GetPosition();
+    // VLightPos += glm::vec3(deltaX * dLightMoveSens, 0.f, deltaY * dLightMoveSens);
+    VLightPos += glm::vec3(deltaX * dLightMoveSens, deltaY * dLightMoveSens, 0.0);
+    light.SetPosition(VLightPos);
 
     dCursorPosLastFrameX = mouseX;
     dCursorPosLastFrameY = mouseY;
@@ -85,7 +91,7 @@ CApplication* CApplication::s_pCInstance = nullptr;
 
 CApplication::CApplication(const AppConfig& sConfig) :
     m_sConfig{ sConfig },
-    m_CCamera{ glm::vec3{ 0.0f, 0.0f, 50.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
+    m_CCamera{ glm::vec3{ 0.0f, 0.0f, 0.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
 {
 }
 
@@ -102,19 +108,13 @@ CApplication* CApplication::Create(const AppConfig& sConfig)
 
 bool CApplication::Init()
 {
-    // Create the window
     m_pCMainWindow = std::make_unique<CWindow>(m_sConfig.WindowWidth, m_sConfig.WindowHeight, m_sConfig.ApplicationName);
-
-    // Add on update callback
     m_pCMainWindow->AddUpdateCallback([&]() { OnUpdate(); });
-
-    // Enable depth testing
+    m_pCMainWindow->EnableFlag(GL_CULL_FACE);
     m_pCMainWindow->EnableFlag(GL_DEPTH_TEST);
 
-    // Initialize shader library
     m_CShaderLibrary.Init();
 
-    // Get the phong shader model
     // TODO(void): Load this based on setting file
     m_CShader = m_CShaderLibrary.GetShader("phong");
 
@@ -122,6 +122,13 @@ bool CApplication::Init()
     // TODO(void): Move this to scene later
     m_pCSkybox = std::make_unique<CSkybox>();
     m_CSkyboxShader = m_CShaderLibrary.GetShader("cubemap");
+
+    // TODO(void): Get it from shader library
+    m_CShadowMappingShader = CShader{ "./shaders/phong/ShadowMapVertexShader.glsl", "./shaders/phong/ShadowMapFragmentShader.glsl" };
+    
+    m_CDirectionalLight.Init(glm::vec3(0.0), glm::vec3(0.0));
+
+    ShadowPassFramebuffer = CreateShadowPassFrameBuffer(1024, 1024);
 
     m_CScene.InitScene();
 
@@ -135,8 +142,12 @@ void CApplication::Run()
 
 void CApplication::OnUpdate()
 {
-    UpdateLight(m_pCMainWindow->GetHandle());
+    UpdateLight(m_pCMainWindow->GetHandle(), m_CDirectionalLight);
     UpdateCamera(m_pCMainWindow->GetHandle(), m_CCamera);
+
+    // TODO(void): Implement a proper render pass system;
+    m_CDirectionalLight.OnDraw(m_CShadowMappingShader, m_CScene);
+    // RunShadowPass(&ShadowPassFramebuffer, &m_CDirectionalLight, m_CShadowMappingShader, m_CScene, m_pCMainWindow->GetWidth(), m_pCMainWindow->GetHeight());
 
     m_pCSkybox->OnRender(m_CSkyboxShader, m_CCamera);
 
@@ -146,8 +157,9 @@ void CApplication::OnUpdate()
     m_CCamera.OnUpdate(m_CShader);
 
     // Position properties
-    m_CShader.SetUniformVector3("light.position", vLightPosition);
+    m_CShader.SetUniformVector3("light.position", m_CDirectionalLight.GetPosition());
     m_CShader.SetUniformVector3("uCameraPosition", m_CCamera.GetPosition());
+    m_CShader.SetUniformMatrix4("uLightSpaceMatrix", m_CDirectionalLight.GetViewProjectionMatrix());
 
     // Light properties
     m_CShader.SetUniformVector3("light.ambient", glm::vec3(0.2f));

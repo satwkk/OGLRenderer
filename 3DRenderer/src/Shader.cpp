@@ -82,25 +82,25 @@ void CShader::UnBind()
 void CShader::SetUniformMatrix4(const std::string& name, const glm::mat4& value)
 {
     auto location = glGetUniformLocation(m_uRendererID, name.c_str());
-    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void CShader::SetUniformVector3(const std::string& name, const glm::vec3& value)
 {
     auto location = glGetUniformLocation(m_uRendererID, name.c_str());
-    glUniform3fv(location, 1, glm::value_ptr(value));
+	glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
 void CShader::SetUniformFloat(const std::string& name, float value)
 {
     auto location = glGetUniformLocation(m_uRendererID, name.c_str());
-    glUniform1f(location, value);
+	glUniform1f(location, value);
 }
 
 void CShader::SetUniformInt(const std::string& name, int value)
 {
     auto location = glGetUniformLocation(m_uRendererID, name.c_str());
-    glUniform1i(location, value);
+	glUniform1i(location, value);
 }
 
 uint32_t CShader::LoadShader(const std::string& shaderPath, unsigned int shaderType)

@@ -23,12 +23,16 @@ public:
 	
 	GLFWwindow* GetHandle() const { return m_pSHandle; }
 	void SetBackgroundColor(const glm::vec3& color) { m_VWindowBackgroundColor = color; }
-	const glm::vec3& GetBackgroundColor() const { return m_VWindowBackgroundColor; }
+	inline const glm::vec3& GetBackgroundColor() const { return m_VWindowBackgroundColor; }
+	inline float GetWidth() { return m_fWidth; }
+	inline float GetHeight() { return m_fHeight; }
 
 public:
 	std::function<void()> m_fnUpdateCallback;
 
 private:
+	float m_fWidth;
+	float m_fHeight;
 	glm::vec3 m_VWindowBackgroundColor;
 	uint32_t m_uEnabledFlags;
 	GLFWwindow* m_pSHandle;

@@ -1,6 +1,7 @@
 #include "Material.h"
 #include "Shader.h"
 #include "Application.h"
+#include "Window.h"
 
 CMaterial::CMaterial() :
 	m_fShine(64.0f),
@@ -18,22 +19,24 @@ CMaterial::~CMaterial()
 void CMaterial::SetDiffuse(const std::string& texturePath, uint32_t slot)
 {
 	assert(texturePath.empty() == false);
-	m_CDiffuse = CTexture(texturePath, m_uAvailableSlot);
-    m_uAvailableSlot++;
+	m_CDiffuse = CTexture(texturePath, m_uAvailableSlot++);
 }
 
 void CMaterial::SetSpecular(const std::string& texturePath, uint32_t slot)
 {
     assert(texturePath.empty() == false);
-    m_CSpecular = CTexture(texturePath, m_uAvailableSlot);
-    m_uAvailableSlot++;
+    m_CSpecular = CTexture(texturePath, m_uAvailableSlot++);
 }
 
 void CMaterial::SetNormalMap(const std::string& texturePath, uint32_t slot)
 {
     assert(texturePath.empty() == false);
-    m_CNormalMap = CTexture(texturePath, m_uAvailableSlot);
-    m_uAvailableSlot++;
+    m_CNormalMap = CTexture(texturePath, m_uAvailableSlot++);
+}
+
+void CMaterial::EnableShadowMap(CShader& shader)
+{
+    shader.SetUniformInt("uShadowMap", m_uAvailableSlot++);
 }
 
 void CMaterial::OnRender(CShader& shader)
@@ -55,6 +58,12 @@ void CMaterial::OnRender(CShader& shader)
     {
         shader.SetUniformInt("material.normalMap", m_CNormalMap.GetSlot());
     }
+
+    // TEMP: Very temporary !!!
+    uint32_t tex = CApplication::Get()->GetDirectionalLight().GetShadowMap();
+    glActiveTexture(GL_TEXTURE0 + m_uAvailableSlot);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    shader.SetUniformInt("uShadowMap", m_uAvailableSlot);
 }
 
 void CMaterial::Enable()

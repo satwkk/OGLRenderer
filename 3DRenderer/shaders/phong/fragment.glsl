@@ -28,6 +28,7 @@ struct Light
 in vec2 TexCoord;
 in mat3 TBN;
 in vec3 FragmentWorldPosition;
+in vec4 FragmentLightSpacePosition;
 
 
 // =====================
@@ -41,6 +42,7 @@ out vec4 FragColor;
 uniform vec3 uCameraPosition;
 uniform Material material;
 uniform Light light;
+uniform sampler2D uShadowMap;
 
 void main() 
 {
@@ -68,10 +70,18 @@ void main()
 	bool isSpecularTextureSet = length(specularTextureColor) > 0.01;
     vec3 specularColor = isSpecularTextureSet ? specularTextureColor : material.specularColor;
 
+    // Calc shadow
+	vec3 coords = FragmentLightSpacePosition.xyz / FragmentLightSpacePosition.w;
+	coords = coords * 0.5 + 0.5;
+	float closestDepth = texture(uShadowMap, coords.xy).r;
+	float currentDepth = coords.z;
+    float bias = max(0.05 * (1.0 - dot(worldNormal, directionToLight)), 0.005);
+	float shadow = (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
+
     // Final calculations
 	vec3 ambient = light.ambient * material.ambientColor * diffuseColor;
-	vec3 diffuseLight = light.diffuse * diffuseFactor * diffuseColor;
-	vec3 specularLight = light.specular * specularFactor * specularColor;
+	vec3 diffuseLight = light.diffuse * diffuseFactor * diffuseColor * (1.0 - shadow);
+	vec3 specularLight = light.specular * specularFactor * specularColor * (1.0 - shadow);
 
 	FragColor = vec4(ambient + diffuseLight + specularLight, 1.0);
 }

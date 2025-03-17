@@ -5,6 +5,8 @@
 
 CWindow::CWindow(float width, float height, const std::string& name) :
 	m_pSHandle { nullptr },
+	m_fWidth{ width },
+	m_fHeight{ height },
 	m_VWindowBackgroundColor{ 0.1f, 0.1f, 0.1f },
 	m_uEnabledFlags{ 0 }
 {

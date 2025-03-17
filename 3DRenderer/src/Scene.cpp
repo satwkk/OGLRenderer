@@ -12,7 +12,8 @@ void CScene::InitScene()
     std::vector<std::shared_ptr<CModel>> vModels = {
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
-        CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS)
+        CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
     };
 
     for (auto& spCModel : vModels)
@@ -22,14 +23,15 @@ void CScene::InitScene()
         srand(rand());
         bool posMultiply1 = rand() % 10 > 5;
         bool posMultiply2 = rand() % 10 > 5;
-        float fXPos = 1000 + rand() % 1000;
-        float fZPos = 1000 + rand() % 1000;
+        float fXPos = rand() % 2000;
+        float fZPos = rand() % 2000;
         fXPos *= posMultiply1 ? 1 : -1;
         fZPos *= posMultiply2 ? 1 : -1;
 
         glm::vec3 sPosition{ fXPos, 0.0f, fZPos };
+        // glm::vec3 sPosition{ 0.0 };
         glm::vec3 sRotation{ -90.0f, 0.0f, 0.0f };
-        glm::vec3 sScale{ 100.0f, 100.0f, 50.0f };
+        glm::vec3 sScale{ 200.0f, 200.0f, 100.0f };
 
         m_CRegistry.emplace<STransformComponent>(uEntityID, sPosition, sRotation, sScale);
         m_CRegistry.emplace<SMeshRendererComponent>(uEntityID, spCModel);

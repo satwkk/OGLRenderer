@@ -16,6 +16,8 @@ public:
     void SetSpecular(const std::string& texturePath, uint32_t slot);
     void SetNormalMap(const std::string& texturePath, uint32_t slot);
 
+    void EnableShadowMap(CShader& shader);
+
 	inline void SetAmbientColor(const glm::vec3& sColor) { m_VAmbientColor = sColor; }
 	inline void SetDiffuseColor(const glm::vec3& sColor) { m_VDiffuseColor = sColor; }
     inline void SetSpecularColor(const glm::vec3& sColor) { m_VSpecularColor = sColor; }
@@ -34,6 +36,7 @@ private:
 	CTexture m_CDiffuse;
 	CTexture m_CSpecular;
 	CTexture m_CNormalMap;
+    CTexture m_CShadowMap;
 	float m_fShine;
     glm::vec3 m_VAmbientColor;
     glm::vec3 m_VDiffuseColor; 

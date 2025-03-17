@@ -7,10 +7,12 @@ layout (location = 3) in vec3 aTangent;
 
 uniform mat4 uVPMatrix;
 uniform mat4 uModelMatrix;
+uniform mat4 uLightSpaceMatrix;
 
 out vec2 TexCoord;
 out mat3 TBN;
 out vec3 FragmentWorldPosition;
+out vec4 FragmentLightSpacePosition;
 
 void main() 
 {
@@ -25,5 +27,6 @@ void main()
     vec3 B = cross(N, T);
     TBN = mat3(T, B, N);
 
+    FragmentLightSpacePosition = uLightSpaceMatrix * vec4(FragmentWorldPosition, 1.0);
     gl_Position = uVPMatrix * vec4(FragmentWorldPosition, 1.0);
 }

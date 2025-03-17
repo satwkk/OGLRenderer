@@ -81,6 +81,12 @@
     <ClCompile Include="src\Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShadowPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\models\Cube.FBX" />
@@ -90,6 +96,10 @@
     <None Include="res\models\SimpleRig_cube.fbx" />
     <None Include="shaders\cubemap\fragment.glsl" />
     <None Include="shaders\cubemap\vertex.glsl" />
+    <None Include="shaders\phong\ShadowMapVertexShader.glsl" />
+    <None Include="shaders\phong\ShadowMapFragmentShader.glsl" />
+    <None Include="shaders\phong\DebugShadowFragmentShader.glsl" />
+    <None Include="shaders\phong\DebugShadowVertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Utility.h">
@@ -165,6 +175,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShadowPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

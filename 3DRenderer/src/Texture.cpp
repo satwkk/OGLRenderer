@@ -1,10 +1,9 @@
 #include <iostream>
-#include "Logger.h"
 
 #include "Texture.h"
-#define STB_IMAGE_IMPLEMENTATION
 #include <GL/glew.h>
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stbi_image.h"
 
 CTexture::CTexture(const std::string& filePath, uint32_t slot) :
