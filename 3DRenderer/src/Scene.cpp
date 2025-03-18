@@ -6,10 +6,11 @@
 #include "Mesh.h"
 
 #include <GLFW/glfw3.h>
+#include <memory>
 
 void CScene::InitScene()
 {
-    std::vector<std::shared_ptr<CModel>> vModels = {
+    std::vector<std::shared_ptr<CModel>> vHouseModels = {
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
@@ -17,17 +18,17 @@ void CScene::InitScene()
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS)
     };
-
+    
     float spacing = 2000.0f;
-    for (uint32_t i = 0; i < vModels.size(); i++)
+    for (uint32_t i = 0; i < vHouseModels.size(); i++)
     {
-        std::shared_ptr<CModel> spCModel = vModels[i];
+        std::shared_ptr<CModel> spCModel = vHouseModels[i];
 
 	    entt::entity uEntityID = m_CRegistry.create();
 
         srand(rand());
 
-        float n = (float)i / vModels.size();
+        float n = (float)i / vHouseModels.size();
         float nn = n * 2.0f - 1.0f;
         glm::vec3 sPosition{ spacing * nn, 0.0f, 0.0f };
         glm::vec3 sRotation{ -90.0f, 0.0f, 0.0f };
@@ -39,7 +40,6 @@ void CScene::InitScene()
     }
 }
 
-// TODO(void): These rendering should be done by a scene renderer 
 void CScene::OnUpdate(CShader& shader)
 {
     CSceneRenderer::Draw(*this, shader);
