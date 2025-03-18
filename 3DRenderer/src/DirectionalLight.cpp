@@ -2,8 +2,10 @@
 #include "Buffer.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/fwd.hpp"
+#include "glm/geometric.hpp"
 
-void CDirectionalLight::Init(const glm::vec3& VInitialPosition, const glm::vec3& VInitialDirection)
+void CDirectionalLight::Init(const glm::vec3& VInitialPosition, const glm::vec3& VDirection)
 {
     FramebufferSpecification specs{};
     specs.uWidth = 1024;
@@ -11,17 +13,36 @@ void CDirectionalLight::Init(const glm::vec3& VInitialPosition, const glm::vec3&
     specs.bDisableColorBuffer = true;
 
     m_VPosition = VInitialPosition;
+
     m_CShadowMapFramebuffer = CFramebuffer(std::move(specs));
+
     m_MProjectionMatrix = glm::ortho(-1000.0f, 1000.0f, 0.0f, 1000.0f, 1.f, 2000.0f);
-    glm::mat4 MLightView = glm::lookAt(m_VPosition, glm::vec3{ 0.0 }, glm::vec3(0.0, 1.0, 0.0));
+
+    glm::mat4 MLightView = glm::lookAt(m_VPosition, m_VPosition + VDirection, glm::vec3(0.0, 1.0, 0.0));
+
     m_MViewProjectionMatrix = m_MProjectionMatrix * MLightView;
+
+    m_MRotation = glm::mat3(MLightView);
+    m_VDirection = VDirection;
 }
 
-void CDirectionalLight::SetPosition(const glm::vec3& position)
+void CDirectionalLight::SetRotation(const glm::vec3& rotation)
 {
-    m_VPosition = position;
-    glm::mat4 MLightView = glm::lookAt(m_VPosition, glm::vec3{ 0.0 }, glm::vec3(0.0, 1.0, 0.0));
-    m_MViewProjectionMatrix = m_MProjectionMatrix * MLightView;
+    glm::mat4 MNewRotation = glm::mat4(m_MRotation);
+    MNewRotation = glm::rotate(glm::mat4(MNewRotation), glm::radians(rotation.y), glm::vec3(0.0, 1.0, 0.0));
+    MNewRotation = glm::rotate(glm::mat4(MNewRotation), glm::radians(rotation.x), glm::vec3(1.0, 0.0, 0.0)); 
+    MNewRotation = glm::rotate(glm::mat4(MNewRotation), glm::radians(rotation.z), glm::vec3(0.0, 0.0, 1.0));
+
+    glm::vec3 VForwardVector = glm::mat3(MNewRotation) * glm::vec3(0.0, 0.0, -1.0);
+    glm::vec3 VRightVector = glm::normalize(glm::cross(glm::vec3(0.0, 1.0, 0.0), VForwardVector));
+    glm::vec3 VUpVector = glm::normalize(glm::cross(VForwardVector, VRightVector));
+    
+    glm::mat4 MNewViewMatrix = glm::lookAt(m_VPosition, m_VPosition + VForwardVector, VUpVector);
+
+    m_MViewProjectionMatrix = m_MProjectionMatrix * MNewViewMatrix;
+
+    m_MRotation = glm::mat3(MNewViewMatrix);
+    m_VDirection = VForwardVector;
 }
 
 void CDirectionalLight::Bind()

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include <memory>
 #include <string>
 #include <glm/glm.hpp>
@@ -9,7 +8,6 @@
 #include "Window.h"
 #include "Scene.h"
 #include "ShaderLibrary.h"
-#include "Texture.h"
 #include "Skybox.h"
 #include "DirectionalLight.h"
 
@@ -66,16 +64,17 @@ private:
 	CShader m_CShader;
 	CShader m_CShadowMappingShader;
 	CDirectionalLight m_CDirectionalLight;
+    float fCameraRotSinValueDebug;
 };
 
 
 // =======================================================================================================
 // TODO(void): Refactor this system into separate Input system
 // =======================================================================================================
-static double dCursorPosLastFrameX = 0.0;
-static double dCursorPosLastFrameY = 0.0;
+static float fCursorPosLastFrameX = 0.0;
+static float fCursorPosLastFrameY = 0.0;
 static bool bShouldMoveLight = false;
-static double dLightMoveSens = 2.f;
+static float fLightMoveSens = 1.f;
 
 void UpdateCamera(GLFWwindow* pWindow, CPerspectiveCamera& cCamera);
 void UpdateLight(GLFWwindow* pWindow, CDirectionalLight& light);

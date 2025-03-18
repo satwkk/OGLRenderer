@@ -16,7 +16,7 @@ struct Material
 
 struct Light 
 {
-	vec3 position;
+	vec3 direction;
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -52,11 +52,11 @@ void main()
 	vec3 worldNormal = normalize(TBN * normalMapValue);
 
 	// Diffuse reflection
-	vec3 directionToLight = normalize(light.position - FragmentWorldPosition);
-	float diffuseFactor = max(dot(worldNormal, directionToLight), 0.0);
+	// vec3 directionToLight = normalize(light.direction - FragmentWorldPosition);
+	float diffuseFactor = max(dot(worldNormal, -light.direction), 0.0);
 
 	// Specular reflection
-	vec3 reflectedLight = reflect(-directionToLight, worldNormal);
+	vec3 reflectedLight = reflect(light.direction, worldNormal);
 	vec3 directionToCamera = normalize(uCameraPosition - FragmentWorldPosition);
 	float specularFactor = pow(max(dot(directionToCamera, reflectedLight), 0.0), material.shine);
 

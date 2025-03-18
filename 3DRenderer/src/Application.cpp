@@ -1,9 +1,11 @@
 #include "Application.h"
 
+#include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "GLFW/glfw3.h"
 #include "Shader.h"
 #include "Window.h"
 
@@ -37,14 +39,14 @@ void UpdateCamera(GLFWwindow* pSWindow, CPerspectiveCamera& cCamera)
     double cursorPosY = 0.0;
     glfwGetCursorPos(pSWindow, &cursorPosX, &cursorPosY);
 
-    double deltaX = cursorPosX - dCursorPosLastFrameX;
-    double deltaY = cursorPosY - dCursorPosLastFrameY;
+    float deltaX = ((float)cursorPosX - fCursorPosLastFrameX) * fLightMoveSens; 
+    float deltaY = ((float)cursorPosY - fCursorPosLastFrameY) * fLightMoveSens;
 
     cCamera.Rotate(deltaY, deltaX);
     cCamera.Move(targetDir);
 
-    dCursorPosLastFrameX = cursorPosX;
-    dCursorPosLastFrameY = cursorPosY;
+    fCursorPosLastFrameX = (float)cursorPosX;
+    fCursorPosLastFrameY = (float)cursorPosY;
 }
 
 void UpdateLight(GLFWwindow* pSWindow, CDirectionalLight& light)
@@ -66,17 +68,14 @@ void UpdateLight(GLFWwindow* pSWindow, CDirectionalLight& light)
     double mouseX, mouseY;
     glfwGetCursorPos(pSWindow, &mouseX, &mouseY);
 
-    float deltaX = mouseX - dCursorPosLastFrameX;
-    float deltaY = mouseY - dCursorPosLastFrameY;
+    float deltaX = ((float)mouseX - fCursorPosLastFrameX) * fLightMoveSens; 
+    float deltaY = ((float)mouseY - fCursorPosLastFrameY) * fLightMoveSens;
 
+    if (glm::abs(deltaX) > 0.0001f || glm::abs(deltaY) > 0.0001f)
+        light.SetRotation(glm::vec3(deltaY, deltaX, 0.0f));
 
-    glm::vec3 VLightPos = light.GetPosition();
-    // VLightPos += glm::vec3(deltaX * dLightMoveSens, 0.f, deltaY * dLightMoveSens);
-    VLightPos += glm::vec3(deltaX * dLightMoveSens, deltaY * dLightMoveSens, 0.0);
-    light.SetPosition(VLightPos);
-
-    dCursorPosLastFrameX = mouseX;
-    dCursorPosLastFrameY = mouseY;
+    fCursorPosLastFrameX = (float)mouseX;
+    fCursorPosLastFrameY = (float)mouseY;
 }
 
 CApplication* CApplication::s_pCInstance = nullptr;
@@ -116,9 +115,9 @@ bool CApplication::Init()
     m_CSkyboxShader = m_CShaderLibrary.GetShader("cubemap");
 
     // TODO(void): Get it from shader library
-    m_CShadowMappingShader = CShader{ "./shaders/phong/ShadowMapVertexShader.glsl", "./shaders/phong/ShadowMapFragmentShader.glsl" };
+    m_CShadowMappingShader = m_CShaderLibrary.GetShader("shadowmap");
     
-    m_CDirectionalLight.Init(glm::vec3(0.0), glm::vec3(0.0));
+    m_CDirectionalLight.Init(glm::vec3(0.0), glm::vec3(0.0, 0.0, -1.0));
 
     m_CScene.InitScene();
 
@@ -132,10 +131,16 @@ void CApplication::Run()
 
 void CApplication::OnUpdate()
 {
+    vlog << "Light direction: " << m_CDirectionalLight.GetDirection().x << ", " << m_CDirectionalLight.GetDirection().y << ", " << m_CDirectionalLight.GetDirection().z << nl;
+
     // TODO(void): Implement a proper render pass system, light should not do the shadow pass
     m_CDirectionalLight.OnDraw(m_CShadowMappingShader, m_CScene);
 
-    UpdateLight(m_pCMainWindow->GetHandle(), m_CDirectionalLight);
+    fCameraRotSinValueDebug += 0.1f;
+    if (fCameraRotSinValueDebug > 360.0f) fCameraRotSinValueDebug -= 360.0f;
+
+    m_CDirectionalLight.SetRotation(glm::vec3(0.0f, fCameraRotSinValueDebug, 0.0f));
+    // UpdateLight(m_pCMainWindow->GetHandle(), m_CDirectionalLight);
     UpdateCamera(m_pCMainWindow->GetHandle(), m_CCamera);
 
     glViewport(0, 0, m_pCMainWindow->GetWidth(), m_pCMainWindow->GetHeight());
@@ -149,7 +154,7 @@ void CApplication::OnUpdate()
     m_CCamera.OnUpdate(m_CShader);
 
     // Position properties
-    m_CShader.SetUniformVector3("light.position", m_CDirectionalLight.GetPosition());
+    m_CShader.SetUniformVector3("light.direction", m_CDirectionalLight.GetDirection());
     m_CShader.SetUniformVector3("uCameraPosition", m_CCamera.GetPosition());
     m_CShader.SetUniformMatrix4("uLightSpaceMatrix", m_CDirectionalLight.GetViewProjectionMatrix());
 
