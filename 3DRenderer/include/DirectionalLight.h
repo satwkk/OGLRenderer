@@ -22,5 +22,6 @@ public:
 private:
     glm::vec3 m_VPosition;
     glm::mat4 m_MViewProjectionMatrix;
+    glm::mat4 m_MProjectionMatrix;
     CFramebuffer m_CShadowMapFramebuffer;
 };

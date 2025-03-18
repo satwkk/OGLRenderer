@@ -12,7 +12,6 @@
 #include "Texture.h"
 #include "Skybox.h"
 #include "DirectionalLight.h"
-#include "ShadowPass.h"
 
 struct GLFWwindow;
 class CModel;
@@ -46,7 +45,6 @@ public:
 	inline CPerspectiveCamera& GetSceneCamera() { return m_CCamera; }
 	// TEMP: This shouldn't be here.
 	inline CDirectionalLight& GetDirectionalLight() { return m_CDirectionalLight; }
-    inline uint32_t GetShadowMapTexture() { return ShadowPassFramebuffer.ShadowMapID; }
 
 private:
 	CApplication() = default;
@@ -68,7 +66,6 @@ private:
 	CShader m_CShader;
 	CShader m_CShadowMappingShader;
 	CDirectionalLight m_CDirectionalLight;
-    shadow_pass_framebuffer ShadowPassFramebuffer;
 };
 
 

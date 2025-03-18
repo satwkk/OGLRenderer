@@ -14,22 +14,22 @@ void CScene::InitScene()
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
         CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS),
+        CModelLoader::Load("./res/models/cottage/cottage_fbx.fbx", BASICFLAGS)
     };
 
-    for (auto& spCModel : vModels)
+    float spacing = 2000.0f;
+    for (uint32_t i = 0; i < vModels.size(); i++)
     {
+        std::shared_ptr<CModel> spCModel = vModels[i];
+
 	    entt::entity uEntityID = m_CRegistry.create();
 
         srand(rand());
-        bool posMultiply1 = rand() % 10 > 5;
-        bool posMultiply2 = rand() % 10 > 5;
-        float fXPos = rand() % 2000;
-        float fZPos = rand() % 2000;
-        fXPos *= posMultiply1 ? 1 : -1;
-        fZPos *= posMultiply2 ? 1 : -1;
 
-        glm::vec3 sPosition{ fXPos, 0.0f, fZPos };
-        // glm::vec3 sPosition{ 0.0 };
+        float n = (float)i / vModels.size();
+        float nn = n * 2.0f - 1.0f;
+        glm::vec3 sPosition{ spacing * nn, 0.0f, 0.0f };
         glm::vec3 sRotation{ -90.0f, 0.0f, 0.0f };
         glm::vec3 sScale{ 200.0f, 200.0f, 100.0f };
 

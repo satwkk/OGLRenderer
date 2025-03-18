@@ -48,8 +48,6 @@ CWindow::~CWindow()
 
 void CWindow::OnUpdate(float ts)
 {
-	glDepthRange(0.0f, 1.0f);
-	glClearDepth(1.0f);
 	while (!bShouldClose())
 	{
 		glfwPollEvents();

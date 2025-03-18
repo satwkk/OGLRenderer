@@ -1,5 +1,6 @@
 #include "DirectionalLight.h"
 #include "Buffer.h"
+#include "Texture.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 
@@ -12,17 +13,16 @@ void CDirectionalLight::Init(const glm::vec3& VInitialPosition, const glm::vec3&
 
     m_VPosition = VInitialPosition;
     m_CShadowMapFramebuffer = CFramebuffer(std::move(specs));
-    glm::mat4 MLightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 100.0f);
-    glm::mat4 MLightView = glm::lookAt(m_VPosition, VInitialDirection, glm::vec3(0.0, 1.0, 0.0));
-    m_MViewProjectionMatrix = MLightProjection * MLightView;
+    m_MProjectionMatrix = glm::ortho(-1000.0f, 1000.0f, 0.0f, 1000.0f, 1.f, 2000.0f);
+    glm::mat4 MLightView = glm::lookAt(m_VPosition, glm::vec3{ 0.0 }, glm::vec3(0.0, 1.0, 0.0));
+    m_MViewProjectionMatrix = m_MProjectionMatrix * MLightView;
 }
 
 void CDirectionalLight::SetPosition(const glm::vec3& position)
 {
     m_VPosition = position;
-    glm::mat4 MLightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 100.0f);
-    glm::mat4 MLightView = glm::lookAt(m_VPosition, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
-    m_MViewProjectionMatrix = MLightProjection * MLightView;
+    glm::mat4 MLightView = glm::lookAt(m_VPosition, glm::vec3{ 0.0 }, glm::vec3(0.0, 1.0, 0.0));
+    m_MViewProjectionMatrix = m_MProjectionMatrix * MLightView;
 }
 
 void CDirectionalLight::Bind()
@@ -47,7 +47,6 @@ void CDirectionalLight::OnDraw(CShader& shader, CScene& scene)
     // Bind frame buffer
     Bind();
 
-    // Clear the depth buffer
     glClear(GL_DEPTH_BUFFER_BIT);
 
     // Render to scene

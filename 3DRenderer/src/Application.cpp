@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ShadowPass.h"
 #include "Utility.h"
 #include "Buffer.h"
 #include "VertexArray.h"
@@ -128,8 +127,6 @@ bool CApplication::Init()
     
     m_CDirectionalLight.Init(glm::vec3(0.0), glm::vec3(0.0));
 
-    ShadowPassFramebuffer = CreateShadowPassFrameBuffer(1024, 1024);
-
     m_CScene.InitScene();
 
     return true;
@@ -142,12 +139,11 @@ void CApplication::Run()
 
 void CApplication::OnUpdate()
 {
-    UpdateLight(m_pCMainWindow->GetHandle(), m_CDirectionalLight);
-    UpdateCamera(m_pCMainWindow->GetHandle(), m_CCamera);
-
     // TODO(void): Implement a proper render pass system, light should not do the shadow pass
     m_CDirectionalLight.OnDraw(m_CShadowMappingShader, m_CScene);
-    // RunShadowPass(&ShadowPassFramebuffer, &m_CDirectionalLight, m_CShadowMappingShader, m_CScene, m_pCMainWindow->GetWidth(), m_pCMainWindow->GetHeight());
+
+    UpdateLight(m_pCMainWindow->GetHandle(), m_CDirectionalLight);
+    UpdateCamera(m_pCMainWindow->GetHandle(), m_CCamera);
 
     glViewport(0, 0, m_pCMainWindow->GetWidth(), m_pCMainWindow->GetHeight());
 
