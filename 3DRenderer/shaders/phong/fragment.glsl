@@ -73,10 +73,10 @@ void main()
     // Calc shadow
 	vec3 coords = FragmentLightSpacePosition.xyz / FragmentLightSpacePosition.w;
 	coords = coords * 0.5 + 0.5;
-	float closestDepth = texture(uShadowMap, coords.xy).r;
-	float currentDepth = coords.z;
+    float closestDepth = texture(uShadowMap, coords.xy).r;
+    float currentDepth = coords.z;
     float bias = max(0.05 * (1.0 - dot(worldNormal, directionToLight)), 0.005);
-	float shadow = (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
+    float shadow = (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
 
     // Final calculations
 	vec3 ambient = light.ambient * material.ambientColor * diffuseColor;

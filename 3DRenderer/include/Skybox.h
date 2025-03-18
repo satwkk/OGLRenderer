@@ -4,7 +4,7 @@
 
 #include "CubeMap.h"
 #include "Shader.h"
-#include "Camera.h"
+#include "PerspectiveCamera.h"
 #include "Buffer.h"
 #include "VertexArray.h"
 

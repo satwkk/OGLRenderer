@@ -145,10 +145,13 @@ void CApplication::OnUpdate()
     UpdateLight(m_pCMainWindow->GetHandle(), m_CDirectionalLight);
     UpdateCamera(m_pCMainWindow->GetHandle(), m_CCamera);
 
-    // TODO(void): Implement a proper render pass system;
+    // TODO(void): Implement a proper render pass system, light should not do the shadow pass
     m_CDirectionalLight.OnDraw(m_CShadowMappingShader, m_CScene);
     // RunShadowPass(&ShadowPassFramebuffer, &m_CDirectionalLight, m_CShadowMappingShader, m_CScene, m_pCMainWindow->GetWidth(), m_pCMainWindow->GetHeight());
 
+    glViewport(0, 0, m_pCMainWindow->GetWidth(), m_pCMainWindow->GetHeight());
+
+    // Render skybox
     m_pCSkybox->OnRender(m_CSkyboxShader, m_CCamera);
 
     m_CShader.Bind();

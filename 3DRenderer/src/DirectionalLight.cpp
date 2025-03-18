@@ -58,6 +58,4 @@ void CDirectionalLight::OnDraw(CShader& shader, CScene& scene)
 
     // Unbind frame buffer
     Unbind();
-
-    glViewport(0, 0, 1920, 1080);
 }

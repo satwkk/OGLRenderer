@@ -5,7 +5,7 @@
 #include <string>
 #include <glm/glm.hpp>
 
-#include "Camera.h"
+#include "PerspectiveCamera.h"
 #include "Window.h"
 #include "Scene.h"
 #include "ShaderLibrary.h"
@@ -73,7 +73,7 @@ private:
 
 
 // =======================================================================================================
-// TODO(void): Refactor this system into separate Input and GlobalLight system
+// TODO(void): Refactor this system into separate Input system
 // =======================================================================================================
 static double dCursorPosLastFrameX = 0.0;
 static double dCursorPosLastFrameY = 0.0;
