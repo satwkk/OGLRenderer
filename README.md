@@ -3,7 +3,8 @@
 A CPP 3D renderer implemented in OpenGL.
 
 # POC
-![Screenshots](./Screenshots/SS_13_03_25.png)
+
+https://github.com/user-attachments/assets/cf39f054-650a-4780-964f-1f4d8ea04006
 
 Features:
 - [x] Model loading

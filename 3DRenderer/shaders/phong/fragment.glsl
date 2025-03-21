@@ -16,7 +16,7 @@ struct Material
 
 struct Light 
 {
-	vec3 position;
+	vec3 direction;
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -28,6 +28,7 @@ struct Light
 in vec2 TexCoord;
 in mat3 TBN;
 in vec3 FragmentWorldPosition;
+in vec4 FragmentLightSpacePosition;
 
 
 // =====================
@@ -41,6 +42,7 @@ out vec4 FragColor;
 uniform vec3 uCameraPosition;
 uniform Material material;
 uniform Light light;
+uniform sampler2D uShadowMap;
 
 void main() 
 {
@@ -50,11 +52,11 @@ void main()
 	vec3 worldNormal = normalize(TBN * normalMapValue);
 
 	// Diffuse reflection
-	vec3 directionToLight = normalize(light.position - FragmentWorldPosition);
-	float diffuseFactor = max(dot(worldNormal, directionToLight), 0.0);
+	// vec3 directionToLight = normalize(light.direction - FragmentWorldPosition);
+	float diffuseFactor = max(dot(worldNormal, -light.direction), 0.0);
 
 	// Specular reflection
-	vec3 reflectedLight = reflect(-directionToLight, worldNormal);
+	vec3 reflectedLight = reflect(light.direction, worldNormal);
 	vec3 directionToCamera = normalize(uCameraPosition - FragmentWorldPosition);
 	float specularFactor = pow(max(dot(directionToCamera, reflectedLight), 0.0), material.shine);
 
@@ -68,10 +70,28 @@ void main()
 	bool isSpecularTextureSet = length(specularTextureColor) > 0.01;
     vec3 specularColor = isSpecularTextureSet ? specularTextureColor : material.specularColor;
 
+    // Calc shadow
+	vec3 coords = FragmentLightSpacePosition.xyz / FragmentLightSpacePosition.w;
+	coords = coords * 0.5 + 0.5;
+    float closestDepth = texture(uShadowMap, coords.xy).r;
+    float currentDepth = coords.z;
+    float bias = 0.005;
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(uShadowMap, 0);
+	for (int x = -1; x <= 1; ++x)
+	{
+		for (int y = -1; y <= 1; ++y)
+		{
+			float closestDepth = texture(uShadowMap, coords.xy + vec2(x, y) * texelSize).r;
+			shadow += (currentDepth - bias) > closestDepth ? 1.0 : 0.0;
+		}
+	}
+	shadow /= 9.0; // Average over 3x3 kernel
+
     // Final calculations
 	vec3 ambient = light.ambient * material.ambientColor * diffuseColor;
-	vec3 diffuseLight = light.diffuse * diffuseFactor * diffuseColor;
-	vec3 specularLight = light.specular * specularFactor * specularColor;
+	vec3 diffuseLight = light.diffuse * diffuseFactor * diffuseColor * (1.0 - shadow);
+	vec3 specularLight = light.specular * specularFactor * specularColor * (1.0 - shadow);
 
 	FragColor = vec4(ambient + diffuseLight + specularLight, 1.0);
 }

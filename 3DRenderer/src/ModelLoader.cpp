@@ -143,7 +143,6 @@ std::shared_ptr<CModel> CModelLoader::Load(const std::string& modelPath, unsigne
         spModelMesh->SetVertices(std::move(sVertexData));
         spModelMesh->SetIndices(std::move(vIndexData));
 
-        // TEMP: Get normal map
         aiMaterial* pMeshMaterial = pScene->mMaterials[pMesh->mMaterialIndex];
         CMaterial cMyMaterial{};
 

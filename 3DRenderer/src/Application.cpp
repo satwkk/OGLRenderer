@@ -1,17 +1,13 @@
 #include "Application.h"
 
-#include <iostream>
+#include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Utility.h"
-#include "Buffer.h"
-#include "VertexArray.h"
-#include "ModelLoader.h"
+#include "GLFW/glfw3.h"
 #include "Shader.h"
-#include "SceneObject.h"
-#include "Logger.h"
+#include "Window.h"
 
 void UpdateCamera(GLFWwindow* pSWindow, CPerspectiveCamera& cCamera)
 {
@@ -43,19 +39,19 @@ void UpdateCamera(GLFWwindow* pSWindow, CPerspectiveCamera& cCamera)
     double cursorPosY = 0.0;
     glfwGetCursorPos(pSWindow, &cursorPosX, &cursorPosY);
 
-    double deltaX = cursorPosX - dCursorPosLastFrameX;
-    double deltaY = cursorPosY - dCursorPosLastFrameY;
+    float deltaX = ((float)cursorPosX - fCursorPosLastFrameX) * fLightMoveSens; 
+    float deltaY = ((float)cursorPosY - fCursorPosLastFrameY) * fLightMoveSens;
 
     cCamera.Rotate(deltaY, deltaX);
     cCamera.Move(targetDir);
 
-    dCursorPosLastFrameX = cursorPosX;
-    dCursorPosLastFrameY = cursorPosY;
+    fCursorPosLastFrameX = (float)cursorPosX;
+    fCursorPosLastFrameY = (float)cursorPosY;
 }
 
-void UpdateLight(GLFWwindow* pSWindow)
+void UpdateLight(GLFWwindow* pSWindow, CDirectionalLight& light)
 {
-    if (glfwGetKey(pSWindow, GLFW_KEY_L))
+    if (glfwGetKey(pSWindow, GLFW_KEY_Q))
     {
         glfwSetInputMode(pSWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         bShouldMoveLight = true;
@@ -72,20 +68,21 @@ void UpdateLight(GLFWwindow* pSWindow)
     double mouseX, mouseY;
     glfwGetCursorPos(pSWindow, &mouseX, &mouseY);
 
-    float deltaX = mouseX - dCursorPosLastFrameX;
-    float deltaY = mouseY - dCursorPosLastFrameY;
+    float deltaX = ((float)mouseX - fCursorPosLastFrameX) * fLightMoveSens; 
+    float deltaY = ((float)mouseY - fCursorPosLastFrameY) * fLightMoveSens;
 
-    vLightPosition += glm::vec3(deltaX * dLightMoveSens, 0.f, deltaY * dLightMoveSens);
+    if (glm::abs(deltaX) > 0.0001f || glm::abs(deltaY) > 0.0001f)
+        light.SetRotation(glm::vec3(deltaY, deltaX, 0.0f));
 
-    dCursorPosLastFrameX = mouseX;
-    dCursorPosLastFrameY = mouseY;
+    fCursorPosLastFrameX = (float)mouseX;
+    fCursorPosLastFrameY = (float)mouseY;
 }
 
 CApplication* CApplication::s_pCInstance = nullptr;
 
 CApplication::CApplication(const AppConfig& sConfig) :
     m_sConfig{ sConfig },
-    m_CCamera{ glm::vec3{ 0.0f, 0.0f, 50.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
+    m_CCamera{ glm::vec3{ 0.0f, 0.0f, 0.0f }, 1.f, 5000.f, m_sConfig.WindowWidth, m_sConfig.WindowHeight, 45.0f }
 {
 }
 
@@ -102,19 +99,13 @@ CApplication* CApplication::Create(const AppConfig& sConfig)
 
 bool CApplication::Init()
 {
-    // Create the window
     m_pCMainWindow = std::make_unique<CWindow>(m_sConfig.WindowWidth, m_sConfig.WindowHeight, m_sConfig.ApplicationName);
-
-    // Add on update callback
     m_pCMainWindow->AddUpdateCallback([&]() { OnUpdate(); });
-
-    // Enable depth testing
+    m_pCMainWindow->EnableFlag(GL_CULL_FACE);
     m_pCMainWindow->EnableFlag(GL_DEPTH_TEST);
 
-    // Initialize shader library
     m_CShaderLibrary.Init();
 
-    // Get the phong shader model
     // TODO(void): Load this based on setting file
     m_CShader = m_CShaderLibrary.GetShader("phong");
 
@@ -122,6 +113,11 @@ bool CApplication::Init()
     // TODO(void): Move this to scene later
     m_pCSkybox = std::make_unique<CSkybox>();
     m_CSkyboxShader = m_CShaderLibrary.GetShader("cubemap");
+
+    // TODO(void): Get it from shader library
+    m_CShadowMappingShader = m_CShaderLibrary.GetShader("shadowmap");
+    
+    m_CDirectionalLight.Init(glm::vec3(0.0), glm::vec3(0.0, 0.0, -1.0));
 
     m_CScene.InitScene();
 
@@ -135,9 +131,21 @@ void CApplication::Run()
 
 void CApplication::OnUpdate()
 {
-    UpdateLight(m_pCMainWindow->GetHandle());
+    vlog << "Light direction: " << m_CDirectionalLight.GetDirection().x << ", " << m_CDirectionalLight.GetDirection().y << ", " << m_CDirectionalLight.GetDirection().z << nl;
+
+    // TODO(void): Implement a proper render pass system, light should not do the shadow pass
+    m_CDirectionalLight.OnDraw(m_CShadowMappingShader, m_CScene);
+
+    fCameraRotSinValueDebug += 0.1f;
+    if (fCameraRotSinValueDebug > 360.0f) fCameraRotSinValueDebug -= 360.0f;
+
+    m_CDirectionalLight.SetRotation(glm::vec3(0.0f, fCameraRotSinValueDebug, 0.0f));
+    // UpdateLight(m_pCMainWindow->GetHandle(), m_CDirectionalLight);
     UpdateCamera(m_pCMainWindow->GetHandle(), m_CCamera);
 
+    glViewport(0, 0, m_pCMainWindow->GetWidth(), m_pCMainWindow->GetHeight());
+
+    // Render skybox
     m_pCSkybox->OnRender(m_CSkyboxShader, m_CCamera);
 
     m_CShader.Bind();
@@ -146,8 +154,9 @@ void CApplication::OnUpdate()
     m_CCamera.OnUpdate(m_CShader);
 
     // Position properties
-    m_CShader.SetUniformVector3("light.position", vLightPosition);
+    m_CShader.SetUniformVector3("light.direction", m_CDirectionalLight.GetDirection());
     m_CShader.SetUniformVector3("uCameraPosition", m_CCamera.GetPosition());
+    m_CShader.SetUniformMatrix4("uLightSpaceMatrix", m_CDirectionalLight.GetViewProjectionMatrix());
 
     // Light properties
     m_CShader.SetUniformVector3("light.ambient", glm::vec3(0.2f));
